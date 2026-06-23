@@ -237,30 +237,53 @@ function deleteClient(id) {
 }
 
 // ========================================
+// VERIFICAR SE É ADMIN
+// ========================================
+async function checkIsAdmin(userId) {
+    try {
+        const { data, error } = await supabase
+            .from('admins')
+            .select('id')
+            .eq('id', userId)
+            .single();
+        return !!data && !error;
+    } catch {
+        return false;
+    }
+}
+
+// ========================================
 // INICIALIZAÇÃO
 // ========================================
 waitForSupabaseReady(() => {
-    // Usar o listener nativo do Supabase
-    // Ele dispara assim que a sessão estiver pronta
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-            // Sessão válida — atualizar nome e carregar dados
+            const isAdmin = await checkIsAdmin(session.user.id);
+            if (!isAdmin) {
+                await supabase.auth.signOut();
+                window.location.href = 'admin-login.html?erro=acesso_negado';
+                return;
+            }
             const adminNameElement = document.querySelector('.admin-user-name');
-            if (adminNameElement && session) {
+            if (adminNameElement) {
                 adminNameElement.textContent = session.user.email.split('@')[0];
             }
             loadDashboardStats();
             loadClientes();
 
         } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
-            // Sem sessão — ir para login
             window.location.href = 'admin-login.html';
 
         } else if (event === 'INITIAL_SESSION') {
-            // Verificação inicial
             if (!session) {
                 window.location.href = 'admin-login.html';
             } else {
+                const isAdmin = await checkIsAdmin(session.user.id);
+                if (!isAdmin) {
+                    await supabase.auth.signOut();
+                    window.location.href = 'admin-login.html?erro=acesso_negado';
+                    return;
+                }
                 const adminNameElement = document.querySelector('.admin-user-name');
                 if (adminNameElement) {
                     adminNameElement.textContent = session.user.email.split('@')[0];

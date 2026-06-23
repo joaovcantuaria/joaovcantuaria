@@ -94,5 +94,11 @@ async function checkAdminAuth() {
 }
 
 waitForSupabaseReady(() => {
+    // Mostrar mensagem se vier de acesso negado
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('erro') === 'acesso_negado') {
+        showAdminMessage('Acesso negado. Você não tem permissão de administrador.', 'error');
+    }
+
     checkAdminAuth();
 });
