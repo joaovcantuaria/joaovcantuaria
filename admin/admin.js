@@ -24,30 +24,32 @@ function waitForSupabaseReady(callback) {
 // Verificar autenticação admin
 async function checkAdminAuthentication() {
     if (!supabase) {
-        console.error('❌ Supabase não está pronto!');
         window.location.href = 'admin-login.html';
         return false;
     }
-    
+
     try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error || !session) {
-            console.log('Sessão não encontrada, redirecionando para login...');
+        // Tentar até 5 vezes com intervalo de 400ms (sessão pode demorar a persistir)
+        let session = null;
+        for (let i = 0; i < 5; i++) {
+            const { data } = await supabase.auth.getSession();
+            session = data.session;
+            if (session) break;
+            await new Promise(resolve => setTimeout(resolve, 400));
+        }
+
+        if (!session) {
             window.location.href = 'admin-login.html';
             return false;
         }
-        
-        console.log('✅ Admin autenticado:', session.user.email);
-        
-        // Atualizar nome do admin na interface
+
         const adminNameElement = document.querySelector('.admin-user-name');
         if (adminNameElement) {
             adminNameElement.textContent = session.user.email.split('@')[0];
         }
-        
+
         return true;
-        
+
     } catch (error) {
         console.error('Erro ao verificar autenticação admin:', error);
         window.location.href = 'admin-login.html';
