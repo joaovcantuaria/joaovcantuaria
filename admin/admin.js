@@ -240,13 +240,34 @@ function deleteClient(id) {
 // INICIALIZAÇÃO
 // ========================================
 waitForSupabaseReady(() => {
-    console.log('🎛️ Painel administrativo carregado!');
-    
-    checkAdminAuthentication().then(isAuthenticated => {
-        if (isAuthenticated) {
-            console.log('✅ Admin autenticado, carregando dados...');
+    // Usar o listener nativo do Supabase
+    // Ele dispara assim que a sessão estiver pronta
+    supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+            // Sessão válida — atualizar nome e carregar dados
+            const adminNameElement = document.querySelector('.admin-user-name');
+            if (adminNameElement && session) {
+                adminNameElement.textContent = session.user.email.split('@')[0];
+            }
             loadDashboardStats();
             loadClientes();
+
+        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+            // Sem sessão — ir para login
+            window.location.href = 'admin-login.html';
+
+        } else if (event === 'INITIAL_SESSION') {
+            // Verificação inicial
+            if (!session) {
+                window.location.href = 'admin-login.html';
+            } else {
+                const adminNameElement = document.querySelector('.admin-user-name');
+                if (adminNameElement) {
+                    adminNameElement.textContent = session.user.email.split('@')[0];
+                }
+                loadDashboardStats();
+                loadClientes();
+            }
         }
     });
 });

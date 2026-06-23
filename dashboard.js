@@ -535,8 +535,38 @@ animateCounters();
 // INICIALIZAÇÃO
 // ========================================
 
-console.log('Dashboard carregado com sucesso! 🎉');
-console.log('Usuário autenticado:', localStorage.getItem('userData'));
+waitForSupabaseReady(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+            updateUserInfo({
+                id: session.user.id,
+                name: session.user.email.split('@')[0],
+                email: session.user.email
+            });
+            loadProjects();
 
-// Carregar dados iniciais
-loadProjects();
+        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+            window.location.href = 'login.html';
+
+        } else if (event === 'INITIAL_SESSION') {
+            if (!session) {
+                window.location.href = 'login.html';
+            } else {
+                supabase.from('usuarios')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single()
+                    .then(({ data }) => {
+                        updateUserInfo({
+                            id: session.user.id,
+                            name: data?.nome_completo || session.user.email.split('@')[0],
+                            email: session.user.email,
+                            phone: data?.telefone || '',
+                            company: data?.empresa || ''
+                        });
+                    });
+                loadProjects();
+            }
+        }
+    });
+});
