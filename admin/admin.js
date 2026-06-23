@@ -255,42 +255,9 @@ async function checkIsAdmin(userId) {
 // ========================================
 // INICIALIZAÇÃO
 // ========================================
-waitForSupabaseReady(() => {
-    supabase.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-            const isAdmin = await checkIsAdmin(session.user.id);
-            if (!isAdmin) {
-                await supabase.auth.signOut();
-                window.location.href = 'admin-login.html?erro=acesso_negado';
-                return;
-            }
-            const adminNameElement = document.querySelector('.admin-user-name');
-            if (adminNameElement) {
-                adminNameElement.textContent = session.user.email.split('@')[0];
-            }
-            loadDashboardStats();
-            loadClientes();
-
-        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
-            window.location.href = 'admin-login.html';
-
-        } else if (event === 'INITIAL_SESSION') {
-            if (!session) {
-                window.location.href = 'admin-login.html';
-            } else {
-                const isAdmin = await checkIsAdmin(session.user.id);
-                if (!isAdmin) {
-                    await supabase.auth.signOut();
-                    window.location.href = 'admin-login.html?erro=acesso_negado';
-                    return;
-                }
-                const adminNameElement = document.querySelector('.admin-user-name');
-                if (adminNameElement) {
-                    adminNameElement.textContent = session.user.email.split('@')[0];
-                }
-                loadDashboardStats();
-                loadClientes();
-            }
-        }
-    });
+// A autenticação já foi verificada no HTML antes deste script carregar.
+// Aqui apenas carregamos os dados do dashboard.
+document.addEventListener('DOMContentLoaded', () => {
+    loadDashboardStats();
+    loadClientes();
 });

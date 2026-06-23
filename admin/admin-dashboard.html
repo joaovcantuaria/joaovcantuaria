@@ -306,34 +306,44 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
-        // SALVAR REFERÊNCIA AO SDK IMEDIATAMENTE
-        const supabaseSDK = window.supabase;
-        
         const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
 
-        var supabase = null;
+        // Inicializar Supabase imediatamente — window.supabase já está disponível aqui
+        var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Inicialização
-        function initSupabase() {
-            if (!supabaseSDK) {
-                console.error('❌ SDK do Supabase NÃO foi salvo!');
-                return false;
-            }
-
+        // Verificar autenticação e permissão admin ANTES de carregar qualquer coisa
+        (async function() {
             try {
-                supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log('✅ Cliente Supabase criado no admin dashboard!');
-                return true;
-            } catch (error) {
-                console.error('❌ Erro ao criar cliente:', error);
-                return false;
-            }
-        }
+                // 1. Verificar sessão
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.replace('admin-login.html');
+                    return;
+                }
 
-        // Executar IMEDIATAMENTE
-        console.log('🚀 Inicializando Supabase no admin dashboard...');
-        initSupabase();
+                // 2. Verificar se é admin
+                const { data: adminData } = await supabase
+                    .from('admins')
+                    .select('id')
+                    .eq('id', session.user.id)
+                    .single();
+
+                if (!adminData) {
+                    await supabase.auth.signOut();
+                    window.location.replace('admin-login.html?erro=acesso_negado');
+                    return;
+                }
+
+                // 3. É admin — atualizar nome na interface
+                const adminNameEl = document.querySelector('.admin-user-name');
+                if (adminNameEl) adminNameEl.textContent = session.user.email.split('@')[0];
+
+            } catch (e) {
+                console.error('Erro na autenticação:', e);
+                window.location.replace('admin-login.html');
+            }
+        })();
     </script>
     <script src="admin.js"></script></body>
 </html>
