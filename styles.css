@@ -222,6 +222,9 @@ body {
     object-fit: cover;
     object-position: center top;
     opacity: 0.18;
+    display: block;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .hero-overlay {
