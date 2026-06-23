@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Cliente - João V. Cantuária</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth-styles.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="logo-placeholder.png" alt="João V. Cantuária" class="logo-img">
+                <span class="logo-text">JVC</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#projetos" class="nav-item" data-section="projetos">
+                <i class="fas fa-folder-open"></i>
+                <span>Meus Projetos</span>
+            </a>
+            <a href="#galeria" class="nav-item" data-section="galeria">
+                <i class="fas fa-images"></i>
+                <span>Galeria</span>
+            </a>
+            <a href="#mensagens" class="nav-item" data-section="mensagens">
+                <i class="fas fa-comments"></i>
+                <span>Mensagens</span>
+                <span class="badge">3</span>
+            </a>
+            <a href="#arquivos" class="nav-item" data-section="arquivos">
+                <i class="fas fa-file-download"></i>
+                <span>Arquivos</span>
+            </a>
+            <a href="#perfil" class="nav-item" data-section="perfil">
+                <i class="fas fa-user-circle"></i>
+                <span>Meu Perfil</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <h1 class="page-title">Dashboard</h1>
+            
+            <div class="topbar-actions">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">5</span>
+                </button>
+                
+                <div class="user-menu">
+                    <img src="https://ui-avatars.com/api/?name=Usuario+Teste&background=FFD700&color=000" 
+                         alt="Usuário" class="user-avatar">
+                    <span class="user-name">Usuário Teste</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="welcome-card">
+                    <h2>Bem-vindo de volta! 👋</h2>
+                    <p>Aqui está um resumo das suas atividades recentes.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>3</h3>
+                            <p>Projetos Ativos</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Projetos Concluídos</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon gold">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>247</h3>
+                            <p>Fotos Entregues</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>3</h3>
+                            <p>Mensagens Novas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Projects -->
+                <div class="section-card">
+                    <div class="card-header">
+                        <h3>Projetos Recentes</h3>
+                        <a href="#projetos" class="link-all">Ver todos</a>
+                    </div>
+                    <div class="projects-list">
+                        <div class="project-item">
+                            <div class="project-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div class="project-info">
+                                <h4>Ensaio Fotográfico Corporativo</h4>
+                                <p>Iniciado em 15/06/2026</p>
+                            </div>
+                            <span class="status-badge status-progress">Em Andamento</span>
+                        </div>
+
+                        <div class="project-item">
+                            <div class="project-icon">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <div class="project-info">
+                                <h4>Campanha de Marketing Digital</h4>
+                                <p>Iniciado em 10/06/2026</p>
+                            </div>
+                            <span class="status-badge status-review">Em Revisão</span>
+                        </div>
+
+                        <div class="project-item">
+                            <div class="project-icon">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <div class="project-info">
+                                <h4>Fotografia de Produto</h4>
+                                <p>Concluído em 05/06/2026</p>
+                            </div>
+                            <span class="status-badge status-completed">Concluído</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projetos Section -->
+            <section id="projetos-section" class="content-section">
+                <h2 class="section-title">Meus Projetos</h2>
+                <p class="section-description">Acompanhe o status de todos os seus projetos</p>
+                
+                <div class="projects-grid">
+                    <!-- Projeto 1 -->
+                    <div class="project-card">
+                        <div class="project-card-header">
+                            <span class="status-badge status-progress">Em Andamento</span>
+                            <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                        <h3>Ensaio Fotográfico Corporativo</h3>
+                        <p>Sessão de fotos profissionais para equipe executiva</p>
+                        <div class="project-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%;"></div>
+                            </div>
+                            <span class="progress-text">65% Concluído</span>
+                        </div>
+                        <div class="project-meta">
+                            <span><i class="fas fa-calendar"></i> 15/06/2026</span>
+                            <span><i class="fas fa-image"></i> 45 fotos</span>
+                        </div>
+                    </div>
+
+                    <!-- Mais projetos aqui -->
+                </div>
+            </section>
+
+            <!-- Galeria Section -->
+            <section id="galeria-section" class="content-section">
+                <h2 class="section-title">Galeria Exclusiva</h2>
+                <p class="section-description">Suas fotos e materiais entregues</p>
+                
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="portfolio-1-placeholder.jpg" alt="Foto 1">
+                        <div class="gallery-overlay">
+                            <button class="btn-icon"><i class="fas fa-eye"></i></button>
+                            <button class="btn-icon"><i class="fas fa-download"></i></button>
+                        </div>
+                    </div>
+                    <!-- Mais fotos aqui -->
+                </div>
+            </section>
+
+            <!-- Outras seções serão adicionadas conforme necessário -->
+        </div>
+    </main>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // SALVAR REFERÊNCIA AO SDK IMEDIATAMENTE
+        const supabaseSDK = window.supabase;
+        console.log('📦 STEP 1: SDK capturado:', typeof supabaseSDK);
+        
+        const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+
+        var supabase = null;
+
+        // Função de inicialização
+        function initSupabase() {
+            console.log('📦 STEP 2: Iniciando initSupabase()');
+            console.log('  - supabaseSDK existe?', typeof supabaseSDK);
+            console.log('  - supabaseSDK.createClient existe?', typeof (supabaseSDK && supabaseSDK.createClient));
+            
+            if (!supabaseSDK) {
+                console.error('❌ SDK do Supabase NÃO foi salvo!');
+                alert('ERRO: SDK do Supabase não carregou!');
+                return false;
+            }
+
+            try {
+                console.log('📦 STEP 3: Criando cliente Supabase...');
+                supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ STEP 4: Cliente Supabase criado!', typeof supabase);
+                console.log('  - supabase.auth existe?', typeof supabase.auth);
+                window.supabaseReady = true; // Flag para indicar que está pronto
+                return true;
+            } catch (error) {
+                console.error('❌ ERRO ao criar cliente:', error);
+                alert('ERRO ao criar cliente Supabase: ' + error.message);
+                return false;
+            }
+        }
+
+        // Executar IMEDIATAMENTE (não esperar window.load)
+        console.log('='.repeat(60));
+        console.log('🚀 INICIANDO SUPABASE NA ÁREA DO CLIENTE');
+        console.log('='.repeat(60));
+        const inicializado = initSupabase();
+        console.log('📦 STEP 5: Resultado da inicialização:', inicializado);
+        console.log('='.repeat(60));
+    </script>
+    
+    <!-- Carregar dashboard.js DEPOIS do Supabase estar pronto -->
+    <script src="dashboard.js"></script>
+</body>
+</html>

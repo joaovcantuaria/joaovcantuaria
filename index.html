@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="João Vitor Cantuária - Publicidade Criativa e Fotografia de Impacto para sua Marca">
+    <meta name="keywords" content="publicidade, fotografia, marketing digital, João Vitor Cantuária">
+    <title>João Vitor Cantuária - Publicidade e Fotografia</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <!-- Logo -->
+                    <div class="logo">
+                        <a href="#home">
+                            <span class="logo-text">JVC</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Menu Toggle para Mobile -->
+                    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <!-- Menu de Navegação -->
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="#servicos" class="nav-link">Serviços</a></li>
+                        <li><a href="#portfolio" class="nav-link">Portfólio</a></li>
+                        <li><a href="#contato" class="nav-link">Contato</a></li>
+                        <li><a href="login.html" class="nav-link btn-login">
+                            Área do Cliente
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <!-- Coloque a foto do outro site aqui: hero-bg.png -->
+            <img src="hero-bg.png" alt="" class="hero-img">
+            <div class="hero-overlay"></div>
+        </div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-eyebrow">João Vitor Cantuária</span>
+                <h1 class="hero-title">
+                    Marketing não é só aparecer.
+                    <span class="highlight">É construir uma marca</span>
+                    que as pessoas lembram.
+                </h1>
+                <p class="hero-subtitle">
+                    Publicidade · Fotografia · Estratégia Visual
+                </p>
+                <div class="hero-ctas">
+                    <a href="https://wa.me/5538999209694?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20seus%20serviços." 
+                       class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-whatsapp"></i> Fale Comigo
+                    </a>
+                    <a href="#servicos" class="btn btn-secondary">
+                        Ver Serviços
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section> 
+
+    <!-- Seção Sobre/Serviços -->
+    <section id="servicos" class="services">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Sobre e Serviços</span>
+                <h2 class="section-title">O que eu faço</h2>
+                <div class="title-underline"></div>
+            </div>
+            
+            <div class="about-content fade-in">
+                <p class="about-text">
+                    Sou João, apaixonado por criar estratégias visuais que contam histórias e transformam marcas. 
+                    Com mais de 9 anos de experiência em publicidade e fotografia, ajudo empresas e profissionais a se destacarem 
+                    no mercado através de conteúdo visual autêntico e campanhas criativas que geram resultados reais.
+                </p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3 class="service-title">Estratégias de Posicionamento</h3>
+                    <p class="service-description">
+                        Planejamento e execução de campanhas digitais que conectam sua marca ao público certo.
+                    </p>
+                </div>
+                
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 class="service-title">Produção de Conteúdo Visual</h3>
+                    <p class="service-description">
+                        Criação de conteúdo visual impactante para redes sociais, sites e campanhas publicitárias.
+                    </p>
+                </div>
+                
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3 class="service-title">Fotografia Corporativa</h3>
+                    <p class="service-description">
+                        Fotografia profissional para empresas, produtos, eventos e perfis corporativos.
+                    </p>
+                </div>
+                
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="service-title">Campanhas Publicitárias</h3>
+                    <p class="service-description">
+                        Desenvolvimento de campanhas criativas que elevam sua marca e impulsionam vendas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Portfólio -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Trabalhos</span>
+                <h2 class="section-title">Portfólio</h2>
+                <div class="title-underline"></div>
+                <p class="section-subtitle">Alguns dos meus trabalhos em fotografia e publicidade</p>
+            </div>
+            
+            <div class="portfolio-carousel">
+                <button class="carousel-btn prev-btn" id="prevBtn" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="portfolio-wrapper">
+                    <div class="portfolio-track" id="portfolioTrack">
+                        <!-- Portfolio Item 1 -->
+                        <div class="portfolio-item">
+                            <div class="portfolio-image">
+                                <img src="portfolio-1-placeholder.jpg" alt="Campanha Marketing Digital">
+                                <div class="portfolio-overlay">
+                                    <div class="portfolio-info">
+                                        <h3>Campanha Marketing Digital</h3>
+                                        <p>Estratégia completa para lançamento de produto</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Portfolio Item 2 -->
+                        <div class="portfolio-item">
+                            <div class="portfolio-image">
+                                <img src="portfolio-2-placeholder.jpg" alt="Fotografia Corporativa">
+                                <div class="portfolio-overlay">
+                                    <div class="portfolio-info">
+                                        <h3>Fotografia Corporativa</h3>
+                                        <p>Ensaio profissional para equipe executiva</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Portfolio Item 3 -->
+                        <div class="portfolio-item">
+                            <div class="portfolio-image">
+                                <img src="portfolio-3-placeholder.jpg" alt="Campanha Publicitária">
+                                <div class="portfolio-overlay">
+                                    <div class="portfolio-info">
+                                        <h3>Campanha Publicitária</h3>
+                                        <p>Criação visual para campanha institucional</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Portfolio Item 4 -->
+                        <div class="portfolio-item">
+                            <div class="portfolio-image">
+                                <img src="portfolio-4-placeholder.jpg" alt="Conteúdo para Redes Sociais">
+                                <div class="portfolio-overlay">
+                                    <div class="portfolio-info">
+                                        <h3>Conteúdo para Redes Sociais</h3>
+                                        <p>Produção de conteúdo visual para Instagram e TikTok</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Portfolio Item 5 -->
+                        <div class="portfolio-item">
+                            <div class="portfolio-image">
+                                <img src="portfolio-5-placeholder.jpg" alt="Fotografia de Produto">
+                                <div class="portfolio-overlay">
+                                    <div class="portfolio-info">
+                                        <h3>Fotografia de Produto</h3>
+                                        <p>Sessão comercial para catálogo de produtos</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Portfolio Item 6 -->
+                        <div class="portfolio-item">
+                            <div class="portfolio-image">
+                                <img src="portfolio-6-placeholder.jpg" alt="Branding Visual">
+                                <div class="portfolio-overlay">
+                                    <div class="portfolio-info">
+                                        <h3>Branding Visual</h3>
+                                        <p>Desenvolvimento de identidade visual completa</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="carousel-btn next-btn" id="nextBtn" aria-label="Próximo">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators" id="carouselIndicators"></div>
+        </div>
+    </section>
+
+    <!-- Seção Depoimentos -->
+    <section id="depoimentos" class="testimonials">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Clientes</span>
+                <h2 class="section-title">O que dizem sobre mim</h2>
+                <div class="title-underline"></div>
+            </div>
+            
+            <div class="testimonials-carousel">
+                <div class="testimonials-track" id="testimonialsTrack">
+                    <!-- Depoimento 1 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "O trabalho do João superou todas as nossas expectativas. As fotos corporativas ficaram incríveis 
+                            e as campanha trouxeram resultados extraordinários para nosso negócio."
+                        </p>
+                        <div class="testimonial-author">
+                            <h4>Maria Clara</h4>
+                            <p>Empresária</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Depoimento 2 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "Profissional extremamente criativo e dedicado. O conteúdo visual que ele criou para nossas 
+                            redes sociais aumentou nosso engajamento em 300%. Recomendo de olhos fechados!"
+                        </p>
+                        <div class="testimonial-author">
+                            <h4>Simone</h4>
+                            <p>Empresária</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Depoimento 3 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "Trabalhar com o João foi uma experiência transformadora. Ele entende profundamente o mercado 
+                            e sabe exatamente como guiar na hora das gravações, me senti super confortavel."
+                        </p>
+                        <div class="testimonial-author">
+                            <h4>Ana Paula</h4>
+                            <p>Empresária</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Depoimento 4 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "Fiz um ensaio corporativo que com toda certeza elevou completamente a percepção 
+                            da minha marca pessoal."
+                        </p>
+                        <div class="testimonial-author">
+                            <h4>Henrique</h4>
+                            <p>Empresário área da Saúde - Prime Store</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Depoimento 5 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "Excelente profissional! A estratégia de conteúdo que ele desenvolveu para nosso Instagram 
+                         foi fundamental Muito obrigada, João!"
+                        </p>
+                        <div class="testimonial-author">
+                            <h4>Talita Santos</h4>
+                            <p>Empresária</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonials Navigation -->
+            <div class="testimonials-nav">
+                <button class="testimonial-nav-btn" id="prevTestimonial" aria-label="Depoimento Anterior">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <button class="testimonial-nav-btn" id="nextTestimonial" aria-label="Próximo Depoimento">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Contato -->
+    <section id="contato" class="contact">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Contato</span>
+                <h2 class="section-title">Vamos conversar</h2>
+                <div class="title-underline"></div>
+                <p class="section-subtitle">Pronto para transformar sua marca? Entre em contato.</p>
+            </div>
+            
+            <div class="contact-wrapper">
+                <!-- Formulário de Contato -->
+                <div class="contact-form-container">
+                    <form id="contactForm" class="contact-form">
+                        <div class="form-group">
+                            <label for="name">Nome Completo</label>
+                            <input type="text" id="name" name="name" required placeholder="Digite seu nome">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Telefone / WhatsApp</label>
+                            <input type="tel" id="phone" name="phone" placeholder="(00) 00000-0000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Mensagem</label>
+                            <textarea id="message" name="message" rows="5" required placeholder="Como posso ajudar você?"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Enviar Mensagem
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Informações de Contato -->
+                <div class="contact-info">
+                    <div class="contact-info-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>E-mail</h4>
+                            <p><a href="mailto:contato@joaovcantuaria.com">contato@joaovcantuaria.com</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Telefone</h4>
+                            <p><a href="tel:+5538999209694">(38) 99920-9604</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>WhatsApp</h4>
+                            <p>
+                                <a href="https://wa.me/5538999209694?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20seus%20serviços." 
+                                   target="_blank" rel="noopener noreferrer">
+                                    Enviar mensagem
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-social">
+                        <h4>Siga-me nas Redes Sociais</h4>
+                        <div class="social-links">
+                            <a href="https://instagram.com/joaovc" target="_blank" rel="noopener noreferrer" class="social-link">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://tiktok.com/@joaovc" target="_blank" rel="noopener noreferrer" class="social-link">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                            <a href="https://wa.me/5538999209694" target="_blank" rel="noopener noreferrer" class="social-link">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>João Vitor Cantuária</h3>
+                    <p>Estratégias Visuais que Transformam</p>
+                </div>
+                
+                <div class="footer-social">
+                    <a href="https://wa.me/5538999309694" target="_blank" rel="noopener noreferrer" 
+                       class="footer-social-link" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://instagram.com/joaovc" target="_blank" rel="noopener noreferrer" 
+                       class="footer-social-link" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://tiktok.com/@joaovc" target="_blank" rel="noopener noreferrer" 
+                       class="footer-social-link" aria-label="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 João Vitor Cantuária Comunicação e Publicidade. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botão Flutuante do WhatsApp -->
+    <a href="https://wa.me/5538999209694?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20seus%20serviços." 
+       class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Botão Scroll to Top -->
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Voltar ao topo">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

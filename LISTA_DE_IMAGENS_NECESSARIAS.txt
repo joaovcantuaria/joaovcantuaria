@@ -1,0 +1,234 @@
+═══════════════════════════════════════════════════════════════════
+  LISTA DE IMAGENS NECESSÁRIAS PARA O SITE
+  João V. Cantuária - Publicidade e Fotografia
+═══════════════════════════════════════════════════════════════════
+
+📸 IMAGENS OBRIGATÓRIAS
+═══════════════════════════════════════════════════════════════════
+
+1. LOGO
+   Nome do arquivo: logo-placeholder.png
+   Tipo: PNG com fundo transparente
+   Dimensões: 200x200px ou 300x300px
+   Peso máximo: 100KB
+   Descrição: Logotipo da empresa João V. Cantuária
+   Onde usar: Header/Menu de navegação
+
+2. HERO BACKGROUND (Escolha uma opção)
+   
+   OPÇÃO A - Imagem:
+   Nome sugerido: hero-bg.jpg
+   Tipo: JPG de alta qualidade
+   Dimensões: 1920x1080px (Full HD)
+   Peso máximo: 500KB
+   Descrição: Imagem que represente publicidade e fotografia
+   Sugestões: 
+   - Equipamento fotográfico em ação
+   - Profissional fotografando
+   - Composição criativa mesclando elementos visuais
+   
+   OPÇÃO B - Vídeo:
+   Nome: hero-video.mp4
+   Tipo: MP4 (H.264)
+   Dimensões: 1920x1080px
+   Duração: 10-30 segundos
+   Peso máximo: 5MB
+   Descrição: Vídeo dinâmico mostrando trabalho de fotografia/publicidade
+
+3. PORTFÓLIO - 6 IMAGENS
+   
+   portfolio-1-placeholder.jpg
+   Tipo: JPG
+   Dimensões: 800x600px (proporção 4:3)
+   Peso máximo: 300KB
+   Sugestão: Campanha de Marketing Digital
+   
+   portfolio-2-placeholder.jpg
+   Tipo: JPG
+   Dimensões: 800x600px
+   Peso máximo: 300KB
+   Sugestão: Fotografia Corporativa / Retrato profissional
+   
+   portfolio-3-placeholder.jpg
+   Tipo: JPG
+   Dimensões: 800x600px
+   Peso máximo: 300KB
+   Sugestão: Campanha Publicitária / Outdoor / Banner
+   
+   portfolio-4-placeholder.jpg
+   Tipo: JPG
+   Dimensões: 800x600px
+   Peso máximo: 300KB
+   Sugestão: Conteúdo para Redes Sociais / Posts Instagram
+   
+   portfolio-5-placeholder.jpg
+   Tipo: JPG
+   Dimensões: 800x600px
+   Peso máximo: 300KB
+   Sugestão: Fotografia de Produto / Still
+   
+   portfolio-6-placeholder.jpg
+   Tipo: JPG
+   Dimensões: 800x600px
+   Peso máximo: 300KB
+   Sugestão: Branding Visual / Identidade Visual
+
+═══════════════════════════════════════════════════════════════════
+📸 IMAGENS OPCIONAIS (Recomendadas)
+═══════════════════════════════════════════════════════════════════
+
+4. FAVICON
+   Nome: favicon.png (ou favicon.ico)
+   Tipo: PNG ou ICO
+   Dimensões: 32x32px ou 64x64px
+   Peso máximo: 10KB
+   Descrição: Ícone pequeno que aparece na aba do navegador
+   Sugestão: Versão simplificada da logo ou iniciais "JVC"
+
+5. SHARE IMAGE (Para redes sociais)
+   Nome: share-image.jpg
+   Tipo: JPG
+   Dimensões: 1200x630px (formato Facebook/LinkedIn)
+   Peso máximo: 500KB
+   Descrição: Imagem que aparece quando o site é compartilhado
+   Sugestão: Logo + slogan "Estratégias Visuais que Transformam"
+
+6. FOTO SOBRE (Opcional)
+   Nome: about-photo.jpg
+   Tipo: JPG
+   Dimensões: 500x500px (quadrada)
+   Peso máximo: 200KB
+   Descrição: Foto profissional de João V. Cantuária
+   Onde usar: Pode ser adicionada na seção "Sobre"
+
+═══════════════════════════════════════════════════════════════════
+🎨 DICAS PARA CRIAR/ESCOLHER AS IMAGENS
+═══════════════════════════════════════════════════════════════════
+
+FOTOGRAFIA:
+- Use imagens de alta qualidade e resolução
+- Mantenha consistência no estilo visual
+- Prefira fotos reais do seu trabalho
+- Evite imagens genéricas de banco de imagens se possível
+
+CORES:
+- As imagens devem harmonizar com a paleta preta/dourada/branca
+- Considere aplicar filtros sutis para unificar o visual
+- Evite imagens muito coloridas que conflitem com o design
+
+COMPOSIÇÃO:
+- Imagens do portfólio devem mostrar claramente o trabalho
+- Evite texto excessivo nas imagens (use as descrições no HTML)
+- Mantenha o foco no trabalho, não em elementos decorativos
+
+BANCOS DE IMAGENS GRATUITOS (Se precisar de placeholders temporários):
+- Unsplash (unsplash.com)
+- Pexels (pexels.com)
+- Pixabay (pixabay.com)
+
+Busque por:
+- "photography equipment"
+- "creative workspace"
+- "advertising campaign"
+- "professional photography"
+- "marketing strategy"
+
+═══════════════════════════════════════════════════════════════════
+🛠️ FERRAMENTAS PARA EDITAR/OTIMIZAR IMAGENS
+═══════════════════════════════════════════════════════════════════
+
+EDIÇÃO BÁSICA (Gratuitas):
+- Canva (canva.com) - Browser, muito fácil
+- Photopea (photopea.com) - Browser, similar ao Photoshop
+- GIMP - Desktop, poderoso e gratuito
+- Pixlr (pixlr.com) - Browser, simples
+
+COMPRESSÃO (Reduzir tamanho sem perder qualidade):
+- TinyPNG (tinypng.com) - Melhor para PNG
+- Squoosh (squoosh.app) - Google, várias opções
+- ImageOptim - Mac, automático
+- JPEG Optimizer - jpegoptimizer.com
+
+REDIMENSIONAMENTO:
+- Bulk Resize Photos (bulkresizephotos.com)
+- Simple Image Resizer (simpleimageresizer.com)
+
+═══════════════════════════════════════════════════════════════════
+📋 CHECKLIST DE PREPARAÇÃO DE IMAGENS
+═══════════════════════════════════════════════════════════════════
+
+Antes de fazer upload das imagens:
+
+[ ] Todas as imagens foram redimensionadas para as dimensões corretas
+[ ] Todas as imagens foram comprimidas (peso abaixo dos limites)
+[ ] Nomes dos arquivos correspondem aos do código
+[ ] Imagens do portfólio representam seu melhor trabalho
+[ ] Logo está em alta resolução e com fundo transparente
+[ ] Favicon foi criado
+[ ] Testei as imagens no site localmente
+[ ] Imagens estão otimizadas para web (RGB, não CMYK)
+[ ] Removi metadados desnecessários das fotos
+
+═══════════════════════════════════════════════════════════════════
+📁 ESTRUTURA DE PASTAS SUGERIDA
+═══════════════════════════════════════════════════════════════════
+
+Organize as imagens assim:
+
+/
+├── index.html
+├── styles.css
+├── script.js
+├── logo-placeholder.png
+├── favicon.png
+├── hero-bg.jpg (ou hero-video.mp4)
+├── portfolio-1-placeholder.jpg
+├── portfolio-2-placeholder.jpg
+├── portfolio-3-placeholder.jpg
+├── portfolio-4-placeholder.jpg
+├── portfolio-5-placeholder.jpg
+├── portfolio-6-placeholder.jpg
+└── share-image.jpg
+
+OU com pasta de imagens:
+
+/
+├── index.html
+├── styles.css
+├── script.js
+└── images/
+    ├── logo.png
+    ├── favicon.png
+    ├── hero-bg.jpg
+    ├── portfolio/
+    │   ├── projeto-1.jpg
+    │   ├── projeto-2.jpg
+    │   ├── projeto-3.jpg
+    │   ├── projeto-4.jpg
+    │   ├── projeto-5.jpg
+    │   └── projeto-6.jpg
+    └── share-image.jpg
+
+Se usar pasta, atualize os caminhos no HTML:
+src="logo.png" → src="images/logo.png"
+
+═══════════════════════════════════════════════════════════════════
+✅ RESUMO RÁPIDO
+═══════════════════════════════════════════════════════════════════
+
+TOTAL DE IMAGENS NECESSÁRIAS:
+- 1 Logo (obrigatória)
+- 1 Hero background ou vídeo (obrigatória)
+- 6 Imagens de portfólio (obrigatórias)
+- 1 Favicon (recomendada)
+- 1 Share image (recomendada)
+
+TOTAL: 8-10 imagens
+
+PESO TOTAL ESTIMADO: ~3-4MB (site otimizado)
+
+═══════════════════════════════════════════════════════════════════
+
+Boa sorte com suas imagens! 📸✨
+
+═══════════════════════════════════════════════════════════════════

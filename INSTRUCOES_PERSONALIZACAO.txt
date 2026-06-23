@@ -1,0 +1,299 @@
+═══════════════════════════════════════════════════════════════════
+  INSTRUÇÕES COMPLETAS DE PERSONALIZAÇÃO
+  Landing Page - João V. Cantuária
+═══════════════════════════════════════════════════════════════════
+
+📋 CHECKLIST DE PERSONALIZAÇÃO OBRIGATÓRIA
+═══════════════════════════════════════════════════════════════════
+
+[ ] 1. NÚMERO DO WHATSAPP
+    Substitua "5511999999999" pelo número real em 4 locais:
+    - index.html: linha do Hero CTA
+    - index.html: linha do botão flutuante
+    - index.html: seção de contato (2x)
+    - script.js: formulário de contato
+    
+    Formato: Código país + DDD + número (sem espaços ou caracteres)
+    Exemplo: 5511987654321 para (11) 98765-4321
+
+[ ] 2. E-MAIL DE CONTATO
+    Substitua "contato@joaovcantuaria.com" pelo e-mail real:
+    - index.html: seção de contato
+
+[ ] 3. REDES SOCIAIS
+    Atualize os links do Instagram e TikTok:
+    - Instagram: https://instagram.com/SEU_USUARIO
+    - TikTok: https://tiktok.com/@SEU_USUARIO
+    
+    Locais no index.html:
+    - Seção de contato
+    - Footer
+
+[ ] 4. LOGO
+    Substitua "logo-placeholder.png" pela imagem real da logo
+    Formato recomendado: PNG com fundo transparente
+    Dimensões: 200x200px ou similar
+
+[ ] 5. IMAGENS DO PORTFÓLIO
+    Substitua os 6 placeholders de imagem:
+    - portfolio-1-placeholder.jpg
+    - portfolio-2-placeholder.jpg
+    - portfolio-3-placeholder.jpg
+    - portfolio-4-placeholder.jpg
+    - portfolio-5-placeholder.jpg
+    - portfolio-6-placeholder.jpg
+    
+    Dimensões recomendadas: 800x600px (4:3)
+    Formato: JPG ou PNG
+    Peso máximo: 500KB cada (comprima se necessário)
+
+[ ] 6. VÍDEO/IMAGEM DE FUNDO DO HERO
+    Opção A - Vídeo:
+    - Descomente as linhas do <video> no index.html
+    - Adicione seu vídeo como "hero-video.mp4"
+    - Formato: MP4, peso máximo 5MB
+    
+    Opção B - Imagem:
+    - Edite o CSS da classe .hero-background
+    - Adicione: background-image: url('hero-bg.jpg');
+    - Dimensões: 1920x1080px
+
+═══════════════════════════════════════════════════════════════════
+📝 PERSONALIZAÇÕES DE CONTEÚDO
+═══════════════════════════════════════════════════════════════════
+
+TEXTOS PARA REVISAR/PERSONALIZAR:
+
+1. Hero Section
+   - Título principal
+   - Subtítulo
+   - Texto do botão CTA
+
+2. Sobre/Serviços
+   - Descrição sobre você
+   - Títulos dos 4 serviços
+   - Descrições dos serviços
+
+3. Portfólio
+   - Títulos dos 6 projetos
+   - Descrições dos projetos
+
+4. Depoimentos
+   - 5 depoimentos completos
+   - Nomes dos clientes
+   - Empresas dos clientes
+
+5. Contato
+   - Telefone
+   - Endereço (se aplicável)
+
+═══════════════════════════════════════════════════════════════════
+🎨 PERSONALIZAÇÃO DE CORES
+═══════════════════════════════════════════════════════════════════
+
+Para alterar a paleta de cores, edite as variáveis no styles.css:
+
+CORES ATUAIS:
+- Preto: #000000 (principal)
+- Dourado: #FFD700 (destaque/acento)
+- Branco: #FFFFFF (secundária)
+
+ONDE EDITAR (styles.css, linhas 11-15):
+:root {
+    --color-primary: #000000;     /* Cor principal */
+    --color-secondary: #FFFFFF;   /* Cor secundária */
+    --color-accent: #FFD700;      /* Cor de destaque */
+    --color-accent-dark: #DAA520; /* Versão escura do destaque */
+}
+
+SUGESTÕES DE PALETAS ALTERNATIVAS:
+
+Paleta Azul Profissional:
+--color-primary: #1a1a2e;
+--color-accent: #0f3460;
+--color-accent-dark: #16213e;
+
+Paleta Verde Elegante:
+--color-primary: #0d1b2a;
+--color-accent: #2ec4b6;
+--color-accent-dark: #1b998b;
+
+Paleta Roxo Criativo:
+--color-primary: #1e1e1e;
+--color-accent: #9d4edd;
+--color-accent-dark: #7b2cbf;
+
+═══════════════════════════════════════════════════════════════════
+🖼️ OTIMIZAÇÃO DE IMAGENS
+═══════════════════════════════════════════════════════════════════
+
+FERRAMENTAS GRATUITAS PARA COMPRIMIR IMAGENS:
+- TinyPNG (https://tinypng.com)
+- Squoosh (https://squoosh.app)
+- ImageOptim (para Mac)
+
+TAMANHOS RECOMENDADOS:
+- Logo: 200x200px (PNG transparente) < 100KB
+- Hero Background: 1920x1080px (JPG) < 500KB
+- Portfólio: 800x600px (JPG) < 300KB cada
+- Ícones: Use Font Awesome (já incluído)
+
+FORMATOS:
+- Logo/Ícones: PNG (com transparência)
+- Fotos: JPG (melhor compressão)
+- Gráficos: PNG ou SVG
+
+═══════════════════════════════════════════════════════════════════
+🚀 PUBLICAÇÃO DO SITE
+═══════════════════════════════════════════════════════════════════
+
+OPÇÃO 1 - GITHUB PAGES (Gratuito, Recomendado)
+1. Crie conta no GitHub (github.com)
+2. Crie novo repositório
+3. Faça upload de todos os arquivos
+4. Vá em Settings > Pages
+5. Selecione branch: main
+6. Clique em Save
+7. Acesse: https://seuusuario.github.io/nome-repositorio
+
+OPÇÃO 2 - NETLIFY (Gratuito, Muito Fácil)
+1. Acesse netlify.com
+2. Arraste a pasta do projeto
+3. Pronto! Site publicado em segundos
+4. Personalize domínio se desejar
+
+OPÇÃO 3 - VERCEL (Gratuito, Profissional)
+1. Acesse vercel.com
+2. Conecte com GitHub ou faça upload
+3. Deploy automático
+
+DOMÍNIO PERSONALIZADO:
+- Registre www.joaovcantuaria.com em:
+  * Registro.br (Brasil)
+  * GoDaddy
+  * Namecheap
+  * Google Domains
+
+═══════════════════════════════════════════════════════════════════
+⚡ MELHORIAS E FUNCIONALIDADES EXTRAS
+═══════════════════════════════════════════════════════════════════
+
+FÁCEIS DE ADICIONAR:
+
+1. FAVICON
+   Adicione no <head> do index.html:
+   <link rel="icon" type="image/png" href="favicon.png">
+
+2. GOOGLE ANALYTICS
+   Adicione no <head> do index.html:
+   <!-- Código do Google Analytics aqui -->
+
+3. FACEBOOK PIXEL
+   Para rastrear conversões em anúncios
+
+4. CHAT ONLINE
+   - Tidio
+   - JivoChat
+   - Tawk.to (gratuito)
+
+5. FORMULÁRIO ALTERNATIVO
+   - Formspree
+   - Google Forms
+   - Netlify Forms
+
+═══════════════════════════════════════════════════════════════════
+🔍 SEO - OTIMIZAÇÃO PARA MOTORES DE BUSCA
+═══════════════════════════════════════════════════════════════════
+
+JÁ INCLUÍDO:
+✓ Meta tags básicas
+✓ Estrutura semântica HTML5
+✓ Alt text em imagens
+✓ URLs amigáveis
+
+PARA ADICIONAR:
+
+1. Google Search Console
+   - Registre seu site
+   - Envie sitemap
+
+2. Meta Tags Adicionais (no <head>):
+   <meta property="og:title" content="João V. Cantuária - Publicidade e Fotografia">
+   <meta property="og:description" content="Estratégias Visuais que Transformam">
+   <meta property="og:image" content="https://seusite.com/share-image.jpg">
+   <meta property="og:url" content="https://www.joaovcantuaria.com">
+   <meta name="twitter:card" content="summary_large_image">
+
+3. Sitemap.xml
+   Crie um arquivo sitemap.xml na raiz
+
+4. Robots.txt
+   Crie um arquivo robots.txt na raiz
+
+═══════════════════════════════════════════════════════════════════
+📱 TESTE EM DISPOSITIVOS
+═══════════════════════════════════════════════════════════════════
+
+ANTES DE PUBLICAR, TESTE EM:
+[ ] Chrome Desktop
+[ ] Firefox Desktop
+[ ] Safari Desktop (se tiver Mac)
+[ ] Chrome Mobile (Android)
+[ ] Safari Mobile (iPhone)
+[ ] Tablet
+
+FERRAMENTAS PARA TESTAR:
+- Chrome DevTools (F12 > Toggle Device Toolbar)
+- Responsinator.com
+- BrowserStack (testes reais)
+
+═══════════════════════════════════════════════════════════════════
+❓ DÚVIDAS COMUNS
+═══════════════════════════════════════════════════════════════════
+
+P: Como mudar a fonte?
+R: Troque as fontes no Google Fonts no <head> e atualize as
+   variáveis --font-heading e --font-body no CSS.
+
+P: Como adicionar mais itens ao portfólio?
+R: Copie um .portfolio-item existente e cole abaixo dos outros.
+   O carrossel se ajusta automaticamente.
+
+P: Como remover uma seção?
+R: Remova a seção completa do HTML e o link correspondente no menu.
+
+P: O formulário não envia?
+R: Verifique se o número do WhatsApp está correto no formato
+   internacional (código país + DDD + número).
+
+P: Posso usar em projetos comerciais?
+R: Sim! Este código é seu para usar como quiser.
+
+═══════════════════════════════════════════════════════════════════
+✅ ANTES DE PUBLICAR - CHECKLIST FINAL
+═══════════════════════════════════════════════════════════════════
+
+[ ] Todos os textos foram personalizados
+[ ] Número do WhatsApp está correto
+[ ] E-mail está correto
+[ ] Links das redes sociais estão corretos
+[ ] Logo foi substituída
+[ ] Imagens do portfólio foram substituídas
+[ ] Imagem/vídeo do hero foi adicionada
+[ ] Depoimentos foram personalizados
+[ ] Cores foram ajustadas (se necessário)
+[ ] Favicon foi adicionado
+[ ] Site foi testado no celular
+[ ] Site foi testado no desktop
+[ ] Todos os links funcionam
+[ ] Formulário de contato funciona
+[ ] Botões do WhatsApp funcionam
+
+═══════════════════════════════════════════════════════════════════
+
+Sucesso com seu novo site! 🚀✨
+
+Para suporte ou dúvidas adicionais sobre o código, consulte o
+arquivo README.md ou a documentação dos arquivos HTML, CSS e JS.
+
+═══════════════════════════════════════════════════════════════════

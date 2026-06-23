@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Dashboard</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+    <!-- Sidebar Admin -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-sidebar-header">
+            <div class="admin-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Admin Panel</span>
+            </div>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <nav class="admin-nav">
+            <a href="#dashboard" class="admin-nav-item active" data-section="dashboard">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#clientes" class="admin-nav-item" data-section="clientes">
+                <i class="fas fa-users"></i>
+                <span>Clientes</span>
+            </a>
+            <a href="#projetos" class="admin-nav-item" data-section="projetos">
+                <i class="fas fa-folder-open"></i>
+                <span>Projetos</span>
+            </a>
+            <a href="#fotos" class="admin-nav-item" data-section="fotos">
+                <i class="fas fa-images"></i>
+                <span>Sistema de Fotos</span>
+            </a>
+            <a href="#financeiro" class="admin-nav-item" data-section="financeiro">
+                <i class="fas fa-dollar-sign"></i>
+                <span>Financeiro</span>
+            </a>
+            <a href="#portfolio" class="admin-nav-item" data-section="portfolio">
+                <i class="fas fa-camera"></i>
+                <span>Portfólio</span>
+            </a>
+            <a href="#depoimentos" class="admin-nav-item" data-section="depoimentos">
+                <i class="fas fa-star"></i>
+                <span>Depoimentos</span>
+            </a>
+            <a href="#configuracoes" class="admin-nav-item" data-section="configuracoes">
+                <i class="fas fa-cog"></i>
+                <span>Configurações</span>
+            </a>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+            <button class="btn-admin-logout" id="adminLogoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <!-- Top Bar -->
+        <header class="admin-topbar">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <h1 class="admin-page-title">Dashboard</h1>
+            
+            <div class="admin-topbar-actions">
+                <a href="../index.html" target="_blank" class="btn-view-site">
+                    <i class="fas fa-external-link-alt"></i> Ver Site
+                </a>
+                <div class="admin-user-info">
+                    <span class="admin-user-name">Admin</span>
+                    <i class="fas fa-user-shield"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="admin-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="admin-section active">
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalClientes">0</h3>
+                            <p>Total de Clientes</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalProjetos">0</h3>
+                            <p>Projetos Ativos</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-stat-card">
+                        <div class="stat-icon gold">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="receitaMes">R$ 0</h3>
+                            <p>Receita do Mês</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="fotosEntregues">0</h3>
+                            <p>Fotos Entregues</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-cards-row">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3>Atividades Recentes</h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="activity-list" id="activityList">
+                                <p class="empty-state">Nenhuma atividade recente</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3>Projetos Urgentes</h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="urgent-projects" id="urgentProjects">
+                                <p class="empty-state">Nenhum projeto urgente</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clientes Section -->
+            <section id="clientes-section" class="admin-section">
+                <div class="section-header">
+                    <h2>Gerenciamento de Clientes</h2>
+                    <button class="btn-admin-primary" onclick="openAddClientModal()">
+                        <i class="fas fa-plus"></i> Novo Cliente
+                    </button>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <div class="table-responsive">
+                            <table class="admin-table" id="clientesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Telefone</th>
+                                        <th>Projetos</th>
+                                        <th>Data Cadastro</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientesTableBody">
+                                    <tr>
+                                        <td colspan="6" class="empty-state">Carregando clientes...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projetos Section -->
+            <section id="projetos-section" class="admin-section">
+                <div class="section-header">
+                    <h2>Gerenciamento de Projetos</h2>
+                    <button class="btn-admin-primary" onclick="openAddProjectModal()">
+                        <i class="fas fa-plus"></i> Novo Projeto
+                    </button>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <div class="projects-grid" id="projectsGrid">
+                            <p class="empty-state">Carregando projetos...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Financeiro Section -->
+            <section id="financeiro-section" class="admin-section">
+                <div class="section-header">
+                    <h2>Gestão Financeira Privada</h2>
+                    <div>
+                        <button class="btn-admin-success" onclick="openAddIncomeModal()">
+                            <i class="fas fa-plus"></i> Receita
+                        </button>
+                        <button class="btn-admin-danger" onclick="openAddExpenseModal()">
+                            <i class="fas fa-minus"></i> Despesa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalReceitas">R$ 0</h3>
+                            <p>Total Receitas</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-stat-card">
+                        <div class="stat-icon red">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalDespesas">R$ 0</h3>
+                            <p>Total Despesas</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="saldoLiquido">R$ 0</h3>
+                            <p>Saldo Líquido</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <div class="table-responsive">
+                            <table class="admin-table" id="financeiroTable">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                        <th>Categoria</th>
+                                        <th>Valor</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="financeiroTableBody">
+                                    <tr>
+                                        <td colspan="6" class="empty-state">Nenhuma transação registrada</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Outras seções (simplificadas por enquanto) -->
+            <section id="fotos-section" class="admin-section">
+                <h2>Sistema de Provas de Fotos</h2>
+                <p>Sistema de upload e aprovação de fotos - Em desenvolvimento</p>
+            </section>
+
+            <section id="portfolio-section" class="admin-section">
+                <h2>Gerenciar Portfólio</h2>
+                <p>Gestão do portfólio do site - Em desenvolvimento</p>
+            </section>
+
+            <section id="depoimentos-section" class="admin-section">
+                <h2>Gerenciar Depoimentos</h2>
+                <p>Gestão de depoimentos - Em desenvolvimento</p>
+            </section>
+
+            <section id="configuracoes-section" class="admin-section">
+                <h2>Configurações do Site</h2>
+                <p>Configurações gerais - Em desenvolvimento</p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // SALVAR REFERÊNCIA AO SDK IMEDIATAMENTE
+        const supabaseSDK = window.supabase;
+        
+        const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+
+        var supabase = null;
+
+        // Inicialização
+        function initSupabase() {
+            if (!supabaseSDK) {
+                console.error('❌ SDK do Supabase NÃO foi salvo!');
+                return false;
+            }
+
+            try {
+                supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Cliente Supabase criado no admin dashboard!');
+                return true;
+            } catch (error) {
+                console.error('❌ Erro ao criar cliente:', error);
+                return false;
+            }
+        }
+
+        // Executar IMEDIATAMENTE
+        console.log('🚀 Inicializando Supabase no admin dashboard...');
+        initSupabase();
+    </script>
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Login</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-login-body">
+    <div class="admin-login-container">
+        <div class="admin-login-card">
+            <div class="admin-login-header">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Painel Administrativo</h1>
+                <p>João V. Cantuária - Sistema de Gestão</p>
+            </div>
+
+            <!-- Mensagem de Erro/Sucesso -->
+            <div id="adminMessage" class="admin-message"></div>
+
+            <form id="adminLoginForm" class="admin-login-form">
+                <div class="form-group">
+                    <label for="adminEmail">
+                        <i class="fas fa-user-shield"></i> E-mail Administrativo
+                    </label>
+                    <input type="email" 
+                           id="adminEmail" 
+                           name="email" 
+                           required 
+                           placeholder="admin@joaovcantuaria.com"
+                           autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="adminPassword">
+                        <i class="fas fa-lock"></i> Senha
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" 
+                               id="adminPassword" 
+                               name="password" 
+                               required 
+                               placeholder="••••••••"
+                               autocomplete="current-password">
+                        <button type="button" class="toggle-password" data-target="adminPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-admin-login">
+                    <i class="fas fa-sign-in-alt"></i> Acessar Painel
+                </button>
+            </form>
+
+            <div class="admin-login-footer">
+                <a href="../index.html">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Site
+                </a>
+            </div>
+
+            <div class="admin-info">
+                <p><strong>⚠️ Área Restrita</strong></p>
+                <p>Acesso apenas para administradores autorizados.</p>
+                <p class="admin-credentials-demo">
+                    <small>Demo: admin@joaovcantuaria.com / Admin@2026</small>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // SALVAR REFERÊNCIA AO SDK IMEDIATAMENTE
+        const supabaseSDK = window.supabase;
+        
+        const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+
+        var supabase = null;
+
+        // Inicialização
+        function initSupabase() {
+            if (!supabaseSDK) {
+                console.error('❌ SDK do Supabase NÃO foi salvo!');
+                return false;
+            }
+
+            try {
+                supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Cliente Supabase criado no admin!');
+                return true;
+            } catch (error) {
+                console.error('❌ Erro ao criar cliente:', error);
+                return false;
+            }
+        }
+
+        // Executar IMEDIATAMENTE
+        console.log('🚀 Inicializando Supabase no painel admin...');
+        initSupabase();
+    </script>
+    <script src="admin-auth.js"></script>
+</body>
+</html>
