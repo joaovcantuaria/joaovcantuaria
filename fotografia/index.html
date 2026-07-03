@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="João Vitor Cantuária - Fotografia Corporativa, Produto, Ensaio Pessoal e Eventos">
+    <title>Fotografia - João Vitor Cantuária</title>
+    <link rel="stylesheet" href="fotografia.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <a href="../index.html">
+                            <span class="logo-text">JVC</span>
+                        </a>
+                    </div>
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="#sobre" class="nav-link">Sobre</a></li>
+                        <li><a href="#portfolio" class="nav-link">Portfólio</a></li>
+                        <li><a href="#pacotes" class="nav-link">Pacotes</a></li>
+                        <li><a href="#contato" class="nav-link">Contato</a></li>
+                        <li><a href="#selecao" class="nav-link btn-highlight">Seleção de Fotos</a></li>
+                    </ul>
+                    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-eyebrow">Fotografia Profissional</span>
+            <h1 class="hero-title">
+                Cada história merece ser <span class="highlight">contada com arte.</span>
+            </h1>
+            <p class="hero-subtitle">Corporativa · Produto · Ensaio Pessoal · Eventos</p>
+            <div class="hero-ctas">
+                <a href="https://wa.me/5538999209694?text=Olá,%20gostaria%20de%20um%20orçamento%20de%20fotografia." class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                    Solicitar Orçamento
+                </a>
+                <a href="#portfolio" class="btn btn-secondary">Ver Trabalhos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre" class="section-sobre">
+        <div class="container">
+            <div class="sobre-content fade-in">
+                <div class="gold-line"></div>
+                <span class="section-label">Minha História</span>
+                <p class="sobre-text">
+                    Minha história com a fotografia começou antes mesmo de eu ter uma câmera. Com uma Cybershot emprestada, eu já saía fotografando tudo que via, porque o olhar veio antes do equipamento.
+                </p>
+                <p class="sobre-text">
+                    Em 2017, aos 18 anos, tive meu primeiro contato real com uma câmera DSLR. O que começou como uma necessidade de gerar renda se transformou em algo muito maior — um amor genuíno por registrar o mundo através das lentes.
+                </p>
+                <p class="sobre-text">
+                    Quase 10 anos depois, com uma pausa no meio do caminho e muito aprendizado acumulado, sigo firme nessa caminhada. Hoje levo esse olhar para o universo corporativo e empresarial, acreditando que cada empresa, cada profissional e cada momento tem uma história única que merece ser contada com cuidado e com arte.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfólio com categorias -->
+    <section id="portfolio" class="section-portfolio">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Trabalhos</span>
+                <h2 class="section-title">Portfólio Fotográfico</h2>
+                <div class="gold-line"></div>
+            </div>
+
+            <!-- Filtro de categorias -->
+            <div class="portfolio-filter fade-in">
+                <button class="filter-btn active" data-filter="todos">Todos</button>
+                <button class="filter-btn" data-filter="corporativa">Corporativa</button>
+                <button class="filter-btn" data-filter="produto">Produto</button>
+                <button class="filter-btn" data-filter="pessoal">Ensaio Pessoal</button>
+                <button class="filter-btn" data-filter="eventos">Eventos</button>
+            </div>
+
+            <!-- Grid de fotos -->
+            <div class="portfolio-grid" id="portfolioGrid">
+                <!-- Placeholder fotos — substitua pelos seus trabalhos reais -->
+                <div class="portfolio-item" data-category="corporativa">
+                    <img src="../portfolio-1-placeholder.jpg" alt="Fotografia Corporativa" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <span class="portfolio-category">Corporativa</span>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="produto">
+                    <img src="../portfolio-2-placeholder.jpg" alt="Fotografia de Produto" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <span class="portfolio-category">Produto</span>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="pessoal">
+                    <img src="../portfolio-3-placeholder.jpg" alt="Ensaio Pessoal" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <span class="portfolio-category">Ensaio Pessoal</span>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="eventos">
+                    <img src="../portfolio-4-placeholder.jpg" alt="Eventos" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <span class="portfolio-category">Eventos</span>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="corporativa">
+                    <img src="../portfolio-5-placeholder.jpg" alt="Fotografia Corporativa" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <span class="portfolio-category">Corporativa</span>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="produto">
+                    <img src="../portfolio-6-placeholder.jpg" alt="Fotografia de Produto" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <span class="portfolio-category">Produto</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pacotes -->
+    <section id="pacotes" class="section-pacotes">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Investimento</span>
+                <h2 class="section-title">Pacotes de Fotografia</h2>
+                <div class="gold-line"></div>
+                <p class="section-subtitle">Cada projeto é único. Valores podem ser ajustados conforme a necessidade.</p>
+            </div>
+
+            <div class="pacotes-grid">
+                <!-- Pacote 1 -->
+                <div class="pacote-card fade-in">
+                    <div class="pacote-header">
+                        <span class="pacote-icon"><i class="fas fa-user"></i></span>
+                        <h3>Ensaio Pessoal</h3>
+                    </div>
+                    <div class="pacote-price">
+                        <span class="price-label">A partir de</span>
+                        <span class="price-value">R$ 350</span>
+                    </div>
+                    <ul class="pacote-features">
+                        <li><i class="fas fa-check"></i> 1 hora de sessão</li>
+                        <li><i class="fas fa-check"></i> 15 fotos editadas</li>
+                        <li><i class="fas fa-check"></i> 1 locação</li>
+                        <li><i class="fas fa-check"></i> Entrega em 7 dias</li>
+                        <li><i class="fas fa-check"></i> Galeria online privada</li>
+                    </ul>
+                    <a href="https://wa.me/5538999209694?text=Olá,%20tenho%20interesse%20no%20pacote%20Ensaio%20Pessoal." class="btn btn-pacote" target="_blank" rel="noopener noreferrer">
+                        Solicitar Orçamento
+                    </a>
+                </div>
+
+                <!-- Pacote 2 -->
+                <div class="pacote-card featured fade-in">
+                    <div class="pacote-badge">Mais Popular</div>
+                    <div class="pacote-header">
+                        <span class="pacote-icon"><i class="fas fa-building"></i></span>
+                        <h3>Corporativo</h3>
+                    </div>
+                    <div class="pacote-price">
+                        <span class="price-label">A partir de</span>
+                        <span class="price-value">R$ 800</span>
+                    </div>
+                    <ul class="pacote-features">
+                        <li><i class="fas fa-check"></i> 2 horas de sessão</li>
+                        <li><i class="fas fa-check"></i> 30 fotos editadas</li>
+                        <li><i class="fas fa-check"></i> Fotos de equipe e individuais</li>
+                        <li><i class="fas fa-check"></i> Entrega em 5 dias</li>
+                        <li><i class="fas fa-check"></i> Galeria online privada</li>
+                        <li><i class="fas fa-check"></i> Direito de uso comercial</li>
+                    </ul>
+                    <a href="https://wa.me/5538999209694?text=Olá,%20tenho%20interesse%20no%20pacote%20Corporativo." class="btn btn-pacote btn-featured" target="_blank" rel="noopener noreferrer">
+                        Solicitar Orçamento
+                    </a>
+                </div>
+
+                <!-- Pacote 3 -->
+                <div class="pacote-card fade-in">
+                    <div class="pacote-header">
+                        <span class="pacote-icon"><i class="fas fa-calendar-alt"></i></span>
+                        <h3>Eventos</h3>
+                    </div>
+                    <div class="pacote-price">
+                        <span class="price-label">A partir de</span>
+                        <span class="price-value">R$ 1.200</span>
+                    </div>
+                    <ul class="pacote-features">
+                        <li><i class="fas fa-check"></i> Cobertura completa</li>
+                        <li><i class="fas fa-check"></i> 100+ fotos editadas</li>
+                        <li><i class="fas fa-check"></i> Fotos espontâneas + posadas</li>
+                        <li><i class="fas fa-check"></i> Entrega em 10 dias</li>
+                        <li><i class="fas fa-check"></i> Galeria online privada</li>
+                        <li><i class="fas fa-check"></i> Highlight em 48h</li>
+                    </ul>
+                    <a href="https://wa.me/5538999209694?text=Olá,%20tenho%20interesse%20no%20pacote%20Eventos." class="btn btn-pacote" target="_blank" rel="noopener noreferrer">
+                        Solicitar Orçamento
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seleção de Fotos -->
+    <section id="selecao" class="section-selecao">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Entrega</span>
+                <h2 class="section-title">Seleção de Fotos</h2>
+                <div class="gold-line"></div>
+                <p class="section-subtitle">Acesse sua galeria privada para visualizar e selecionar as fotos do seu ensaio.</p>
+            </div>
+
+            <div class="selecao-card fade-in">
+                <div class="selecao-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Área Exclusiva do Cliente</h3>
+                <p>Insira o código recebido para acessar sua galeria de fotos.</p>
+                <form id="selecaoForm" class="selecao-form">
+                    <div class="input-group">
+                        <input type="text" id="codigoAcesso" placeholder="Digite seu código de acesso" required>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+                <p class="selecao-help">Não tem um código? <a href="https://wa.me/5538999209694?text=Olá,%20preciso%20do%20código%20de%20acesso%20da%20minha%20galeria%20de%20fotos." target="_blank" rel="noopener noreferrer">Entre em contato</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Orçamento -->
+    <section id="contato" class="section-cta">
+        <div class="container">
+            <div class="cta-content fade-in">
+                <div class="gold-line"></div>
+                <h2 class="cta-title">Pronto para registrar sua história?</h2>
+                <p class="cta-text">Cada projeto é pensado de forma única. Conte-me sobre o que você precisa.</p>
+                <a href="https://wa.me/5538999209694?text=Olá,%20gostaria%20de%20um%20orçamento%20personalizado%20de%20fotografia." class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                    Orçamento Personalizado
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span>JVC</span>
+                    <p>Fotografia com propósito.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="https://instagram.com/joaovc" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/5538999209694" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 João Vitor Cantuária. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/5538999209694?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20fotografia." class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="fotografia.js"></script>
+</body>
+</html>
