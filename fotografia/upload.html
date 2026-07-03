@@ -547,16 +547,22 @@
         }
 
         function verSelecao(fotos) {
-            const urls = fotos.map(f => `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400,q_80/${f}.jpg`);
+            const items = fotos.map(f => {
+                const nome = f.split('/').pop();
+                const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400,q_80/${f}.jpg`;
+                return `<div class="foto-item"><img src="${url}"><p>${nome}</p></div>`;
+            });
             const win = window.open('', '_blank');
             win.document.write(`
                 <html><head><title>Fotos Selecionadas</title>
-                <style>body{background:#0a0a0a;padding:2rem;font-family:sans-serif;color:#fff;}
+                <style>body{background:#0a0a0a;padding:2rem;font-family:'DM Sans',sans-serif;color:#fff;}
                 h2{font-size:1.2rem;margin-bottom:1.5rem;font-weight:300;color:#C6A972;}
-                .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
-                .grid img{width:100%;border:1px solid rgba(255,255,255,0.1);}</style></head>
+                .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+                .foto-item{border:1px solid rgba(255,255,255,0.1);overflow:hidden;}
+                .foto-item img{width:100%;display:block;}
+                .foto-item p{padding:0.5rem 0.75rem;font-size:0.75rem;color:rgba(255,255,255,0.5);letter-spacing:0.03em;background:#111;margin:0;}</style></head>
                 <body><h2>${fotos.length} foto(s) selecionada(s)</h2><div class="grid">
-                ${urls.map(u => `<img src="${u}">`).join('')}
+                ${items.join('')}
                 </div></body></html>
             `);
         }

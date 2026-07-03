@@ -45,9 +45,11 @@
         }
         .galeria-item.selected .check-badge { display: flex; }
         .galeria-item .foto-number {
-            position: absolute; bottom: 8px; left: 8px;
-            font-size: 0.65rem; color: rgba(255,255,255,0.4);
-            letter-spacing: 0.05em;
+            position: absolute; bottom: 0; left: 0; right: 0;
+            font-size: 0.65rem; color: rgba(255,255,255,0.7);
+            letter-spacing: 0.03em; padding: 0.4rem 0.6rem;
+            background: rgba(0,0,0,0.7);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
         .galeria-empty {
@@ -311,7 +313,7 @@
                 item.innerHTML = `
                     <img src="${imageUrl}" alt="Foto ${index + 1}" loading="lazy">
                     <div class="check-badge"><i class="fas fa-check"></i></div>
-                    <span class="foto-number">${index + 1}</span>
+                    <span class="foto-number">${publicId.split('/').pop()}</span>
                 `;
 
                 // Clique para selecionar/desselecionar
