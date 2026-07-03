@@ -3,11 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload de Fotos - Painel</title>
+    <title>Painel de Fotografia - JVC</title>
     <link rel="stylesheet" href="fotografia.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Tela de login */
+        .login-gate {
+            min-height: 100vh; display: flex; align-items: center;
+            justify-content: center; padding: 2rem;
+        }
+        .login-gate-card {
+            background: var(--black-card); border: 1px solid var(--border);
+            padding: 3rem; max-width: 380px; width: 100%; text-align: center;
+        }
+        .login-gate-card i.lock-icon {
+            font-size: 2rem; color: var(--gold); margin-bottom: 1.5rem; display: block;
+        }
+        .login-gate-card h2 {
+            font-size: 1.2rem; font-weight: 400; margin-bottom: 0.4rem;
+        }
+        .login-gate-card > p {
+            font-size: 0.82rem; color: var(--white-dim); margin-bottom: 2rem; font-weight: 300;
+        }
+        .login-gate-card input {
+            width: 100%; background: transparent;
+            border: none; border-bottom: 1px solid rgba(255,255,255,0.13);
+            padding: 0.75rem 0; font-size: 0.95rem; color: var(--white);
+            font-family: 'DM Sans', sans-serif; outline: none; text-align: center;
+            letter-spacing: 0.1em;
+        }
+        .login-gate-card input:focus { border-bottom-color: var(--gold); }
+        .login-gate-card input::placeholder { color: rgba(255,255,255,0.18); }
+        .login-gate-card .btn-entrar {
+            width: 100%; margin-top: 2rem; padding: 0.85rem;
+            background: var(--gold); color: var(--black); border: none;
+            font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+            font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .login-gate-card .btn-entrar:hover { background: #d4b87a; }
+        .login-gate-card .erro-msg {
+            color: #ff6b6b; font-size: 0.8rem; margin-top: 1rem; display: none;
+        }
+
+        /* Conteúdo protegido */
+        .painel-protegido { display: none; }
+        .painel-protegido.visible { display: block; }
+
         .upload-page { padding: 6rem 2rem 4rem; min-height: 100vh; }
         .upload-card {
             max-width: 700px; margin: 0 auto;
@@ -103,6 +146,22 @@
     </style>
 </head>
 <body>
+    <!-- TELA DE LOGIN -->
+    <div class="login-gate" id="loginGate">
+        <div class="login-gate-card">
+            <i class="fas fa-lock lock-icon"></i>
+            <h2>Painel de Fotografia</h2>
+            <p>Área restrita. Digite a senha para acessar.</p>
+            <form id="loginGateForm">
+                <input type="password" id="senhaInput" placeholder="••••••••" autocomplete="off">
+                <button type="submit" class="btn-entrar">Acessar Painel</button>
+            </form>
+            <p class="erro-msg" id="erroMsg">Senha incorreta.</p>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO PROTEGIDO -->
+    <div class="painel-protegido" id="painelProtegido">
     <!-- Header -->
     <header id="header" class="scrolled">
         <nav class="navbar">
@@ -560,5 +619,37 @@
         .btn-action:hover { border-color: var(--gold); color: var(--gold); }
         .btn-delete:hover { border-color: #ff6b6b; color: #ff6b6b; }
     </style>
+
+    </div><!-- fim painel-protegido -->
+
+    <!-- Script de autenticação do painel -->
+    <script>
+        const SENHA_HASH = '6a4f7d8e'; // hash simplificado
+        const SENHA_CORRETA = 'Carmed1921@';
+        const SESSION_KEY = 'painel_foto_auth';
+
+        // Verificar se já está autenticado na sessão
+        if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+            document.getElementById('loginGate').style.display = 'none';
+            document.getElementById('painelProtegido').classList.add('visible');
+        }
+
+        document.getElementById('loginGateForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const senha = document.getElementById('senhaInput').value;
+
+            if (senha === SENHA_CORRETA) {
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                document.getElementById('loginGate').style.display = 'none';
+                document.getElementById('painelProtegido').classList.add('visible');
+            } else {
+                document.getElementById('erroMsg').style.display = 'block';
+                document.getElementById('senhaInput').value = '';
+                setTimeout(() => {
+                    document.getElementById('erroMsg').style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
 </body>
 </html>
