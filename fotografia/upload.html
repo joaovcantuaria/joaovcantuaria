@@ -349,9 +349,6 @@
                 formData.append('upload_preset', UPLOAD_PRESET);
                 formData.append('folder', `galerias/${codigo}`);
                 formData.append('tags', codigo);
-                // Usar nome original do arquivo (sem extensão) como public_id
-                const originalName = file.name.replace(/\.[^/.]+$/, '');
-                formData.append('public_id', `galerias/${codigo}/${originalName}`);
                 formData.append('use_filename', 'true');
                 formData.append('unique_filename', 'false');
 
