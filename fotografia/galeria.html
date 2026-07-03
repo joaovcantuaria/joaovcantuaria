@@ -110,14 +110,15 @@
 
         // Buscar fotos da galeria no Cloudinary
         async function loadGaleria() {
-            const folder = `galerias/${codigo}`;
+            // Tentar buscar via endpoint de lista por tag
             const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${codigo}.json`;
 
             try {
                 const response = await fetch(url);
                 
                 if (!response.ok) {
-                    showEmpty();
+                    // Se tag não funcionar, tentar buscar via Supabase
+                    await loadFromSupabase();
                     return;
                 }
 
@@ -125,34 +126,66 @@
                 const fotos = data.resources || [];
 
                 if (fotos.length === 0) {
-                    showEmpty();
+                    await loadFromSupabase();
                     return;
                 }
 
-                document.getElementById('galeriaTitulo').textContent = `Galeria: ${codigo.toUpperCase()}`;
-                document.getElementById('galeriaCount').textContent = `${fotos.length} foto${fotos.length > 1 ? 's' : ''}`;
-
-                const grid = document.createElement('div');
-                grid.className = 'galeria-grid';
-
-                fotos.forEach(foto => {
-                    // URL com marca d'água aplicada via transformação do Cloudinary
-                    const imageUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/l_text:Arial_50_bold:Cópia não autorizada,co_white,o_40,g_center,a_-25/l_text:Arial_50_bold:Cópia não autorizada,co_white,o_40,g_north_east,a_-25/l_text:Arial_50_bold:Cópia não autorizada,co_white,o_40,g_south_west,a_-25/c_fill,w_800,h_600,q_80/${foto.public_id}.jpg`;
-
-                    const item = document.createElement('div');
-                    item.className = 'galeria-item';
-                    item.innerHTML = `<img src="${imageUrl}" alt="Foto" loading="lazy">`;
-                    item.addEventListener('click', () => openLightbox(imageUrl));
-                    grid.appendChild(item);
-                });
-
-                document.getElementById('galeriaContent').innerHTML = '';
-                document.getElementById('galeriaContent').appendChild(grid);
+                renderGaleria(fotos.map(f => f.public_id));
 
             } catch (error) {
                 console.error('Erro ao carregar galeria:', error);
+                await loadFromSupabase();
+            }
+        }
+
+        // Fallback: buscar do Supabase
+        async function loadFromSupabase() {
+            try {
+                const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+                const SUPABASE_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+                
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/galerias?codigo=eq.${codigo}&select=fotos`,
+                    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+                );
+                
+                const data = await response.json();
+                
+                if (data && data.length > 0 && data[0].fotos) {
+                    renderGaleria(data[0].fotos);
+                } else {
+                    showEmpty();
+                }
+            } catch {
                 showEmpty();
             }
+        }
+
+        function renderGaleria(publicIds) {
+            if (!publicIds || publicIds.length === 0) {
+                showEmpty();
+                return;
+            }
+
+            document.getElementById('galeriaTitulo').textContent = `Galeria: ${codigo.toUpperCase()}`;
+            document.getElementById('galeriaCount').textContent = `${publicIds.length} foto${publicIds.length > 1 ? 's' : ''}`;
+
+            const grid = document.createElement('div');
+            grid.className = 'galeria-grid';
+
+            publicIds.forEach(publicId => {
+                // URL com marca d'água via transformação Cloudinary
+                const imageUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/l_text:Arial_45_bold:Cópia não autorizada,co_white,o_35,g_center,a_-30/l_text:Arial_45_bold:Cópia não autorizada,co_white,o_35,g_north_east,a_-30,y_100/l_text:Arial_45_bold:Cópia não autorizada,co_white,o_35,g_south_west,a_-30,y_100/c_fill,w_800,h_600,q_80/${publicId}.jpg`;
+
+                const item = document.createElement('div');
+                item.className = 'galeria-item';
+                item.innerHTML = `<img src="${imageUrl}" alt="Foto" loading="lazy">`;
+                item.addEventListener('click', () => openLightbox(imageUrl));
+                grid.appendChild(item);
+            });
+
+            document.getElementById('galeriaContent').innerHTML = '';
+            document.getElementById('galeriaContent').appendChild(grid);
         }
 
         function showEmpty() {
