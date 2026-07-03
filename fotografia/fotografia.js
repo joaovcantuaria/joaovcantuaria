@@ -93,12 +93,11 @@ const selecaoForm = document.getElementById('selecaoForm');
 if (selecaoForm) {
     selecaoForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const codigo = document.getElementById('codigoAcesso').value.trim();
+        const codigo = document.getElementById('codigoAcesso').value.trim().toLowerCase().replace(/\s+/g, '_');
 
         if (!codigo) return;
 
-        // Por enquanto redireciona para WhatsApp com o código
-        // Futuramente pode integrar com Supabase Storage
-        alert('Funcionalidade em desenvolvimento!\n\nEm breve você poderá acessar sua galeria com o código.\n\nPor enquanto, entre em contato via WhatsApp informando seu código.');
+        // Redirecionar para a galeria com o código
+        window.location.href = `galeria.html?codigo=${codigo}`;
     });
 }

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria - João Vitor Cantuária</title>
+    <link rel="stylesheet" href="fotografia.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .galeria-page { padding: 6rem 2rem 4rem; min-height: 100vh; }
+        .galeria-header { text-align: center; margin-bottom: 3rem; }
+        .galeria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 4px;
+        }
+        .galeria-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            background: var(--black-card);
+        }
+        .galeria-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .galeria-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--white-dim);
+        }
+        .galeria-empty i { font-size: 3rem; color: var(--gold); margin-bottom: 1.5rem; display: block; }
+        .galeria-back { 
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            color: var(--gold); text-decoration: none; font-size: 0.8rem;
+            letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem;
+            opacity: 0.7; transition: opacity 0.3s;
+        }
+        .galeria-back:hover { opacity: 1; }
+        .galeria-count {
+            font-size: 0.75rem; color: var(--white-dim); margin-top: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+        /* Lightbox */
+        .lightbox {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            z-index: 10000; align-items: center; justify-content: center; padding: 2rem;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .lightbox-close {
+            position: absolute; top: 1.5rem; right: 1.5rem; background: none;
+            border: none; color: var(--gold); font-size: 1.5rem; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header" class="scrolled">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo"><a href="index.html"><span class="logo-text">JVC</span></a></div>
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link">Fotografia</a></li>
+                        <li><a href="../index.html" class="nav-link">Site Principal</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="galeria-page">
+        <div class="container">
+            <a href="index.html#selecao" class="galeria-back"><i class="fas fa-arrow-left"></i> Voltar</a>
+            
+            <div class="galeria-header">
+                <span class="section-label">Galeria Exclusiva</span>
+                <h1 class="section-title" id="galeriaTitulo">Carregando...</h1>
+                <p class="galeria-count" id="galeriaCount"></p>
+            </div>
+
+            <div id="galeriaContent">
+                <div class="galeria-empty">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Carregando suas fotos...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+        <img id="lightboxImg" src="" alt="Foto">
+    </div>
+
+    <script>
+        const CLOUD_NAME = 'cpfik4ih';
+
+        // Pegar código da URL
+        const params = new URLSearchParams(window.location.search);
+        const codigo = params.get('codigo');
+
+        if (!codigo) {
+            window.location.href = 'index.html#selecao';
+        }
+
+        // Buscar fotos da galeria no Cloudinary
+        async function loadGaleria() {
+            const folder = `galerias/${codigo}`;
+            const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${codigo}.json`;
+
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    showEmpty();
+                    return;
+                }
+
+                const data = await response.json();
+                const fotos = data.resources || [];
+
+                if (fotos.length === 0) {
+                    showEmpty();
+                    return;
+                }
+
+                document.getElementById('galeriaTitulo').textContent = `Galeria: ${codigo.toUpperCase()}`;
+                document.getElementById('galeriaCount').textContent = `${fotos.length} foto${fotos.length > 1 ? 's' : ''}`;
+
+                const grid = document.createElement('div');
+                grid.className = 'galeria-grid';
+
+                fotos.forEach(foto => {
+                    // URL com marca d'água aplicada via transformação do Cloudinary
+                    const imageUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/l_text:Arial_50_bold:Cópia não autorizada,co_white,o_40,g_center,a_-25/l_text:Arial_50_bold:Cópia não autorizada,co_white,o_40,g_north_east,a_-25/l_text:Arial_50_bold:Cópia não autorizada,co_white,o_40,g_south_west,a_-25/c_fill,w_800,h_600,q_80/${foto.public_id}.jpg`;
+
+                    const item = document.createElement('div');
+                    item.className = 'galeria-item';
+                    item.innerHTML = `<img src="${imageUrl}" alt="Foto" loading="lazy">`;
+                    item.addEventListener('click', () => openLightbox(imageUrl));
+                    grid.appendChild(item);
+                });
+
+                document.getElementById('galeriaContent').innerHTML = '';
+                document.getElementById('galeriaContent').appendChild(grid);
+
+            } catch (error) {
+                console.error('Erro ao carregar galeria:', error);
+                showEmpty();
+            }
+        }
+
+        function showEmpty() {
+            document.getElementById('galeriaTitulo').textContent = 'Galeria não encontrada';
+            document.getElementById('galeriaContent').innerHTML = `
+                <div class="galeria-empty">
+                    <i class="fas fa-image"></i>
+                    <p>Nenhuma foto encontrada para esse código.</p>
+                    <p style="margin-top:1rem;font-size:0.8rem;color:rgba(255,255,255,0.3)">
+                        Verifique se o código está correto ou entre em contato.
+                    </p>
+                </div>`;
+        }
+
+        // Lightbox
+        function openLightbox(src) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        document.getElementById('lightboxClose').addEventListener('click', () => {
+            document.getElementById('lightbox').classList.remove('active');
+        });
+
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lightbox')) {
+                document.getElementById('lightbox').classList.remove('active');
+            }
+        });
+
+        // Bloquear clique direito nas fotos
+        document.addEventListener('contextmenu', (e) => {
+            if (e.target.tagName === 'IMG') e.preventDefault();
+        });
+
+        // Carregar galeria
+        loadGaleria();
+    </script>
+</body>
+</html>

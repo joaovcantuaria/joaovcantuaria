@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Fotos - Painel</title>
+    <link rel="stylesheet" href="fotografia.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .upload-page { padding: 6rem 2rem 4rem; min-height: 100vh; }
+        .upload-card {
+            max-width: 700px; margin: 0 auto;
+            background: var(--black-card); border: 1px solid var(--border);
+            padding: 3rem;
+        }
+        .upload-card h2 { font-size: 1.3rem; font-weight: 400; margin-bottom: 0.5rem; }
+        .upload-card > p { font-size: 0.85rem; color: var(--white-dim); margin-bottom: 2.5rem; font-weight: 300; }
+
+        .form-group { margin-bottom: 2rem; }
+        .form-group label {
+            display: block; font-size: 0.68rem; font-weight: 500;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: rgba(255,255,255,0.38); margin-bottom: 0.55rem;
+        }
+        .form-group input[type="text"] {
+            width: 100%; background: transparent;
+            border: none; border-bottom: 1px solid rgba(255,255,255,0.13);
+            padding: 0.7rem 0; font-size: 0.95rem; color: var(--white);
+            font-family: var(--font-body); outline: none;
+        }
+        .form-group input:focus { border-bottom-color: var(--gold); }
+        .form-group input::placeholder { color: rgba(255,255,255,0.18); }
+
+        .dropzone {
+            border: 2px dashed var(--border);
+            padding: 3rem 2rem; text-align: center;
+            cursor: pointer; transition: var(--transition);
+            margin-bottom: 2rem;
+        }
+        .dropzone:hover, .dropzone.dragover { border-color: var(--gold); background: rgba(198,169,114,0.03); }
+        .dropzone i { font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem; display: block; }
+        .dropzone p { font-size: 0.85rem; color: var(--white-dim); }
+        .dropzone small { font-size: 0.75rem; color: rgba(255,255,255,0.25); margin-top: 0.5rem; display: block; }
+
+        .file-input { display: none; }
+
+        .preview-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem; margin-bottom: 2rem;
+        }
+        .preview-item {
+            aspect-ratio: 1; overflow: hidden; position: relative;
+            background: var(--black-soft);
+        }
+        .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+        .preview-item .remove {
+            position: absolute; top: 4px; right: 4px;
+            background: rgba(0,0,0,0.7); color: var(--white);
+            border: none; width: 20px; height: 20px;
+            font-size: 0.6rem; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+        }
+
+        .btn-upload {
+            width: 100%; padding: 0.9rem; background: var(--gold);
+            color: var(--black); border: none; font-family: var(--font-body);
+            font-size: 0.78rem; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; cursor: pointer; transition: var(--transition);
+        }
+        .btn-upload:hover { background: #d4b87a; }
+        .btn-upload:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .progress-bar {
+            width: 100%; height: 3px; background: var(--border-subtle);
+            margin-top: 1rem; display: none;
+        }
+        .progress-fill { height: 100%; background: var(--gold); width: 0; transition: width 0.3s; }
+
+        .result-box {
+            margin-top: 2rem; padding: 1.5rem; border: 1px solid var(--border);
+            background: rgba(198,169,114,0.03); display: none;
+        }
+        .result-box h4 { font-size: 0.85rem; font-weight: 500; margin-bottom: 0.75rem; color: var(--gold); }
+        .result-box .link-copy {
+            display: flex; gap: 0.5rem; align-items: center;
+        }
+        .result-box input {
+            flex: 1; background: var(--black); border: 1px solid var(--border-subtle);
+            padding: 0.6rem 0.75rem; color: var(--white); font-size: 0.82rem;
+            font-family: var(--font-body); outline: none;
+        }
+        .result-box button {
+            background: var(--gold); color: var(--black); border: none;
+            padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 600;
+            cursor: pointer; letter-spacing: 0.1em; text-transform: uppercase;
+        }
+
+        .upload-info {
+            margin-top: 2rem; font-size: 0.78rem; color: rgba(255,255,255,0.3);
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header" class="scrolled">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo"><a href="index.html"><span class="logo-text">JVC</span></a></div>
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link">Fotografia</a></li>
+                        <li><a href="../index.html" class="nav-link">Site Principal</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="upload-page">
+        <div class="container">
+            <div class="upload-card">
+                <h2>Upload de Galeria</h2>
+                <p>Suba as fotos do ensaio e gere o link de acesso para o cliente.</p>
+
+                <div class="form-group">
+                    <label for="codigoGaleria">Código da Galeria</label>
+                    <input type="text" id="codigoGaleria" placeholder="Ex: maria2026, empresa_abc">
+                </div>
+
+                <div class="dropzone" id="dropzone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Arraste as fotos aqui ou clique para selecionar</p>
+                    <small>JPG, PNG, WebP — até 10MB por foto</small>
+                </div>
+                <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
+
+                <div class="preview-grid" id="previewGrid"></div>
+
+                <button class="btn-upload" id="btnUpload" disabled>
+                    <i class="fas fa-upload"></i> Enviar Fotos
+                </button>
+
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div class="result-box" id="resultBox">
+                    <h4><i class="fas fa-check-circle"></i> Upload concluído!</h4>
+                    <p style="font-size:0.8rem;color:var(--white-dim);margin-bottom:1rem;">Envie esse link para o cliente:</p>
+                    <div class="link-copy">
+                        <input type="text" id="linkResult" readonly>
+                        <button onclick="copyLink()">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="upload-info">
+                    <p><strong>Como funciona:</strong></p>
+                    <p>1. Digite um código único para a galeria (ex: nome do cliente + ano)</p>
+                    <p>2. Selecione as fotos do ensaio</p>
+                    <p>3. Clique em "Enviar Fotos" — todas serão enviadas com marca d'água automática</p>
+                    <p>4. Copie o link gerado e envie para o cliente</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const CLOUD_NAME = 'cpfik4ih';
+        const UPLOAD_PRESET = 'galeria_clientes';
+
+        let selectedFiles = [];
+
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const previewGrid = document.getElementById('previewGrid');
+        const btnUpload = document.getElementById('btnUpload');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const resultBox = document.getElementById('resultBox');
+
+        // Dropzone — clique
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        // Dropzone — drag & drop
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        // Input de arquivo
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            const newFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+            selectedFiles = [...selectedFiles, ...newFiles];
+            renderPreviews();
+            btnUpload.disabled = selectedFiles.length === 0;
+        }
+
+        function renderPreviews() {
+            previewGrid.innerHTML = selectedFiles.map((file, i) => {
+                const url = URL.createObjectURL(file);
+                return `<div class="preview-item">
+                    <img src="${url}" alt="Preview">
+                    <button class="remove" onclick="removeFile(${i})"><i class="fas fa-times"></i></button>
+                </div>`;
+            }).join('');
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderPreviews();
+            btnUpload.disabled = selectedFiles.length === 0;
+        }
+
+        // Upload
+        btnUpload.addEventListener('click', async () => {
+            const codigo = document.getElementById('codigoGaleria').value.trim().toLowerCase().replace(/\s+/g, '_');
+
+            if (!codigo) {
+                alert('Digite o código da galeria!');
+                return;
+            }
+
+            if (selectedFiles.length === 0) return;
+
+            btnUpload.disabled = true;
+            btnUpload.textContent = 'Enviando...';
+            progressBar.style.display = 'block';
+
+            let uploaded = 0;
+            const total = selectedFiles.length;
+
+            for (const file of selectedFiles) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', UPLOAD_PRESET);
+                formData.append('folder', `galerias/${codigo}`);
+                formData.append('tags', codigo);
+
+                try {
+                    await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    uploaded++;
+                    progressFill.style.width = `${(uploaded / total) * 100}%`;
+                } catch (error) {
+                    console.error('Erro no upload:', error);
+                }
+            }
+
+            // Finalizado
+            btnUpload.textContent = `✓ ${uploaded} fotos enviadas`;
+
+            const baseUrl = window.location.origin + '/fotografia/galeria.html';
+            const link = `${baseUrl}?codigo=${codigo}`;
+            document.getElementById('linkResult').value = link;
+            resultBox.style.display = 'block';
+
+            selectedFiles = [];
+            previewGrid.innerHTML = '';
+        });
+
+        function copyLink() {
+            const input = document.getElementById('linkResult');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            event.target.textContent = 'Copiado!';
+            setTimeout(() => { event.target.textContent = 'Copiar'; }, 2000);
+        }
+    </script>
+</body>
+</html>
