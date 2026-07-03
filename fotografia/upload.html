@@ -391,7 +391,7 @@
                             'Content-Type': 'application/json',
                             'Prefer': 'return=minimal'
                         },
-                        body: JSON.stringify({ fotos: allFotos })
+                        body: JSON.stringify({ fotos: allFotos, nome_album: nomeAlbum || null, fotos_inclusas: fotosInclusas, valor_foto_extra: valorFotoExtra })
                     });
                 } else {
                     // Criar nova galeria
