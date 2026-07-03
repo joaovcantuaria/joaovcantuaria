@@ -163,6 +163,16 @@
                     <p>4. Copie o link gerado e envie para o cliente</p>
                 </div>
             </div>
+
+            <!-- PAINEL DE GALERIAS -->
+            <div class="upload-card" style="margin-top:2rem;">
+                <h2><i class="fas fa-images" style="color:var(--gold);margin-right:0.5rem;"></i>Minhas Galerias</h2>
+                <p>Gerencie todas as galerias criadas.</p>
+
+                <div id="galeriasLista" style="margin-top:2rem;">
+                    <p style="color:rgba(255,255,255,0.3);font-size:0.85rem;text-align:center;">Carregando...</p>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -334,6 +344,132 @@
             event.target.textContent = 'Copiado!';
             setTimeout(() => { event.target.textContent = 'Copiar'; }, 2000);
         }
+
+        // ========================================
+        // GERENCIAMENTO DE GALERIAS
+        // ========================================
+        const SUPABASE_URL_G = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+        const SUPABASE_KEY_G = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+
+        async function loadGalerias() {
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL_G}/rest/v1/galerias?select=*&order=criado_em.desc`,
+                    { headers: { 'apikey': SUPABASE_KEY_G, 'Authorization': `Bearer ${SUPABASE_KEY_G}` } }
+                );
+                const galerias = await response.json();
+
+                const container = document.getElementById('galeriasLista');
+
+                if (!galerias || galerias.length === 0) {
+                    container.innerHTML = '<p style="color:rgba(255,255,255,0.3);font-size:0.85rem;text-align:center;">Nenhuma galeria criada ainda.</p>';
+                    return;
+                }
+
+                container.innerHTML = galerias.map(g => {
+                    const numFotos = g.fotos ? g.fotos.length : 0;
+                    const data = new Date(g.criado_em).toLocaleDateString('pt-BR');
+                    const link = `${window.location.origin}/fotografia/galeria.html?codigo=${g.codigo}`;
+                    
+                    return `
+                    <div class="galeria-row" id="galeria-${g.id}">
+                        <div class="galeria-row-info">
+                            <strong>${g.codigo.toUpperCase()}</strong>
+                            <span>${numFotos} foto${numFotos !== 1 ? 's' : ''} · ${data}</span>
+                        </div>
+                        <div class="galeria-row-actions">
+                            <button class="btn-action btn-copy" onclick="copyGaleriaLink('${link}')" title="Copiar link">
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <a href="${link}" target="_blank" class="btn-action btn-view" title="Visualizar">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                            <button class="btn-action btn-delete" onclick="deleteGaleria('${g.codigo}', ${g.id})" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                }).join('');
+
+            } catch (error) {
+                console.error('Erro ao carregar galerias:', error);
+                document.getElementById('galeriasLista').innerHTML = '<p style="color:#ff6b6b;font-size:0.85rem;">Erro ao carregar galerias.</p>';
+            }
+        }
+
+        function copyGaleriaLink(link) {
+            navigator.clipboard.writeText(link);
+            alert('Link copiado!');
+        }
+
+        async function deleteGaleria(codigo, id) {
+            if (!confirm(`Excluir a galeria "${codigo.toUpperCase()}"?\n\nAs fotos no Cloudinary não serão apagadas automaticamente.`)) return;
+
+            try {
+                await fetch(`${SUPABASE_URL_G}/rest/v1/galerias?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_KEY_G,
+                        'Authorization': `Bearer ${SUPABASE_KEY_G}`,
+                        'Prefer': 'return=minimal'
+                    }
+                });
+
+                document.getElementById(`galeria-${id}`).remove();
+                
+                // Verificar se ficou vazio
+                const remaining = document.querySelectorAll('.galeria-row');
+                if (remaining.length === 0) {
+                    document.getElementById('galeriasLista').innerHTML = '<p style="color:rgba(255,255,255,0.3);font-size:0.85rem;text-align:center;">Nenhuma galeria criada ainda.</p>';
+                }
+
+            } catch (error) {
+                console.error('Erro ao excluir:', error);
+                alert('Erro ao excluir galeria.');
+            }
+        }
+
+        // Carregar galerias ao abrir a página
+        loadGalerias();
     </script>
+
+    <style>
+        .galeria-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .galeria-row:last-child { border-bottom: none; }
+        .galeria-row-info strong {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.03em;
+        }
+        .galeria-row-info span {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
+        }
+        .galeria-row-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn-action {
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.4);
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-action:hover { border-color: var(--gold); color: var(--gold); }
+        .btn-delete:hover { border-color: #ff6b6b; color: #ff6b6b; }
+    </style>
 </body>
 </html>
