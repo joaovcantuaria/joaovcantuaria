@@ -9,10 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .galeria-page { padding: 6rem 2rem 4rem; min-height: 100vh; }
-        .galeria-header { text-align: center; margin-bottom: 3rem; }
+        .galeria-header { text-align: center; margin-bottom: 1.5rem; }
+        .galeria-instrucao {
+            text-align: center; font-size: 0.82rem; color: var(--white-dim);
+            margin-bottom: 2.5rem; font-weight: 300;
+        }
         .galeria-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 4px;
         }
         .galeria-item {
@@ -20,19 +24,37 @@
             aspect-ratio: 4/3;
             overflow: hidden;
             background: var(--black-card);
+            cursor: pointer;
+            transition: outline 0.2s ease, opacity 0.2s ease;
+            outline: 3px solid transparent;
+            outline-offset: -3px;
         }
         .galeria-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100%; height: 100%; object-fit: cover;
+            pointer-events: none;
         }
+        .galeria-item.selected {
+            outline-color: #C6A972;
+        }
+        .galeria-item .check-badge {
+            position: absolute; top: 10px; right: 10px;
+            width: 28px; height: 28px;
+            background: #C6A972; color: #0a0a0a;
+            display: none; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700;
+        }
+        .galeria-item.selected .check-badge { display: flex; }
+        .galeria-item .foto-number {
+            position: absolute; bottom: 8px; left: 8px;
+            font-size: 0.65rem; color: rgba(255,255,255,0.4);
+            letter-spacing: 0.05em;
+        }
+
         .galeria-empty {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--white-dim);
+            text-align: center; padding: 4rem 2rem; color: var(--white-dim);
         }
         .galeria-empty i { font-size: 3rem; color: var(--gold); margin-bottom: 1.5rem; display: block; }
-        .galeria-back { 
+        .galeria-back {
             display: inline-flex; align-items: center; gap: 0.5rem;
             color: var(--gold); text-decoration: none; font-size: 0.8rem;
             letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem;
@@ -43,16 +65,104 @@
             font-size: 0.75rem; color: var(--white-dim); margin-top: 0.5rem;
             letter-spacing: 0.05em;
         }
+
+        /* Barra de seleção fixa */
+        .selecao-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(10,10,10,0.95); backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(198,169,114,0.2);
+            padding: 1rem 2rem;
+            display: none; align-items: center; justify-content: space-between;
+            z-index: 9999;
+        }
+        .selecao-bar.visible { display: flex; }
+        .selecao-bar-info {
+            font-size: 0.85rem; color: var(--white-dim);
+        }
+        .selecao-bar-info strong { color: #C6A972; }
+        .btn-enviar-selecao {
+            background: #C6A972; color: #0a0a0a; border: none;
+            padding: 0.7rem 1.8rem; font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; cursor: pointer; transition: all 0.3s;
+        }
+        .btn-enviar-selecao:hover { background: #d4b87a; }
+        .btn-enviar-selecao:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Modal de envio */
+        .modal-selecao {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.9); z-index: 10001;
+            align-items: center; justify-content: center; padding: 2rem;
+        }
+        .modal-selecao.active { display: flex; }
+        .modal-selecao-content {
+            background: #161616; border: 1px solid rgba(198,169,114,0.2);
+            padding: 2.5rem; max-width: 420px; width: 100%;
+        }
+        .modal-selecao-content h3 {
+            font-size: 1.1rem; font-weight: 400; margin-bottom: 0.5rem;
+        }
+        .modal-selecao-content > p {
+            font-size: 0.82rem; color: rgba(255,255,255,0.5); margin-bottom: 2rem; font-weight: 300;
+        }
+        .modal-selecao-content .form-group { margin-bottom: 1.5rem; }
+        .modal-selecao-content label {
+            display: block; font-size: 0.68rem; font-weight: 500;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: rgba(255,255,255,0.38); margin-bottom: 0.5rem;
+        }
+        .modal-selecao-content input,
+        .modal-selecao-content textarea {
+            width: 100%; background: transparent;
+            border: none; border-bottom: 1px solid rgba(255,255,255,0.13);
+            padding: 0.7rem 0; font-size: 0.95rem; color: #fff;
+            font-family: 'DM Sans', sans-serif; outline: none; resize: none;
+        }
+        .modal-selecao-content input:focus,
+        .modal-selecao-content textarea:focus { border-bottom-color: #C6A972; }
+        .modal-selecao-content input::placeholder,
+        .modal-selecao-content textarea::placeholder { color: rgba(255,255,255,0.18); }
+
+        .modal-buttons { display: flex; gap: 1rem; margin-top: 2rem; }
+        .btn-cancelar {
+            flex: 1; background: transparent; border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5); padding: 0.75rem;
+            font-family: 'DM Sans', sans-serif; font-size: 0.75rem;
+            letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+        }
+        .btn-confirmar {
+            flex: 1; background: #C6A972; color: #0a0a0a; border: none;
+            padding: 0.75rem; font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; cursor: pointer;
+        }
+
+        /* Sucesso */
+        .sucesso-msg {
+            text-align: center; padding: 2rem;
+        }
+        .sucesso-msg i { font-size: 2.5rem; color: #C6A972; margin-bottom: 1rem; display: block; }
+        .sucesso-msg h3 { font-size: 1.1rem; font-weight: 400; margin-bottom: 0.5rem; }
+        .sucesso-msg p { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+
         /* Lightbox */
         .lightbox {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
             z-index: 10000; align-items: center; justify-content: center; padding: 2rem;
         }
         .lightbox.active { display: flex; }
-        .lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .lightbox img { max-width: 90%; max-height: 85%; object-fit: contain; }
         .lightbox-close {
             position: absolute; top: 1.5rem; right: 1.5rem; background: none;
-            border: none; color: var(--gold); font-size: 1.5rem; cursor: pointer;
+            border: none; color: #C6A972; font-size: 1.5rem; cursor: pointer;
+        }
+        .lightbox-select {
+            position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            background: #C6A972; color: #0a0a0a; border: none;
+            padding: 0.6rem 1.5rem; font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; cursor: pointer;
         }
     </style>
 </head>
@@ -75,12 +185,16 @@
     <main class="galeria-page">
         <div class="container">
             <a href="index.html#selecao" class="galeria-back"><i class="fas fa-arrow-left"></i> Voltar</a>
-            
+
             <div class="galeria-header">
                 <span class="section-label">Galeria Exclusiva</span>
                 <h1 class="section-title" id="galeriaTitulo">Carregando...</h1>
                 <p class="galeria-count" id="galeriaCount"></p>
             </div>
+
+            <p class="galeria-instrucao" id="galeriaInstrucao" style="display:none;">
+                Clique nas fotos que você mais gostou para selecionar. Depois clique em <strong>"Enviar Seleção"</strong>.
+            </p>
 
             <div id="galeriaContent">
                 <div class="galeria-empty">
@@ -91,96 +205,127 @@
         </div>
     </main>
 
+    <!-- Barra fixa de seleção -->
+    <div class="selecao-bar" id="selecaoBar">
+        <div class="selecao-bar-info">
+            <strong id="selecaoCount">0</strong> foto(s) selecionada(s)
+        </div>
+        <button class="btn-enviar-selecao" id="btnEnviarSelecao">Enviar Seleção</button>
+    </div>
+
+    <!-- Modal de envio -->
+    <div class="modal-selecao" id="modalSelecao">
+        <div class="modal-selecao-content" id="modalContent">
+            <h3>Confirmar Seleção</h3>
+            <p>Preencha seus dados para enviarmos as fotos selecionadas.</p>
+            <div class="form-group">
+                <label>Seu Nome</label>
+                <input type="text" id="clienteNome" placeholder="Digite seu nome">
+            </div>
+            <div class="form-group">
+                <label>Observações (opcional)</label>
+                <textarea id="clienteMensagem" rows="3" placeholder="Alguma observação sobre as fotos?"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancelar" id="btnCancelarSelecao">Cancelar</button>
+                <button class="btn-confirmar" id="btnConfirmarSelecao">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
         <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
         <img id="lightboxImg" src="" alt="Foto">
+        <button class="lightbox-select" id="lightboxSelect">Selecionar esta foto</button>
     </div>
 
     <script>
         const CLOUD_NAME = 'cpfik4th';
+        const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
 
-        // Pegar código da URL
         const params = new URLSearchParams(window.location.search);
         const codigo = params.get('codigo');
 
-        if (!codigo) {
-            window.location.href = 'index.html#selecao';
-        }
+        if (!codigo) window.location.href = 'index.html#selecao';
 
-        // Buscar fotos da galeria no Cloudinary
+        let allPhotos = [];
+        let selectedPhotos = new Set();
+        let currentLightboxId = null;
+
+        // ========================================
+        // CARREGAR GALERIA
+        // ========================================
         async function loadGaleria() {
-            // Tentar buscar via endpoint de lista por tag
             const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${codigo}.json`;
-
             try {
                 const response = await fetch(url);
-                
-                if (!response.ok) {
-                    // Se tag não funcionar, tentar buscar via Supabase
-                    await loadFromSupabase();
-                    return;
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.resources && data.resources.length > 0) {
+                        allPhotos = data.resources.map(f => f.public_id);
+                        renderGaleria();
+                        return;
+                    }
                 }
-
-                const data = await response.json();
-                const fotos = data.resources || [];
-
-                if (fotos.length === 0) {
-                    await loadFromSupabase();
-                    return;
-                }
-
-                renderGaleria(fotos.map(f => f.public_id));
-
-            } catch (error) {
-                console.error('Erro ao carregar galeria:', error);
+                await loadFromSupabase();
+            } catch {
                 await loadFromSupabase();
             }
         }
 
-        // Fallback: buscar do Supabase
         async function loadFromSupabase() {
             try {
-                const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
-                const SUPABASE_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
-                
                 const response = await fetch(
                     `${SUPABASE_URL}/rest/v1/galerias?codigo=eq.${codigo}&select=fotos`,
                     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
                 );
-                
                 const data = await response.json();
-                
-                if (data && data.length > 0 && data[0].fotos) {
-                    renderGaleria(data[0].fotos);
+                if (data && data.length > 0 && data[0].fotos && data[0].fotos.length > 0) {
+                    allPhotos = data[0].fotos;
+                    renderGaleria();
                 } else {
                     showEmpty();
                 }
-            } catch {
-                showEmpty();
-            }
+            } catch { showEmpty(); }
         }
 
-        function renderGaleria(publicIds) {
-            if (!publicIds || publicIds.length === 0) {
-                showEmpty();
-                return;
-            }
-
+        // ========================================
+        // RENDERIZAR GALERIA
+        // ========================================
+        function renderGaleria() {
             document.getElementById('galeriaTitulo').textContent = `Galeria: ${codigo.toUpperCase()}`;
-            document.getElementById('galeriaCount').textContent = `${publicIds.length} foto${publicIds.length > 1 ? 's' : ''}`;
+            document.getElementById('galeriaCount').textContent = `${allPhotos.length} foto${allPhotos.length > 1 ? 's' : ''}`;
+            document.getElementById('galeriaInstrucao').style.display = 'block';
 
             const grid = document.createElement('div');
             grid.className = 'galeria-grid';
 
-            publicIds.forEach(publicId => {
-                // URL com marca d'água via transformação Cloudinary
+            allPhotos.forEach((publicId, index) => {
                 const imageUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/l_text:Arial_45_bold:Cópia não autorizada,co_white,o_35,g_center,a_-30/l_text:Arial_45_bold:Cópia não autorizada,co_white,o_35,g_north_east,a_-30,y_100/l_text:Arial_45_bold:Cópia não autorizada,co_white,o_35,g_south_west,a_-30,y_100/w_900,q_80/${publicId}.jpg`;
 
                 const item = document.createElement('div');
                 item.className = 'galeria-item';
-                item.innerHTML = `<img src="${imageUrl}" alt="Foto" loading="lazy">`;
-                item.addEventListener('click', () => openLightbox(imageUrl));
+                item.dataset.id = publicId;
+                item.innerHTML = `
+                    <img src="${imageUrl}" alt="Foto ${index + 1}" loading="lazy">
+                    <div class="check-badge"><i class="fas fa-check"></i></div>
+                    <span class="foto-number">${index + 1}</span>
+                `;
+
+                // Clique para selecionar/desselecionar
+                item.addEventListener('click', (e) => {
+                    toggleSelect(publicId, item);
+                });
+
+                // Duplo clique para lightbox
+                item.addEventListener('dblclick', (e) => {
+                    e.preventDefault();
+                    currentLightboxId = publicId;
+                    openLightbox(imageUrl, publicId);
+                });
+
                 grid.appendChild(item);
             });
 
@@ -188,22 +333,107 @@
             document.getElementById('galeriaContent').appendChild(grid);
         }
 
-        function showEmpty() {
-            document.getElementById('galeriaTitulo').textContent = 'Galeria não encontrada';
-            document.getElementById('galeriaContent').innerHTML = `
-                <div class="galeria-empty">
-                    <i class="fas fa-image"></i>
-                    <p>Nenhuma foto encontrada para esse código.</p>
-                    <p style="margin-top:1rem;font-size:0.8rem;color:rgba(255,255,255,0.3)">
-                        Verifique se o código está correto ou entre em contato.
-                    </p>
-                </div>`;
+        // ========================================
+        // SELEÇÃO
+        // ========================================
+        function toggleSelect(publicId, element) {
+            if (selectedPhotos.has(publicId)) {
+                selectedPhotos.delete(publicId);
+                element.classList.remove('selected');
+            } else {
+                selectedPhotos.add(publicId);
+                element.classList.add('selected');
+            }
+            updateSelecaoBar();
         }
 
-        // Lightbox
-        function openLightbox(src) {
+        function updateSelecaoBar() {
+            const bar = document.getElementById('selecaoBar');
+            const count = document.getElementById('selecaoCount');
+            count.textContent = selectedPhotos.size;
+
+            if (selectedPhotos.size > 0) {
+                bar.classList.add('visible');
+            } else {
+                bar.classList.remove('visible');
+            }
+        }
+
+        // ========================================
+        // ENVIAR SELEÇÃO
+        // ========================================
+        document.getElementById('btnEnviarSelecao').addEventListener('click', () => {
+            document.getElementById('modalSelecao').classList.add('active');
+        });
+
+        document.getElementById('btnCancelarSelecao').addEventListener('click', () => {
+            document.getElementById('modalSelecao').classList.remove('active');
+        });
+
+        document.getElementById('btnConfirmarSelecao').addEventListener('click', async () => {
+            const nome = document.getElementById('clienteNome').value.trim();
+            const mensagem = document.getElementById('clienteMensagem').value.trim();
+            const btn = document.getElementById('btnConfirmarSelecao');
+
+            if (!nome) {
+                alert('Por favor, digite seu nome.');
+                return;
+            }
+
+            btn.textContent = 'Enviando...';
+            btn.disabled = true;
+
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/selecoes`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        codigo: codigo,
+                        fotos_selecionadas: Array.from(selectedPhotos),
+                        nome_cliente: nome,
+                        mensagem: mensagem || null
+                    })
+                });
+
+                // Sucesso
+                document.getElementById('modalContent').innerHTML = `
+                    <div class="sucesso-msg">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Seleção enviada com sucesso!</h3>
+                        <p>${selectedPhotos.size} foto(s) selecionada(s).<br>Entraremos em contato em breve.</p>
+                    </div>
+                `;
+
+                // Esconder barra de seleção
+                document.getElementById('selecaoBar').classList.remove('visible');
+
+            } catch (error) {
+                console.error('Erro ao enviar seleção:', error);
+                alert('Erro ao enviar. Tente novamente.');
+                btn.textContent = 'Confirmar';
+                btn.disabled = false;
+            }
+        });
+
+        // ========================================
+        // LIGHTBOX
+        // ========================================
+        function openLightbox(src, publicId) {
             document.getElementById('lightboxImg').src = src;
             document.getElementById('lightbox').classList.add('active');
+            currentLightboxId = publicId;
+
+            const selectBtn = document.getElementById('lightboxSelect');
+            if (selectedPhotos.has(publicId)) {
+                selectBtn.textContent = 'Remover seleção';
+            } else {
+                selectBtn.textContent = 'Selecionar esta foto';
+            }
         }
 
         document.getElementById('lightboxClose').addEventListener('click', () => {
@@ -216,12 +446,40 @@
             }
         });
 
-        // Bloquear clique direito nas fotos
+        document.getElementById('lightboxSelect').addEventListener('click', () => {
+            if (!currentLightboxId) return;
+            const item = document.querySelector(`.galeria-item[data-id="${currentLightboxId}"]`);
+            if (item) toggleSelect(currentLightboxId, item);
+
+            const selectBtn = document.getElementById('lightboxSelect');
+            if (selectedPhotos.has(currentLightboxId)) {
+                selectBtn.textContent = 'Remover seleção';
+            } else {
+                selectBtn.textContent = 'Selecionar esta foto';
+            }
+        });
+
+        // ========================================
+        // UTILITÁRIOS
+        // ========================================
+        function showEmpty() {
+            document.getElementById('galeriaTitulo').textContent = 'Galeria não encontrada';
+            document.getElementById('galeriaContent').innerHTML = `
+                <div class="galeria-empty">
+                    <i class="fas fa-image"></i>
+                    <p>Nenhuma foto encontrada para esse código.</p>
+                    <p style="margin-top:1rem;font-size:0.8rem;color:rgba(255,255,255,0.3)">
+                        Verifique se o código está correto ou entre em contato.
+                    </p>
+                </div>`;
+        }
+
+        // Bloquear clique direito
         document.addEventListener('contextmenu', (e) => {
             if (e.target.tagName === 'IMG') e.preventDefault();
         });
 
-        // Carregar galeria
+        // Carregar
         loadGaleria();
     </script>
 </body>
