@@ -184,7 +184,12 @@
                 <p>Suba as fotos do ensaio e gere o link de acesso para o cliente.</p>
 
                 <div class="form-group">
-                    <label for="codigoGaleria">Código da Galeria</label>
+                    <label for="nomeAlbum">Nome do Álbum</label>
+                    <input type="text" id="nomeAlbum" placeholder="Ex: Ensaio Corporativo - Empresa XYZ">
+                </div>
+
+                <div class="form-group">
+                    <label for="codigoGaleria">Código de Acesso</label>
                     <input type="text" id="codigoGaleria" placeholder="Ex: maria2026, empresa_abc">
                 </div>
 
@@ -308,6 +313,7 @@
         // Upload
         btnUpload.addEventListener('click', async () => {
             const codigo = document.getElementById('codigoGaleria').value.trim().toLowerCase().replace(/\s+/g, '_');
+            const nomeAlbum = document.getElementById('nomeAlbum').value.trim();
 
             if (!codigo) {
                 alert('Digite o código da galeria!');
@@ -390,7 +396,7 @@
                             'Content-Type': 'application/json',
                             'Prefer': 'return=minimal'
                         },
-                        body: JSON.stringify({ codigo: codigo, fotos: uploadedUrls })
+                        body: JSON.stringify({ codigo: codigo, fotos: uploadedUrls, nome_album: nomeAlbum || null })
                     });
                 }
             } catch (e) {

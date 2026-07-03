@@ -253,6 +253,7 @@
         if (!codigo) window.location.href = 'index.html#selecao';
 
         let allPhotos = [];
+        let albumName = '';
         let selectedPhotos = new Set();
         let currentLightboxId = null;
 
@@ -280,12 +281,13 @@
         async function loadFromSupabase() {
             try {
                 const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/galerias?codigo=eq.${codigo}&select=fotos`,
+                    `${SUPABASE_URL}/rest/v1/galerias?codigo=eq.${codigo}&select=fotos,nome_album`,
                     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
                 );
                 const data = await response.json();
                 if (data && data.length > 0 && data[0].fotos && data[0].fotos.length > 0) {
                     allPhotos = data[0].fotos;
+                    albumName = data[0].nome_album || codigo.toUpperCase();
                     renderGaleria();
                 } else {
                     showEmpty();
@@ -297,7 +299,7 @@
         // RENDERIZAR GALERIA
         // ========================================
         function renderGaleria() {
-            document.getElementById('galeriaTitulo').textContent = `Galeria: ${codigo.toUpperCase()}`;
+            document.getElementById('galeriaTitulo').textContent = albumName || codigo.toUpperCase();
             document.getElementById('galeriaCount').textContent = `${allPhotos.length} foto${allPhotos.length > 1 ? 's' : ''}`;
             document.getElementById('galeriaInstrucao').style.display = 'block';
 
