@@ -210,7 +210,10 @@
     <!-- Barra fixa de seleção -->
     <div class="selecao-bar" id="selecaoBar">
         <div class="selecao-bar-info">
-            <strong id="selecaoCount">0</strong> foto(s) selecionada(s)
+            <strong id="selecaoCount">0</strong> / <span id="fotosInclusasDisplay">15</span> inclusas
+            <span class="extras-info" id="extrasInfo" style="display:none;margin-left:1rem;color:#ff9f43;">
+                + <span id="extrasCount">0</span> extra(s) = R$ <span id="extrasValor">0</span>
+            </span>
         </div>
         <button class="btn-enviar-selecao" id="btnEnviarSelecao">Enviar Seleção</button>
     </div>
@@ -220,6 +223,7 @@
         <div class="modal-selecao-content" id="modalContent">
             <h3>Confirmar Seleção</h3>
             <p>Preencha seus dados para enviarmos as fotos selecionadas.</p>
+            <p id="modalResumo" style="font-size:0.82rem;color:#C6A972;margin-bottom:1.5rem;padding:0.75rem;border:1px solid rgba(198,169,114,0.2);background:rgba(198,169,114,0.05);"></p>
             <div class="form-group">
                 <label>Seu Nome</label>
                 <input type="text" id="clienteNome" placeholder="Digite seu nome">
@@ -254,6 +258,8 @@
 
         let allPhotos = [];
         let albumName = '';
+        let fotosInclusas = 15;
+        let valorFotoExtra = 25;
         let selectedPhotos = new Set();
         let currentLightboxId = null;
 
@@ -269,6 +275,7 @@
                     if (data.resources && data.resources.length > 0) {
                         allPhotos = data.resources.map(f => f.public_id);
                         renderGaleria();
+                        loadPreviousSelection();
                         return;
                     }
                 }
@@ -281,14 +288,17 @@
         async function loadFromSupabase() {
             try {
                 const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/galerias?codigo=eq.${codigo}&select=fotos,nome_album`,
+                    `${SUPABASE_URL}/rest/v1/galerias?codigo=eq.${codigo}&select=fotos,nome_album,fotos_inclusas,valor_foto_extra`,
                     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
                 );
                 const data = await response.json();
                 if (data && data.length > 0 && data[0].fotos && data[0].fotos.length > 0) {
                     allPhotos = data[0].fotos;
                     albumName = data[0].nome_album || codigo.toUpperCase();
+                    fotosInclusas = data[0].fotos_inclusas || 15;
+                    valorFotoExtra = data[0].valor_foto_extra || 25;
                     renderGaleria();
+                    loadPreviousSelection();
                 } else {
                     showEmpty();
                 }
@@ -354,12 +364,46 @@
         function updateSelecaoBar() {
             const bar = document.getElementById('selecaoBar');
             const count = document.getElementById('selecaoCount');
+            const extrasInfo = document.getElementById('extrasInfo');
+            const extrasCount = document.getElementById('extrasCount');
+            const extrasValor = document.getElementById('extrasValor');
+
             count.textContent = selectedPhotos.size;
+            document.getElementById('fotosInclusasDisplay').textContent = fotosInclusas;
+
+            const extras = Math.max(0, selectedPhotos.size - fotosInclusas);
+            if (extras > 0) {
+                extrasInfo.style.display = 'inline';
+                extrasCount.textContent = extras;
+                extrasValor.textContent = (extras * valorFotoExtra).toFixed(2).replace('.', ',');
+            } else {
+                extrasInfo.style.display = 'none';
+            }
 
             if (selectedPhotos.size > 0) {
                 bar.classList.add('visible');
             } else {
                 bar.classList.remove('visible');
+            }
+
+            // Salvar seleção no localStorage
+            localStorage.setItem(`selecao_${codigo}`, JSON.stringify(Array.from(selectedPhotos)));
+        }
+
+        // ========================================
+        // CARREGAR SELEÇÃO ANTERIOR
+        // ========================================
+        function loadPreviousSelection() {
+            // Carregar do localStorage
+            const saved = localStorage.getItem(`selecao_${codigo}`);
+            if (saved) {
+                const savedPhotos = JSON.parse(saved);
+                savedPhotos.forEach(photoId => {
+                    selectedPhotos.add(photoId);
+                    const item = document.querySelector(`.galeria-item[data-id="${photoId}"]`);
+                    if (item) item.classList.add('selected');
+                });
+                updateSelecaoBar();
             }
         }
 
@@ -367,6 +411,12 @@
         // ENVIAR SELEÇÃO
         // ========================================
         document.getElementById('btnEnviarSelecao').addEventListener('click', () => {
+            const extras = Math.max(0, selectedPhotos.size - fotosInclusas);
+            let resumo = `${selectedPhotos.size} foto(s) selecionada(s) — ${fotosInclusas} inclusa(s)`;
+            if (extras > 0) {
+                resumo += ` + ${extras} extra(s) = R$ ${(extras * valorFotoExtra).toFixed(2).replace('.', ',')}`;
+            }
+            document.getElementById('modalResumo').textContent = resumo;
             document.getElementById('modalSelecao').classList.add('active');
         });
 
@@ -405,6 +455,7 @@
                 });
 
                 // Sucesso
+                localStorage.removeItem(`selecao_${codigo}`);
                 document.getElementById('modalContent').innerHTML = `
                     <div class="sucesso-msg">
                         <i class="fas fa-check-circle"></i>

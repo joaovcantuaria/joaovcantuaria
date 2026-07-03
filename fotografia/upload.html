@@ -193,6 +193,17 @@
                     <input type="text" id="codigoGaleria" placeholder="Ex: maria2026, empresa_abc">
                 </div>
 
+                <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+                    <div>
+                        <label for="fotosInclusas">Fotos Inclusas</label>
+                        <input type="text" id="fotosInclusas" placeholder="Ex: 15" value="15">
+                    </div>
+                    <div>
+                        <label for="valorFotoExtra">Valor Foto Extra (R$)</label>
+                        <input type="text" id="valorFotoExtra" placeholder="Ex: 25" value="25">
+                    </div>
+                </div>
+
                 <div class="dropzone" id="dropzone">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <p>Arraste as fotos aqui ou clique para selecionar</p>
@@ -314,6 +325,8 @@
         btnUpload.addEventListener('click', async () => {
             const codigo = document.getElementById('codigoGaleria').value.trim().toLowerCase().replace(/\s+/g, '_');
             const nomeAlbum = document.getElementById('nomeAlbum').value.trim();
+            const fotosInclusas = parseInt(document.getElementById('fotosInclusas').value) || 15;
+            const valorFotoExtra = parseFloat(document.getElementById('valorFotoExtra').value) || 25;
 
             if (!codigo) {
                 alert('Digite o código da galeria!');
@@ -396,7 +409,7 @@
                             'Content-Type': 'application/json',
                             'Prefer': 'return=minimal'
                         },
-                        body: JSON.stringify({ codigo: codigo, fotos: uploadedUrls, nome_album: nomeAlbum || null })
+                        body: JSON.stringify({ codigo: codigo, fotos: uploadedUrls, nome_album: nomeAlbum || null, fotos_inclusas: fotosInclusas, valor_foto_extra: valorFotoExtra })
                     });
                 }
             } catch (e) {
