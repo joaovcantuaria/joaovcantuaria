@@ -1075,8 +1075,8 @@ section {
 
     .hero-img-mobile {
         display: block !important;
-        opacity: 0.35;
-        object-position: center center;
+        opacity: 0.15;
+        object-position: 65% center;
     }
 
     /* Serviços */
