@@ -1060,6 +1060,11 @@ section {
         padding: 0 1.5rem;
     }
 
+    .hero-background .hero-img {
+        object-position: center center;
+        opacity: 0.25;
+    }
+
     /* Serviços */
     .services-grid {
         grid-template-columns: 1fr;
