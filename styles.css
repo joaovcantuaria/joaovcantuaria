@@ -1061,8 +1061,8 @@ section {
     }
 
     .hero-background .hero-img {
-        object-position: center center;
-        opacity: 0.25;
+        object-position: right center;
+        opacity: 0.3;
     }
 
     /* Serviços */
