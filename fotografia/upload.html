@@ -568,21 +568,50 @@
             const items = fotos.map(f => {
                 const nome = f.split('/').pop();
                 const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400,q_80/${f}.jpg`;
-                return `<div class="foto-item"><img src="${url}"><p>${nome}</p></div>`;
+                return `<div class="foto-item"><img src="${url}" data-nome="${nome}"><p>${nome}</p></div>`;
             });
             const win = window.open('', '_blank');
-            win.document.write(`
-                <html><head><title>Fotos Selecionadas</title>
-                <style>body{background:#0a0a0a;padding:2rem;font-family:'DM Sans',sans-serif;color:#fff;}
-                h2{font-size:1.2rem;margin-bottom:1.5rem;font-weight:300;color:#C6A972;}
-                .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
-                .foto-item{border:1px solid rgba(255,255,255,0.1);overflow:hidden;}
-                .foto-item img{width:100%;display:block;}
-                .foto-item p{padding:0.5rem 0.75rem;font-size:0.75rem;color:rgba(255,255,255,0.5);letter-spacing:0.03em;background:#111;margin:0;}</style></head>
-                <body><h2>${fotos.length} foto(s) selecionada(s)</h2><div class="grid">
-                ${items.join('')}
-                </div></body></html>
-            `);
+            win.document.write(`<html><head><title>Fotos Selecionadas</title>`
+                + `<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>`
+                + `<style>body{background:#0a0a0a;padding:2rem;font-family:'DM Sans',sans-serif;color:#fff;}`
+                + `h2{font-size:1.2rem;margin-bottom:0.5rem;font-weight:300;color:#C6A972;}`
+                + `.toolbar{display:flex;gap:0.75rem;margin-bottom:2rem;flex-wrap:wrap;align-items:center;}`
+                + `.toolbar p{font-size:0.85rem;color:rgba(255,255,255,0.5);margin-right:auto;}`
+                + `.btn{padding:0.6rem 1.4rem;font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-family:sans-serif;border:none;display:inline-flex;align-items:center;gap:0.4rem;}`
+                + `.btn-back{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);}`
+                + `.btn-back:hover{border-color:#C6A972;color:#C6A972;}`
+                + `.btn-pdf{background:#C6A972;color:#0a0a0a;}`
+                + `.btn-pdf:hover{background:#d4b87a;}`
+                + `.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}`
+                + `.foto-item{border:1px solid rgba(255,255,255,0.1);overflow:hidden;}`
+                + `.foto-item img{width:100%;display:block;}`
+                + `.foto-item p{padding:0.5rem 0.75rem;font-size:0.75rem;color:rgba(255,255,255,0.5);letter-spacing:0.03em;background:#111;margin:0;}</style></head>`
+                + `<body><h2>Fotos Selecionadas</h2>`
+                + `<div class="toolbar"><p>${fotos.length} foto(s)</p>`
+                + `<button class="btn btn-back" onclick="window.close()">Voltar</button>`
+                + `<button class="btn btn-pdf" id="btnPdf">Download PDF</button></div>`
+                + `<div class="grid">${items.join('')}</div>`
+                + `<script>`
+                + `document.getElementById('btnPdf').addEventListener('click', async function(){`
+                + `this.textContent='Gerando...';this.disabled=true;`
+                + `const{jsPDF}=window.jspdf;const doc=new jsPDF('p','mm','a4');`
+                + `const margin=10,colW=60,imgH=45;let x=margin,y=20,col=0;`
+                + `doc.setFontSize(14);doc.setTextColor(198,169,114);doc.text('Fotos Selecionadas',margin,12);`
+                + `doc.setFontSize(8);doc.setTextColor(150,150,150);doc.text('${fotos.length} foto(s)',margin,17);`
+                + `const imgs=document.querySelectorAll('.foto-item img');`
+                + `for(let i=0;i<imgs.length;i++){`
+                + `const img=imgs[i],nome=img.dataset.nome;`
+                + `try{const c=document.createElement('canvas');c.width=400;c.height=300;`
+                + `const ctx=c.getContext('2d');const li=new Image();li.crossOrigin='anonymous';`
+                + `await new Promise((r,j)=>{li.onload=r;li.onerror=j;li.src=img.src;});`
+                + `ctx.drawImage(li,0,0,400,300);const d=c.toDataURL('image/jpeg',0.7);`
+                + `doc.addImage(d,'JPEG',x,y,colW,imgH);`
+                + `}catch(e){doc.setFillColor(30,30,30);doc.rect(x,y,colW,imgH,'F');}`
+                + `doc.setFontSize(7);doc.setTextColor(100,100,100);doc.text(nome||'',x,y+imgH+3);`
+                + `col++;if(col>=3){col=0;x=margin;y+=imgH+8;if(y>265){doc.addPage();y=15;}}else{x+=colW+5;}}`
+                + `doc.save('fotos_selecionadas.pdf');this.textContent='Download PDF';this.disabled=false;});`
+                + `<\/script></body></html>`
+            );
         }
 
         async function deleteSelecao(id) {
