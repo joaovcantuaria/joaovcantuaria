@@ -66,12 +66,18 @@ document.querySelectorAll('.nav-link, .hero-ctas a[href^="#"]').forEach(link => 
 const filterBtns = document.querySelectorAll('.filter-btn');
 const portfolioItems = document.querySelectorAll('.portfolio-item');
 
+function filterPortfolio(category) {
+    portfolioItems.forEach(item => {
+        if (item.dataset.category === category) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
 // Filtrar ao iniciar (mostra primeira categoria ativa)
-portfolioItems.forEach(item => {
-    if (item.dataset.category !== 'corporativa') {
-        item.classList.add('hidden');
-    }
-});
+filterPortfolio('corporativa');
 
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -82,13 +88,7 @@ filterBtns.forEach(btn => {
         btn.classList.add('active');
 
         // Filtrar itens
-        portfolioItems.forEach(item => {
-            if (item.dataset.category === filter) {
-                item.classList.remove('hidden');
-            } else {
-                item.classList.add('hidden');
-            }
-        });
+        filterPortfolio(filter);
     });
 });
 
@@ -117,14 +117,16 @@ const lightboxImg = document.getElementById('lightboxImg');
 const lightboxClose = document.querySelector('.lightbox-close');
 
 if (lightbox) {
-    // Abrir lightbox ao clicar na foto
-    document.querySelectorAll('.portfolio-item img').forEach(img => {
-        img.addEventListener('click', (e) => {
-            e.stopPropagation();
-            lightboxImg.src = img.src;
-            lightboxImg.alt = img.alt;
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
+    // Abrir lightbox ao clicar no item do portfolio
+    document.querySelectorAll('.portfolio-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const img = item.querySelector('img');
+            if (img) {
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
         });
     });
 
