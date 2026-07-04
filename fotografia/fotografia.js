@@ -66,6 +66,13 @@ document.querySelectorAll('.nav-link, .hero-ctas a[href^="#"]').forEach(link => 
 const filterBtns = document.querySelectorAll('.filter-btn');
 const portfolioItems = document.querySelectorAll('.portfolio-item');
 
+// Filtrar ao iniciar (mostra primeira categoria ativa)
+portfolioItems.forEach(item => {
+    if (item.dataset.category !== 'corporativa') {
+        item.classList.add('hidden');
+    }
+});
+
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         const filter = btn.dataset.filter;
@@ -76,7 +83,7 @@ filterBtns.forEach(btn => {
 
         // Filtrar itens
         portfolioItems.forEach(item => {
-            if (filter === 'todos' || item.dataset.category === filter) {
+            if (item.dataset.category === filter) {
                 item.classList.remove('hidden');
             } else {
                 item.classList.add('hidden');
