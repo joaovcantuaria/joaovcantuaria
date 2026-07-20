@@ -306,8 +306,22 @@
         <img src="" alt="Imagem ampliada" id="lightboxImg">
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2/dist/umd/supabase.min.js"></script>
-    <script src="/supabase-config.js"></script>
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Inicializar Supabase inline
+        const supabaseSDK = window.supabase;
+        const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+        var supabase = null;
+
+        if (supabaseSDK && supabaseSDK.createClient) {
+            supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('✅ Supabase conectado!');
+        } else {
+            console.error('❌ SDK do Supabase não carregou');
+        }
+    </script>
     <script src="/orcamentos/ver-orcamento.js"></script>
 </body>
 </html>

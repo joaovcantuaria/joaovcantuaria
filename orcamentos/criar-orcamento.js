@@ -6,14 +6,19 @@ let uploadedImages = [];
 
 // Aguardar Supabase
 function waitForSupabaseReady(callback) {
+    // Se já está pronto (inicializado inline), chamar direto
+    if (typeof supabase !== 'undefined' && supabase !== null && typeof supabase.from === 'function') {
+        callback();
+        return;
+    }
+    // Senão, aguardar
     let attempts = 0;
     const interval = setInterval(() => {
         attempts++;
-        // Verifica se o cliente supabase já foi criado pelo supabase-config.js
         if (typeof supabase !== 'undefined' && supabase !== null && typeof supabase.from === 'function') {
             clearInterval(interval);
             callback();
-        } else if (attempts >= 100) {
+        } else if (attempts >= 50) {
             clearInterval(interval);
             showToast('Erro ao conectar com o servidor. Recarregue a página.', true);
         }

@@ -6,15 +6,19 @@ let currentBudget = null;
 
 // Aguardar Supabase
 function waitForSupabase(callback) {
+    // Se já está pronto (inicializado inline), chamar direto
+    if (typeof supabase !== 'undefined' && supabase !== null && typeof supabase.from === 'function') {
+        callback();
+        return;
+    }
     let attempts = 0;
     const interval = setInterval(() => {
         attempts++;
         if (typeof supabase !== 'undefined' && supabase !== null && typeof supabase.from === 'function') {
             clearInterval(interval);
             callback();
-        } else if (attempts >= 100) {
+        } else if (attempts >= 50) {
             clearInterval(interval);
-            // Se for preview, não precisa do supabase
             if (isPreview()) {
                 callback();
             }
