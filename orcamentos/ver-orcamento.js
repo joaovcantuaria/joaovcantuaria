@@ -9,10 +9,10 @@ function waitForSupabase(callback) {
     let attempts = 0;
     const interval = setInterval(() => {
         attempts++;
-        if (typeof supabase !== 'undefined' && supabase !== null) {
+        if (typeof supabase !== 'undefined' && supabase !== null && typeof supabase.from === 'function') {
             clearInterval(interval);
             callback();
-        } else if (attempts >= 50) {
+        } else if (attempts >= 100) {
             clearInterval(interval);
             // Se for preview, não precisa do supabase
             if (isPreview()) {

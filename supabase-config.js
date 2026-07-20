@@ -29,7 +29,7 @@ function tryInitSupabase() {
 
 // Tentar inicializar várias vezes até funcionar
 var attempts = 0;
-var maxAttempts = 10;
+var maxAttempts = 50;
 
 function waitForSupabase() {
     attempts++;

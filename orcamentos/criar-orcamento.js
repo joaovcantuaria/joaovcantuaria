@@ -5,14 +5,15 @@
 let uploadedImages = [];
 
 // Aguardar Supabase
-function waitForSupabase(callback) {
+function waitForSupabaseReady(callback) {
     let attempts = 0;
     const interval = setInterval(() => {
         attempts++;
-        if (typeof supabase !== 'undefined' && supabase !== null) {
+        // Verifica se o cliente supabase já foi criado pelo supabase-config.js
+        if (typeof supabase !== 'undefined' && supabase !== null && typeof supabase.from === 'function') {
             clearInterval(interval);
             callback();
-        } else if (attempts >= 50) {
+        } else if (attempts >= 100) {
             clearInterval(interval);
             showToast('Erro ao conectar com o servidor. Recarregue a página.', true);
         }
@@ -305,6 +306,6 @@ function generateId() {
 }
 
 // Init
-waitForSupabase(() => {
+waitForSupabaseReady(() => {
     console.log('✅ Sistema de orçamentos pronto');
 });
