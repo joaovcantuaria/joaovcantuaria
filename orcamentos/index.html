@@ -6,206 +6,271 @@
     <title>Orçamento - João Vitor Cantuária</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --gold: #C6A972;
-            --gold-dark: #a8884e;
-            --black: #0a0a0a;
-            --black-soft: #111111;
-            --black-card: #161616;
+            --gold: #B8965A;
+            --gold-light: #D4AF6E;
+            --gold-bg: #FAF6F0;
+            --gold-border: rgba(184, 150, 90, 0.2);
+            --gold-subtle: rgba(184, 150, 90, 0.08);
             --white: #ffffff;
-            --white-dim: rgba(255,255,255,0.65);
-            --border: rgba(198, 169, 114, 0.2);
-            --green: #4ade80;
-            --red: #f87171;
+            --bg: #FDFCFA;
+            --text: #1a1a1a;
+            --text-light: #6b6b6b;
+            --text-muted: #9a9a9a;
+            --border: #eee;
+            --border-light: #f5f3f0;
+            --green: #2d8a4e;
+            --green-bg: #edf7f0;
+            --red: #c0392b;
+            --red-bg: #fdf0ef;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
             --font-body: 'DM Sans', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+            --radius: 12px;
         }
         body {
             font-family: var(--font-body);
-            background: var(--black);
-            color: var(--white);
-            line-height: 1.6;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
-        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
 
-        /* Login Screen */
+        /* ====== LOGIN SCREEN ====== */
         .login-screen {
             display: flex; align-items: center; justify-content: center;
             min-height: 100vh; padding: 2rem;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--gold-bg) 100%);
         }
         .login-box {
-            background: var(--black-card); border: 1px solid var(--border);
-            border-radius: 16px; padding: 3rem 2.5rem; text-align: center;
-            max-width: 400px; width: 100%;
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: 20px; padding: 3.5rem 3rem; text-align: center;
+            max-width: 420px; width: 100%; box-shadow: var(--shadow-lg);
         }
         .login-box .brand {
-            font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;
+            font-family: var(--font-heading); font-size: 1.4rem; font-weight: 600;
+            color: var(--text); margin-bottom: 0.2rem;
         }
         .login-box .brand span { color: var(--gold); }
         .login-box .brand-sub {
-            font-size: 0.7rem; color: var(--white-dim);
-            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem;
+            font-size: 0.65rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 2.5rem;
         }
         .login-box h2 {
-            font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;
+            font-family: var(--font-heading); font-size: 1.2rem; font-weight: 500;
+            color: var(--text); margin-bottom: 0.4rem;
         }
-        .login-box p { font-size: 0.85rem; color: var(--white-dim); margin-bottom: 1.5rem; }
+        .login-box > p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 2rem; }
         .login-box input {
-            width: 100%; padding: 0.85rem 1rem; background: var(--black-soft);
-            border: 1px solid var(--border); border-radius: 8px; color: var(--white);
-            font-family: var(--font-body); font-size: 0.95rem; text-align: center;
-            letter-spacing: 2px; margin-bottom: 1rem;
+            width: 100%; padding: 1rem 1.2rem; background: var(--gold-bg);
+            border: 1px solid var(--border); border-radius: 10px; color: var(--text);
+            font-family: var(--font-body); font-size: 1rem; text-align: center;
+            letter-spacing: 3px; margin-bottom: 1.2rem; transition: border-color 0.3s;
         }
         .login-box input:focus { outline: none; border-color: var(--gold); }
+        .login-box input::placeholder { color: var(--text-muted); letter-spacing: 1px; }
         .login-box button {
-            width: 100%; padding: 0.85rem; background: var(--gold); color: var(--black);
-            border: none; border-radius: 8px; font-family: var(--font-body);
+            width: 100%; padding: 1rem; background: var(--gold); color: var(--white);
+            border: none; border-radius: 10px; font-family: var(--font-body);
             font-size: 0.95rem; font-weight: 600; cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.2s; letter-spacing: 0.5px;
         }
-        .login-box button:hover { background: var(--gold-dark); }
+        .login-box button:hover { background: var(--gold-light); transform: translateY(-1px); }
+        .login-box button:active { transform: translateY(0); }
         .login-error {
-            color: var(--red); font-size: 0.8rem; margin-top: 0.75rem; display: none;
+            color: var(--red); font-size: 0.8rem; margin-top: 1rem; display: none;
         }
 
-        /* Budget View */
+        /* ====== BUDGET VIEW ====== */
         .budget-view { display: none; }
+        .budget-container {
+            max-width: 780px; margin: 0 auto; padding: 3rem 2rem 4rem;
+        }
 
         /* Header */
         .budget-header {
-            text-align: center; padding: 2rem 0 2.5rem; border-bottom: 1px solid var(--border);
-            margin-bottom: 2.5rem;
+            text-align: center; padding-bottom: 2.5rem;
+            margin-bottom: 3rem; border-bottom: 1px solid var(--border);
         }
-        .budget-header .brand { font-size: 1.3rem; font-weight: 700; }
+        .budget-header .brand {
+            font-family: var(--font-heading); font-size: 1.3rem; font-weight: 600;
+            color: var(--text);
+        }
         .budget-header .brand span { color: var(--gold); }
         .budget-header .brand-sub {
-            font-size: 0.7rem; color: var(--white-dim);
-            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem;
+            font-size: 0.6rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 2rem;
         }
-        .budget-header h1 { font-size: 1.6rem; font-weight: 700; margin-top: 1.5rem; }
+        .budget-header h1 {
+            font-family: var(--font-heading); font-size: 1.8rem; font-weight: 600;
+            color: var(--text); margin-top: 2rem; line-height: 1.3;
+        }
         .budget-meta {
-            display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;
-            font-size: 0.8rem; color: var(--white-dim);
+            display: flex; justify-content: center; gap: 2rem; margin-top: 1.2rem;
+            font-size: 0.8rem; color: var(--text-muted);
         }
-        .budget-meta span i { margin-right: 0.3rem; color: var(--gold); }
+        .budget-meta span { display: flex; align-items: center; gap: 0.4rem; }
+        .budget-meta i { color: var(--gold); font-size: 0.75rem; }
+
+        /* Status */
+        .status-wrapper { margin-top: 1.5rem; }
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.7rem;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .status-badge.pending { background: var(--gold-subtle); color: var(--gold); }
+        .status-badge.expired { background: var(--red-bg); color: var(--red); }
+        .status-badge.accepted { background: var(--green-bg); color: var(--green); }
 
         /* Sections */
-        .budget-section {
-            margin-bottom: 2.5rem;
-        }
+        .budget-section { margin-bottom: 3rem; }
         .budget-section h2 {
-            font-size: 1rem; font-weight: 600; color: var(--gold);
-            margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
-            text-transform: uppercase; letter-spacing: 0.5px;
+            font-size: 0.7rem; font-weight: 600; color: var(--gold);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.2rem;
+            display: flex; align-items: center; gap: 0.6rem;
+        }
+        .budget-section h2::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
         }
 
         /* Description */
         .description-text {
-            color: var(--white-dim); font-size: 0.95rem; line-height: 1.8;
+            color: var(--text-light); font-size: 0.95rem; line-height: 1.9;
             white-space: pre-wrap;
         }
 
         /* Images */
         .images-gallery {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 1rem;
         }
         .gallery-img {
-            border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
-            cursor: pointer; transition: transform 0.3s, border-color 0.3s;
+            border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow-sm); cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .gallery-img:hover { transform: scale(1.02); border-color: var(--gold); }
+        .gallery-img:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
         .gallery-img img { width: 100%; height: 200px; object-fit: cover; display: block; }
 
-        /* Items table */
-        .items-table {
-            width: 100%; border-collapse: collapse;
+        /* Items */
+        .items-card {
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm);
         }
+        .items-table { width: 100%; border-collapse: collapse; }
+        .items-table thead { background: var(--gold-bg); }
         .items-table th {
-            text-align: left; font-size: 0.75rem; color: var(--white-dim);
-            text-transform: uppercase; letter-spacing: 0.5px; padding: 0.75rem 1rem;
-            border-bottom: 1px solid var(--border);
+            text-align: left; font-size: 0.7rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; padding: 1rem 1.5rem;
+            font-weight: 600;
         }
         .items-table th:last-child { text-align: right; }
         .items-table td {
-            padding: 1rem; font-size: 0.95rem; border-bottom: 1px solid var(--border);
+            padding: 1.1rem 1.5rem; font-size: 0.95rem;
+            border-bottom: 1px solid var(--border-light); color: var(--text);
         }
-        .items-table td:last-child { text-align: right; font-weight: 600; color: var(--white); }
-        .items-table tr:last-child td { border-bottom: none; }
+        .items-table td:last-child {
+            text-align: right; font-weight: 600; color: var(--text);
+            white-space: nowrap;
+        }
+        .items-table tbody tr:last-child td { border-bottom: none; }
+        .items-table tbody tr { transition: background 0.2s; }
+        .items-table tbody tr:hover { background: var(--gold-subtle); }
 
         /* Totals */
         .totals-box {
-            background: var(--black-card); border: 1px solid var(--border);
-            border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 1.8rem 2rem; margin-top: 1rem;
+            box-shadow: var(--shadow-sm);
         }
         .total-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0.6rem 0; font-size: 0.95rem;
+            padding: 0.5rem 0; font-size: 0.95rem;
         }
-        .total-row .label { color: var(--white-dim); }
-        .total-row .value { font-weight: 600; }
-        .total-row.subtotal .value { color: var(--white-dim); text-decoration: line-through; }
+        .total-row .label { color: var(--text-muted); font-size: 0.9rem; }
+        .total-row .value { font-weight: 600; color: var(--text); }
+        .total-row.subtotal .value {
+            color: var(--text-muted); text-decoration: line-through;
+            font-weight: 400;
+        }
         .total-row.discount .value { color: var(--green); }
         .total-row.discount .label { color: var(--green); }
         .total-row.final {
-            border-top: 1px solid var(--border); margin-top: 0.75rem;
-            padding-top: 1rem; font-size: 1.4rem;
+            border-top: 1px solid var(--border); margin-top: 0.8rem;
+            padding-top: 1.2rem; font-size: 1.1rem;
         }
-        .total-row.final .value { color: var(--gold); font-weight: 700; }
+        .total-row.final .label { color: var(--text); font-weight: 500; font-size: 1rem; }
+        .total-row.final .value {
+            color: var(--gold); font-weight: 700; font-size: 1.5rem;
+            font-family: var(--font-heading);
+        }
         .discount-note {
-            font-size: 0.8rem; color: var(--green); margin-top: 0.5rem;
-            font-style: italic;
+            font-size: 0.8rem; color: var(--green); margin-top: 0.4rem;
+            font-style: italic; padding-left: 0.2rem;
         }
 
-        /* Status badge */
-        .status-badge {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.75rem;
-            font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+        /* Expired */
+        .expired-overlay {
+            background: var(--red-bg); border: 1px solid rgba(192,57,43,0.15);
+            border-radius: var(--radius); padding: 2rem; text-align: center;
+            margin-bottom: 2.5rem;
         }
-        .status-badge.pending { background: rgba(198,169,114,0.15); color: var(--gold); }
-        .status-badge.expired { background: rgba(248,113,113,0.15); color: var(--red); }
-        .status-badge.accepted { background: rgba(74,222,128,0.15); color: var(--green); }
+        .expired-overlay i { font-size: 1.8rem; color: var(--red); margin-bottom: 0.8rem; }
+        .expired-overlay h3 { color: var(--red); font-size: 1rem; margin-bottom: 0.4rem; }
+        .expired-overlay p { color: var(--text-light); font-size: 0.85rem; }
 
         /* Footer */
         .budget-footer {
-            text-align: center; padding-top: 2.5rem; margin-top: 2.5rem;
+            text-align: center; padding-top: 3rem; margin-top: 3rem;
             border-top: 1px solid var(--border);
         }
-        .budget-footer p { font-size: 0.8rem; color: var(--white-dim); }
+        .budget-footer p { font-size: 0.8rem; color: var(--text-muted); }
         .budget-footer .contact { margin-top: 0.5rem; }
-        .budget-footer a { color: var(--gold); text-decoration: none; }
+        .budget-footer a {
+            color: var(--gold); text-decoration: none; transition: opacity 0.3s;
+        }
+        .budget-footer a:hover { opacity: 0.7; }
 
         /* Lightbox */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); display: none; align-items: center;
+            background: rgba(0,0,0,0.9); display: none; align-items: center;
             justify-content: center; z-index: 9999; cursor: pointer; padding: 2rem;
+            backdrop-filter: blur(4px);
         }
         .lightbox.show { display: flex; }
-        .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
-
-        /* Expired overlay */
-        .expired-overlay {
-            background: var(--black-card); border: 1px solid var(--red);
-            border-radius: 12px; padding: 2rem; text-align: center;
-            margin-bottom: 2rem;
+        .lightbox img {
+            max-width: 100%; max-height: 90vh; border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        .expired-overlay i { font-size: 2rem; color: var(--red); margin-bottom: 1rem; }
-        .expired-overlay h3 { color: var(--red); margin-bottom: 0.5rem; }
-        .expired-overlay p { color: var(--white-dim); font-size: 0.9rem; }
 
         /* Responsive */
         @media (max-width: 600px) {
-            .container { padding: 1.2rem; }
-            .budget-header h1 { font-size: 1.3rem; }
-            .budget-meta { flex-direction: column; gap: 0.5rem; }
+            .budget-container { padding: 2rem 1.2rem 3rem; }
+            .budget-header h1 { font-size: 1.4rem; }
+            .budget-meta { flex-direction: column; gap: 0.4rem; align-items: center; }
             .images-gallery { grid-template-columns: 1fr 1fr; }
-            .total-row.final { font-size: 1.2rem; }
+            .items-table th, .items-table td { padding: 0.9rem 1rem; }
+            .totals-box { padding: 1.5rem; }
+            .total-row.final .value { font-size: 1.3rem; }
+            .login-box { padding: 2.5rem 1.5rem; }
+        }
+
+        /* Print styles */
+        @media print {
+            .login-screen { display: none !important; }
+            .budget-view { display: block !important; }
+            body { background: white; }
+            .budget-container { padding: 0; }
+            .gallery-img, .items-card, .totals-box { box-shadow: none; }
         }
     </style>
 </head>
@@ -226,7 +291,7 @@
 
     <!-- Budget -->
     <div class="budget-view" id="budgetView">
-        <div class="container">
+        <div class="budget-container">
             <div class="budget-header">
                 <div class="brand">João Vitor <span>Cantuária</span></div>
                 <div class="brand-sub">Comunicação e Publicidade</div>
@@ -236,14 +301,14 @@
                     <span><i class="fas fa-calendar"></i> <span id="budgetDate"></span></span>
                     <span><i class="fas fa-clock"></i> Válido até <span id="budgetExpiry"></span></span>
                 </div>
-                <div style="margin-top: 1rem;">
+                <div class="status-wrapper">
                     <span class="status-badge pending" id="statusBadge">
                         <i class="fas fa-hourglass-half"></i> Aguardando aprovação
                     </span>
                 </div>
             </div>
 
-            <!-- Expired notice -->
+            <!-- Expired -->
             <div class="expired-overlay" id="expiredNotice" style="display:none;">
                 <i class="fas fa-calendar-times"></i>
                 <h3>Orçamento Expirado</h3>
@@ -265,12 +330,14 @@
             <!-- Items -->
             <div class="budget-section">
                 <h2><i class="fas fa-list-check"></i> Serviços Inclusos</h2>
-                <table class="items-table">
-                    <thead>
-                        <tr><th>Serviço</th><th>Valor</th></tr>
-                    </thead>
-                    <tbody id="itemsBody"></tbody>
-                </table>
+                <div class="items-card">
+                    <table class="items-table">
+                        <thead>
+                            <tr><th>Serviço</th><th>Valor</th></tr>
+                        </thead>
+                        <tbody id="itemsBody"></tbody>
+                    </table>
+                </div>
 
                 <div class="totals-box">
                     <div class="total-row subtotal">
@@ -278,12 +345,12 @@
                         <span class="value" id="viewSubtotal"></span>
                     </div>
                     <div class="total-row discount" id="discountRow">
-                        <span class="label" id="discountLabel">Desconto</span>
+                        <span class="label" id="discountLabel">Desconto aplicado</span>
                         <span class="value" id="viewDiscount"></span>
                     </div>
                     <p class="discount-note" id="viewDiscountNote" style="display:none;"></p>
                     <div class="total-row final">
-                        <span class="label">Total</span>
+                        <span class="label">Total do investimento</span>
                         <span class="value" id="viewTotal"></span>
                     </div>
                 </div>
@@ -291,11 +358,11 @@
 
             <!-- Footer -->
             <div class="budget-footer">
-                <p>Orçamento gerado por João Vitor Cantuária</p>
+                <p>Orçamento preparado por João Vitor Cantuária</p>
                 <p class="contact">
-                    <a href="https://wa.me/5538999209694">WhatsApp</a> · 
-                    <a href="mailto:contato@joaovcantuaria.com">contato@joaovcantuaria.com</a> · 
-                    <a href="https://joaovcantuaria.com">joaovcantuaria.com</a>
+                    <a href="https://wa.me/5538999209694"><i class="fab fa-whatsapp"></i> WhatsApp</a> &nbsp;·&nbsp; 
+                    <a href="mailto:contato@joaovcantuaria.com"><i class="fas fa-envelope"></i> E-mail</a> &nbsp;·&nbsp; 
+                    <a href="https://joaovcantuaria.com"><i class="fas fa-globe"></i> Site</a>
                 </p>
             </div>
         </div>
