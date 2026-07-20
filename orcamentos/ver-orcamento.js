@@ -2,6 +2,17 @@
 // VER ORÇAMENTO - LÓGICA DO CLIENTE
 // ========================================
 
+// Toggle password visibility
+const toggleBtn = document.getElementById('togglePassword');
+const passwordField = document.getElementById('passwordInput');
+if (toggleBtn && passwordField) {
+    toggleBtn.addEventListener('click', () => {
+        const isPassword = passwordField.type === 'password';
+        passwordField.type = isPassword ? 'text' : 'password';
+        toggleBtn.querySelector('i').className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+    });
+}
+
 let currentBudget = null;
 
 // Aguardar Supabase
