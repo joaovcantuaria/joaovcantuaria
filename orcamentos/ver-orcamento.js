@@ -165,6 +165,12 @@ function showBudget() {
     if (b.images && b.images.length > 0) {
         document.getElementById('imagesSection').style.display = 'block';
         const gallery = document.getElementById('imagesGallery');
+        
+        // Se tiver mais de 2 imagens, usa grid multi-coluna
+        if (b.images.length > 2) {
+            gallery.classList.add('multi');
+        }
+        
         b.images.forEach((img, i) => {
             const div = document.createElement('div');
             div.className = 'gallery-img';
