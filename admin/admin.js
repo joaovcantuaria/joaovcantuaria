@@ -149,7 +149,7 @@ async function loadDashboardStats() {
 async function loadClientes() {
     try {
         const { data: clientes, error } = await supabase
-            .from('usuarios').select('*').order('created_at', { ascending: false });
+            .from('usuarios').select('*').order('email', { ascending: true });
         if (error) throw error;
 
         const tbody = document.getElementById('clientesTableBody');
@@ -164,7 +164,7 @@ async function loadClientes() {
                 <td>${c.email || ''}</td>
                 <td>${c.telefone || 'N/A'}</td>
                 <td>-</td>
-                <td>${formatDate(c.created_at)}</td>
+                <td>${formatDate(c.data_criacao || c.created_at)}</td>
                 <td>
                     <button class="btn-icon" onclick="openEditClientModal('${c.id}')" title="Editar">
                         <i class="fas fa-edit"></i>
