@@ -1,11 +1,10 @@
 // ========================================
-// AUTENTICAÇÃO ADMINISTRATIVA
+// AUTENTICACAO ADMINISTRATIVA
 // ========================================
 
 function waitForSupabaseReady(callback) {
     let attempts = 0;
     const maxAttempts = 50;
-    
     const checkInterval = setInterval(() => {
         attempts++;
         if (typeof supabase !== 'undefined' && supabase !== null) {
@@ -13,7 +12,7 @@ function waitForSupabaseReady(callback) {
             callback();
         } else if (attempts >= maxAttempts) {
             clearInterval(checkInterval);
-            showAdminMessage('Erro ao carregar sistema. Recarregue a página.', 'error');
+            showAdminMessage('Erro ao carregar sistema. Recarregue a pagina.', 'error');
         }
     }, 100);
 }
@@ -48,7 +47,7 @@ if (adminLoginForm) {
     adminLoginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const email    = document.getElementById('adminEmail').value.trim();
+        const email = document.getElementById('adminEmail').value.trim();
         const password = document.getElementById('adminPassword').value;
 
         if (!email || !password) {
@@ -62,18 +61,39 @@ if (adminLoginForm) {
 
         try {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
             if (error) throw error;
 
-            // Aguardar sessão ser persistida antes de redirecionar
-            await new Promise(resolve => setTimeout(resolve, 800));
+            console.log('Login OK, usuario:', data.user.id);
 
+            // Verificar se e admin ANTES de redirecionar
+            const { data: adminData, error: adminError } = await supabase
+                .from('admins')
+                .select('id')
+                .eq('id', data.user.id)
+                .maybeSingle();
+
+            console.log('Admin check:', { adminData, adminError });
+
+            if (!adminData) {
+                await supabase.auth.signOut();
+                showAdminMessage('Acesso negado. Voce nao tem permissao de administrador.', 'error');
+                btn.textContent = 'Acessar Painel';
+                btn.disabled = false;
+                return;
+            }
+
+            showAdminMessage('Acesso autorizado! Redirecionando...', 'success');
+
+            // Aguardar sessao ser completamente persistida
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Redirecionar
             window.location.href = 'admin-dashboard.html';
 
         } catch (error) {
             const msgs = {
                 'Invalid login credentials': 'E-mail ou senha incorretos.',
-                'Email not confirmed': 'E-mail não confirmado.',
+                'Email not confirmed': 'E-mail nao confirmado.',
                 'Email rate limit exceeded': 'Muitas tentativas. Aguarde alguns minutos.'
             };
             const found = Object.entries(msgs).find(([k]) => error.message.includes(k));
@@ -84,21 +104,36 @@ if (adminLoginForm) {
     });
 }
 
-// Se já estiver logado, redireciona direto para o dashboard
+// Se ja estiver logado E for admin, redirecionar
 async function checkAdminAuth() {
     if (!supabase) return;
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-        window.location.href = 'admin-dashboard.html';
+
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return; // Nao logado, fica na tela de login
+
+        // Verificar se e admin
+        const { data: adminData } = await supabase
+            .from('admins')
+            .select('id')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+        if (adminData) {
+            // E admin, redirecionar pro dashboard
+            window.location.href = 'admin-dashboard.html';
+        }
+        // Se nao e admin, apenas fica na pagina de login (nao faz nada)
+    } catch (e) {
+        console.error('Erro ao verificar auth:', e);
     }
 }
 
 waitForSupabaseReady(() => {
-    // Mostrar mensagem se vier de acesso negado
     const params = new URLSearchParams(window.location.search);
     if (params.get('erro') === 'acesso_negado') {
-        showAdminMessage('Acesso negado. Você não tem permissão de administrador.', 'error');
+        showAdminMessage('Acesso negado. Voce nao tem permissao de administrador.', 'error');
+    } else {
+        checkAdminAuth();
     }
-
-    checkAdminAuth();
 });

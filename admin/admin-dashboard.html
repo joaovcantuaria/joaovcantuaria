@@ -432,53 +432,43 @@
         const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
 
-        // Inicializar Supabase imediatamente
+        // Inicializar Supabase
         var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Verificar autenticacao e permissao admin ANTES de carregar qualquer coisa
-        (async function() {
-            try {
-                // Aguardar sessao ser restaurada (pode demorar no GitHub Pages)
-                let session = null;
-                for (let i = 0; i < 10; i++) {
-                    const { data } = await supabase.auth.getSession();
-                    session = data.session;
-                    if (session) break;
-                    await new Promise(r => setTimeout(r, 500));
-                }
+        // Verificacao de admin usando onAuthStateChange (mais confiavel que getSession)
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log('Auth event:', event);
 
+            // Quando a pagina carrega, o primeiro evento e INITIAL_SESSION
+            if (event === 'INITIAL_SESSION') {
                 if (!session) {
-                    console.log('Sem sessao, redirecionando...');
+                    // Nao tem sessao nenhuma - redirecionar pro login
                     window.location.replace('admin-login.html');
                     return;
                 }
 
-                console.log('Sessao OK, user:', session.user.id, session.user.email);
-
-                // Verificar se e admin - tentar com e sem RLS
-                const { data: adminData, error: adminError } = await supabase
+                // Tem sessao - verificar se e admin
+                const { data: adminData } = await supabase
                     .from('admins')
                     .select('id')
                     .eq('id', session.user.id)
                     .maybeSingle();
 
-                console.log('Admin check:', { adminData, adminError });
-
                 if (!adminData) {
-                    console.log('Usuario nao e admin. Saindo...');
                     await supabase.auth.signOut();
                     window.location.replace('admin-login.html?erro=acesso_negado');
                     return;
                 }
 
+                // E admin - atualizar interface
                 const adminNameEl = document.querySelector('.admin-user-name');
                 if (adminNameEl) adminNameEl.textContent = session.user.email.split('@')[0];
+            }
 
-            } catch (e) {
-                console.error('Erro na autenticacao:', e);
+            if (event === 'SIGNED_OUT') {
                 window.location.replace('admin-login.html');
             }
-        })();
+        });
     </script>
     <script src="admin.js"></script>
 </body>
