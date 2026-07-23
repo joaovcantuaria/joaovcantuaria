@@ -14,10 +14,9 @@
             <div class="admin-login-header">
                 <i class="fas fa-shield-alt"></i>
                 <h1>Painel Administrativo</h1>
-                <p>João V. Cantuária - Sistema de Gestão</p>
+                <p>Joao V. Cantuaria - Sistema de Gestao</p>
             </div>
 
-            <!-- Mensagem de Erro/Sucesso -->
             <div id="adminMessage" class="admin-message"></div>
 
             <form id="adminLoginForm" class="admin-login-form">
@@ -25,12 +24,8 @@
                     <label for="adminEmail">
                         <i class="fas fa-user-shield"></i> E-mail Administrativo
                     </label>
-                    <input type="email" 
-                           id="adminEmail" 
-                           name="email" 
-                           required 
-                           placeholder="admin@joaovcantuaria.com"
-                           autocomplete="email">
+                    <input type="email" id="adminEmail" name="email" required 
+                           placeholder="admin@joaovcantuaria.com" autocomplete="email">
                 </div>
 
                 <div class="form-group">
@@ -38,12 +33,8 @@
                         <i class="fas fa-lock"></i> Senha
                     </label>
                     <div class="password-input-wrapper">
-                        <input type="password" 
-                               id="adminPassword" 
-                               name="password" 
-                               required 
-                               placeholder="••••••••"
-                               autocomplete="current-password">
+                        <input type="password" id="adminPassword" name="password" required 
+                               placeholder="********" autocomplete="current-password">
                         <button type="button" class="toggle-password" data-target="adminPassword">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -60,14 +51,6 @@
                     <i class="fas fa-arrow-left"></i> Voltar ao Site
                 </a>
             </div>
-
-            <div class="admin-info">
-                <p><strong>⚠️ Área Restrita</strong></p>
-                <p>Acesso apenas para administradores autorizados.</p>
-                <p class="admin-credentials-demo">
-                    <small>Demo: admin@joaovcantuaria.com / Admin@2026</small>
-                </p>
-            </div>
         </div>
     </div>
 
@@ -75,35 +58,130 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
-        // SALVAR REFERÊNCIA AO SDK IMEDIATAMENTE
-        const supabaseSDK = window.supabase;
-        
+        // Inicializar Supabase
         const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+        var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('Supabase inicializado na pagina de login');
 
-        var supabase = null;
-
-        // Inicialização
-        function initSupabase() {
-            if (!supabaseSDK) {
-                console.error('❌ SDK do Supabase NÃO foi salvo!');
-                return false;
-            }
-
-            try {
-                supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log('✅ Cliente Supabase criado no admin!');
-                return true;
-            } catch (error) {
-                console.error('❌ Erro ao criar cliente:', error);
-                return false;
-            }
+        // Mostrar mensagem
+        function showMsg(msg, type) {
+            const el = document.getElementById('adminMessage');
+            el.textContent = msg;
+            el.className = 'admin-message ' + type + ' show';
+            setTimeout(() => el.classList.remove('show'), 6000);
         }
 
-        // Executar IMEDIATAMENTE
-        console.log('🚀 Inicializando Supabase no painel admin...');
-        initSupabase();
+        // Toggle senha
+        document.querySelectorAll('.toggle-password').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = document.getElementById(btn.getAttribute('data-target'));
+                const icon = btn.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
+        });
+
+        // Se vier com erro=acesso_negado
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('erro') === 'acesso_negado') {
+            showMsg('Acesso negado. Voce nao tem permissao de administrador.', 'error');
+        }
+
+        // Form de login
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const btn = e.target.querySelector('button[type="submit"]');
+
+            if (!email || !password) {
+                showMsg('Preencha todos os campos.', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+            btn.disabled = true;
+
+            try {
+                // 1. Login
+                console.log('1. Tentando login com:', email);
+                const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+                
+                if (loginError) {
+                    console.error('Erro login:', loginError);
+                    throw loginError;
+                }
+                console.log('2. Login OK! User ID:', loginData.user.id);
+
+                // 2. Verificar se e admin
+                console.log('3. Verificando tabela admins...');
+                const { data: adminData, error: adminError } = await supabase
+                    .from('admins')
+                    .select('id')
+                    .eq('id', loginData.user.id)
+                    .maybeSingle();
+
+                console.log('4. Resultado admin:', { adminData, adminError });
+
+                if (adminError) {
+                    console.error('Erro ao verificar admin:', adminError);
+                    showMsg('Erro ao verificar permissoes: ' + adminError.message, 'error');
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Acessar Painel';
+                    btn.disabled = false;
+                    return;
+                }
+
+                if (!adminData) {
+                    console.log('5. NAO e admin - fazendo signOut');
+                    await supabase.auth.signOut();
+                    showMsg('Acesso negado. Este email nao tem permissao de administrador.', 'error');
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Acessar Painel';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // 3. E admin! Redirecionar
+                console.log('5. E ADMIN! Redirecionando em 2s...');
+                showMsg('Acesso autorizado! Redirecionando...', 'success');
+                
+                // Esperar sessao ser persistida completamente
+                await new Promise(r => setTimeout(r, 2000));
+                
+                console.log('6. Redirecionando agora...');
+                window.location.href = 'admin-dashboard.html';
+
+            } catch (error) {
+                console.error('Erro:', error);
+                const msgs = {
+                    'Invalid login credentials': 'E-mail ou senha incorretos.',
+                    'Email not confirmed': 'E-mail nao confirmado.',
+                    'Email rate limit exceeded': 'Muitas tentativas. Aguarde alguns minutos.'
+                };
+                const found = Object.entries(msgs).find(([k]) => error.message.includes(k));
+                showMsg(found ? found[1] : error.message, 'error');
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Acessar Painel';
+                btn.disabled = false;
+            }
+        });
+
+        // Verificar se ja esta logado como admin
+        (async function() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                const { data: adminData } = await supabase
+                    .from('admins').select('id').eq('id', session.user.id).maybeSingle();
+                if (adminData) {
+                    console.log('Ja logado como admin, redirecionando...');
+                    window.location.href = 'admin-dashboard.html';
+                }
+            }
+        })();
     </script>
-    <script src="admin-auth.js"></script>
 </body>
 </html>
