@@ -84,6 +84,11 @@
                     <span class="card-title">Fotografia</span>
                     <span class="card-desc">Galerias, uploads e selecoes</span>
                 </button>
+                <button class="nav-card" data-panel="entregas">
+                    <i class="fas fa-gift"></i>
+                    <span class="card-title">Entregas</span>
+                    <span class="card-desc">Entregar fotos aos clientes</span>
+                </button>
                 <button class="nav-card" data-panel="financeiro">
                     <i class="fas fa-chart-line"></i>
                     <span class="card-title">Financeiro</span>
@@ -194,6 +199,20 @@
                 <div id="selecoesGrid">
                     <p class="empty">Carregando...</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ENTREGAS -->
+    <div class="panel-overlay" id="panel-entregas">
+        <div class="panel-header">
+            <button class="btn-back" onclick="closePanel()"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
+            <h1 class="panel-title">Entregas de Fotos</h1>
+            <button class="btn-action-primary" onclick="openAddEntregaModal()"><i class="fas fa-plus"></i> Nova Entrega</button>
+        </div>
+        <div class="panel-content">
+            <div id="entregasGrid" class="galerias-grid">
+                <p class="empty">Carregando...</p>
             </div>
         </div>
     </div>

@@ -92,6 +92,7 @@ function loadPanelData(panel) {
         case 'projetos': loadProjetos(); break;
         case 'orcamentos': loadOrcamentos(); break;
         case 'fotografia': loadGalerias(); loadSelecoes(); break;
+        case 'entregas': loadEntregas(); break;
         case 'financeiro': loadFinanceiro(); break;
         case 'portfolio': loadPortfolio(); break;
         case 'depoimentos': loadDepoimentos(); break;
@@ -740,3 +741,191 @@ async function saveConfiguracoes() {
 document.addEventListener('DOMContentLoaded', () => {
     loadDashboardStats();
 });
+
+
+// ========================================
+// ENTREGAS DE FOTOS
+// ========================================
+let entregaCapaFile = null;
+let entregaFotosFiles = [];
+
+async function loadEntregas() {
+    try {
+        const { data, error } = await supabase.from('entregas').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        const container = document.getElementById('entregasGrid');
+        if (!data || data.length === 0) { container.innerHTML = '<p class="empty">Nenhuma entrega criada</p>'; return; }
+        container.innerHTML = data.map(e => {
+            const numFotos = e.fotos ? e.fotos.length : 0;
+            const link = `${window.location.origin}/entrega/?id=${e.codigo}`;
+            return `<div class="galeria-row">
+                <div class="galeria-row-info">
+                    <strong>${e.cliente_nome}</strong>
+                    <span>${numFotos} foto${numFotos!==1?'s':''} · ${formatDate(e.created_at)} · Codigo: ${e.codigo}</span>
+                </div>
+                <div class="galeria-row-actions">
+                    <button class="tbl-btn" onclick="copyToClipboard('${link}')" title="Copiar link"><i class="fas fa-link"></i></button>
+                    <a href="${link}" target="_blank" class="tbl-btn" title="Visualizar"><i class="fas fa-external-link-alt"></i></a>
+                    <button class="tbl-btn danger" onclick="deleteEntrega('${e.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`;
+        }).join('');
+    } catch (e) { console.error(e); }
+}
+
+async function deleteEntrega(id) {
+    if (!confirm('Excluir esta entrega?')) return;
+    await supabase.from('entregas').delete().eq('id', id);
+    showToast('Entrega excluida!'); loadEntregas();
+}
+
+function openAddEntregaModal() {
+    entregaCapaFile = null;
+    entregaFotosFiles = [];
+    openModal('Nova Entrega de Fotos', `<form class="modal-form" onsubmit="saveEntrega(event)">
+        <div class="form-group">
+            <label>Nome do Cliente</label>
+            <input type="text" id="entregaCliente" required placeholder="Nome completo do cliente">
+        </div>
+        <div class="form-group">
+            <label>Codigo de Acesso (para URL)</label>
+            <input type="text" id="entregaCodigo" required placeholder="Ex: ensaio-maria-2026">
+        </div>
+        <div class="form-group">
+            <label>Historia do Ensaio</label>
+            <textarea id="entregaHistoria" rows="4" placeholder="Conte um pouco sobre esse ensaio/evento..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Foto de Capa</label>
+            <div class="dropzone" id="capaDropzone" onclick="document.getElementById('capaInput').click()">
+                <i class="fas fa-image"></i>
+                <p>Clique ou arraste a foto de capa</p>
+            </div>
+            <input type="file" id="capaInput" style="display:none" accept="image/*" onchange="handleCapaFile(this.files)">
+            <div id="capaPreview"></div>
+        </div>
+        <div class="form-group">
+            <label>Fotos do Album</label>
+            <div class="dropzone" id="fotosDropzone" onclick="document.getElementById('fotosInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Arraste as fotos ou clique para selecionar</p>
+                <small>JPG, PNG, WebP</small>
+            </div>
+            <input type="file" id="fotosInput" style="display:none" multiple accept="image/*" onchange="handleEntregaFotos(this.files)">
+            <div class="preview-grid" id="entregaPreviewGrid"></div>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+            <button type="submit" class="btn-submit" id="btnSaveEntrega">Criar Entrega</button>
+        </div>
+    </form>`);
+
+    // Drag & drop for capa
+    setTimeout(() => {
+        const capaDz = document.getElementById('capaDropzone');
+        if (capaDz) {
+            capaDz.addEventListener('dragover', (e) => { e.preventDefault(); capaDz.classList.add('dragover'); });
+            capaDz.addEventListener('dragleave', () => capaDz.classList.remove('dragover'));
+            capaDz.addEventListener('drop', (e) => { e.preventDefault(); capaDz.classList.remove('dragover'); handleCapaFile(e.dataTransfer.files); });
+        }
+        const fotosDz = document.getElementById('fotosDropzone');
+        if (fotosDz) {
+            fotosDz.addEventListener('dragover', (e) => { e.preventDefault(); fotosDz.classList.add('dragover'); });
+            fotosDz.addEventListener('dragleave', () => fotosDz.classList.remove('dragover'));
+            fotosDz.addEventListener('drop', (e) => { e.preventDefault(); fotosDz.classList.remove('dragover'); handleEntregaFotos(e.dataTransfer.files); });
+        }
+    }, 100);
+}
+
+function handleCapaFile(files) {
+    if (files.length === 0) return;
+    entregaCapaFile = files[0];
+    const url = URL.createObjectURL(files[0]);
+    const preview = document.getElementById('capaPreview');
+    if (preview) preview.innerHTML = `<div class="preview-item" style="width:200px;aspect-ratio:16/9;margin-top:0.5rem;"><img src="${url}"></div>`;
+}
+
+function handleEntregaFotos(files) {
+    entregaFotosFiles = [...entregaFotosFiles, ...Array.from(files).filter(f => f.type.startsWith('image/'))];
+    renderEntregaPreviews();
+}
+
+function renderEntregaPreviews() {
+    const grid = document.getElementById('entregaPreviewGrid');
+    if (!grid) return;
+    grid.innerHTML = entregaFotosFiles.map((file, i) => {
+        const url = URL.createObjectURL(file);
+        return `<div class="preview-item"><img src="${url}"><button class="remove-preview" onclick="removeEntregaFoto(${i})"><i class="fas fa-times"></i></button></div>`;
+    }).join('');
+}
+
+function removeEntregaFoto(i) {
+    entregaFotosFiles.splice(i, 1);
+    renderEntregaPreviews();
+}
+
+async function saveEntrega(e) {
+    e.preventDefault();
+    const clienteNome = document.getElementById('entregaCliente').value.trim();
+    const codigo = document.getElementById('entregaCodigo').value.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const historia = document.getElementById('entregaHistoria').value.trim();
+
+    if (!clienteNome || !codigo) { showToast('Preencha nome e codigo', 'error'); return; }
+    if (!entregaCapaFile) { showToast('Selecione uma foto de capa', 'error'); return; }
+    if (entregaFotosFiles.length === 0) { showToast('Selecione as fotos do album', 'error'); return; }
+
+    const btn = document.getElementById('btnSaveEntrega');
+    btn.textContent = 'Enviando capa...';
+    btn.disabled = true;
+
+    try {
+        // 1. Upload capa
+        const capaId = await uploadToCloudinary(entregaCapaFile, 'entrega_' + codigo);
+        if (!capaId) throw new Error('Falha no upload da capa');
+
+        // 2. Upload fotos
+        const fotosIds = [];
+        for (let i = 0; i < entregaFotosFiles.length; i++) {
+            btn.textContent = `Enviando foto ${i+1}/${entregaFotosFiles.length}...`;
+            const id = await uploadToCloudinary(entregaFotosFiles[i], 'entrega_' + codigo);
+            if (id) fotosIds.push(id);
+        }
+
+        btn.textContent = 'Salvando...';
+
+        // 3. Salvar no Supabase
+        const { error } = await supabase.from('entregas').insert([{
+            cliente_nome: clienteNome,
+            codigo: codigo,
+            historia: historia,
+            capa_url: capaId,
+            fotos: fotosIds
+        }]);
+
+        if (error) throw error;
+
+        showToast(`Entrega criada com ${fotosIds.length} fotos!`);
+        closeModal();
+        loadEntregas();
+
+    } catch (err) {
+        showToast('Erro: ' + err.message, 'error');
+        btn.textContent = 'Criar Entrega';
+        btn.disabled = false;
+    }
+}
+
+async function uploadToCloudinary(file, tag) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', UPLOAD_PRESET);
+    formData.append('tags', tag);
+    try {
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+        const data = await res.json();
+        return data.public_id || null;
+    } catch (err) {
+        console.error('Upload error:', err);
+        return null;
+    }
+}
