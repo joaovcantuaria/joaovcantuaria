@@ -87,43 +87,33 @@
 
         <!-- Content Area -->
         <div class="admin-content">
-            <!-- Dashboard Section -->
+
+            <!-- ===================== DASHBOARD ===================== -->
             <section id="dashboard-section" class="admin-section active">
                 <div class="admin-stats-grid">
                     <div class="admin-stat-card">
-                        <div class="stat-icon blue">
-                            <i class="fas fa-users"></i>
-                        </div>
+                        <div class="stat-icon blue"><i class="fas fa-users"></i></div>
                         <div class="stat-info">
                             <h3 id="totalClientes">0</h3>
                             <p>Total de Clientes</p>
                         </div>
                     </div>
-
                     <div class="admin-stat-card">
-                        <div class="stat-icon green">
-                            <i class="fas fa-folder-open"></i>
-                        </div>
+                        <div class="stat-icon green"><i class="fas fa-folder-open"></i></div>
                         <div class="stat-info">
                             <h3 id="totalProjetos">0</h3>
                             <p>Projetos Ativos</p>
                         </div>
                     </div>
-
                     <div class="admin-stat-card">
-                        <div class="stat-icon gold">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
+                        <div class="stat-icon gold"><i class="fas fa-dollar-sign"></i></div>
                         <div class="stat-info">
                             <h3 id="receitaMes">R$ 0</h3>
-                            <p>Receita do Mês</p>
+                            <p>Receita do Mes</p>
                         </div>
                     </div>
-
                     <div class="admin-stat-card">
-                        <div class="stat-icon purple">
-                            <i class="fas fa-images"></i>
-                        </div>
+                        <div class="stat-icon purple"><i class="fas fa-images"></i></div>
                         <div class="stat-info">
                             <h3 id="fotosEntregues">0</h3>
                             <p>Fotos Entregues</p>
@@ -133,20 +123,15 @@
 
                 <div class="admin-cards-row">
                     <div class="admin-card">
-                        <div class="admin-card-header">
-                            <h3>Atividades Recentes</h3>
-                        </div>
+                        <div class="admin-card-header"><h3>Atividades Recentes</h3></div>
                         <div class="admin-card-body">
                             <div class="activity-list" id="activityList">
                                 <p class="empty-state">Nenhuma atividade recente</p>
                             </div>
                         </div>
                     </div>
-
                     <div class="admin-card">
-                        <div class="admin-card-header">
-                            <h3>Projetos Urgentes</h3>
-                        </div>
+                        <div class="admin-card-header"><h3>Projetos Urgentes</h3></div>
                         <div class="admin-card-body">
                             <div class="urgent-projects" id="urgentProjects">
                                 <p class="empty-state">Nenhum projeto urgente</p>
@@ -156,7 +141,7 @@
                 </div>
             </section>
 
-            <!-- Clientes Section -->
+            <!-- ===================== CLIENTES ===================== -->
             <section id="clientes-section" class="admin-section">
                 <div class="section-header">
                     <h2>Gerenciamento de Clientes</h2>
@@ -164,7 +149,6 @@
                         <i class="fas fa-plus"></i> Novo Cliente
                     </button>
                 </div>
-
                 <div class="admin-card">
                     <div class="admin-card-body">
                         <div class="table-responsive">
@@ -176,13 +160,11 @@
                                         <th>Telefone</th>
                                         <th>Projetos</th>
                                         <th>Data Cadastro</th>
-                                        <th>Ações</th>
+                                        <th>Acoes</th>
                                     </tr>
                                 </thead>
                                 <tbody id="clientesTableBody">
-                                    <tr>
-                                        <td colspan="6" class="empty-state">Carregando clientes...</td>
-                                    </tr>
+                                    <tr><td colspan="6" class="empty-state">Carregando clientes...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -190,7 +172,7 @@
                 </div>
             </section>
 
-            <!-- Projetos Section -->
+            <!-- ===================== PROJETOS ===================== -->
             <section id="projetos-section" class="admin-section">
                 <div class="section-header">
                     <h2>Gerenciamento de Projetos</h2>
@@ -198,62 +180,97 @@
                         <i class="fas fa-plus"></i> Novo Projeto
                     </button>
                 </div>
-
                 <div class="admin-card">
                     <div class="admin-card-body">
-                        <div class="projects-grid" id="projectsGrid">
-                            <p class="empty-state">Carregando projetos...</p>
+                        <div class="table-responsive">
+                            <table class="admin-table" id="projetosTable">
+                                <thead>
+                                    <tr>
+                                        <th>Titulo</th>
+                                        <th>Cliente</th>
+                                        <th>Status</th>
+                                        <th>Progresso</th>
+                                        <th>Data Inicio</th>
+                                        <th>Acoes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="projetosTableBody">
+                                    <tr><td colspan="6" class="empty-state">Carregando projetos...</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Financeiro Section -->
+            <!-- ===================== FOTOS ===================== -->
+            <section id="fotos-section" class="admin-section">
+                <div class="section-header">
+                    <h2>Sistema de Provas de Fotos</h2>
+                    <button class="btn-admin-primary" onclick="openAddProvaModal()">
+                        <i class="fas fa-upload"></i> Nova Prova
+                    </button>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <div class="table-responsive">
+                            <table class="admin-table" id="fotosTable">
+                                <thead>
+                                    <tr>
+                                        <th>Titulo</th>
+                                        <th>Cliente</th>
+                                        <th>Projeto</th>
+                                        <th>Qtd Fotos</th>
+                                        <th>Selecionadas</th>
+                                        <th>Status</th>
+                                        <th>Acoes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fotosTableBody">
+                                    <tr><td colspan="7" class="empty-state">Nenhuma prova cadastrada</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================== FINANCEIRO ===================== -->
             <section id="financeiro-section" class="admin-section">
                 <div class="section-header">
-                    <h2>Gestão Financeira Privada</h2>
+                    <h2>Gestao Financeira Privada</h2>
                     <div>
-                        <button class="btn-admin-success" onclick="openAddIncomeModal()">
+                        <button class="btn-admin-success" onclick="openAddTransactionModal('receita')">
                             <i class="fas fa-plus"></i> Receita
                         </button>
-                        <button class="btn-admin-danger" onclick="openAddExpenseModal()">
+                        <button class="btn-admin-danger" onclick="openAddTransactionModal('despesa')">
                             <i class="fas fa-minus"></i> Despesa
                         </button>
                     </div>
                 </div>
-
                 <div class="admin-stats-grid">
                     <div class="admin-stat-card">
-                        <div class="stat-icon green">
-                            <i class="fas fa-arrow-up"></i>
-                        </div>
+                        <div class="stat-icon green"><i class="fas fa-arrow-up"></i></div>
                         <div class="stat-info">
                             <h3 id="totalReceitas">R$ 0</h3>
                             <p>Total Receitas</p>
                         </div>
                     </div>
-
                     <div class="admin-stat-card">
-                        <div class="stat-icon red">
-                            <i class="fas fa-arrow-down"></i>
-                        </div>
+                        <div class="stat-icon red"><i class="fas fa-arrow-down"></i></div>
                         <div class="stat-info">
                             <h3 id="totalDespesas">R$ 0</h3>
                             <p>Total Despesas</p>
                         </div>
                     </div>
-
                     <div class="admin-stat-card">
-                        <div class="stat-icon blue">
-                            <i class="fas fa-balance-scale"></i>
-                        </div>
+                        <div class="stat-icon blue"><i class="fas fa-balance-scale"></i></div>
                         <div class="stat-info">
                             <h3 id="saldoLiquido">R$ 0</h3>
-                            <p>Saldo Líquido</p>
+                            <p>Saldo Liquido</p>
                         </div>
                     </div>
                 </div>
-
                 <div class="admin-card">
                     <div class="admin-card-body">
                         <div class="table-responsive">
@@ -262,16 +279,15 @@
                                     <tr>
                                         <th>Data</th>
                                         <th>Tipo</th>
-                                        <th>Descrição</th>
+                                        <th>Descricao</th>
                                         <th>Categoria</th>
+                                        <th>Metodo</th>
                                         <th>Valor</th>
-                                        <th>Ações</th>
+                                        <th>Acoes</th>
                                     </tr>
                                 </thead>
                                 <tbody id="financeiroTableBody">
-                                    <tr>
-                                        <td colspan="6" class="empty-state">Nenhuma transação registrada</td>
-                                    </tr>
+                                    <tr><td colspan="7" class="empty-state">Nenhuma transacao registrada</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -279,51 +295,155 @@
                 </div>
             </section>
 
-            <!-- Outras seções (simplificadas por enquanto) -->
-            <section id="fotos-section" class="admin-section">
-                <h2>Sistema de Provas de Fotos</h2>
-                <p>Sistema de upload e aprovação de fotos - Em desenvolvimento</p>
-            </section>
-
+            <!-- ===================== PORTFOLIO ===================== -->
             <section id="portfolio-section" class="admin-section">
-                <h2>Gerenciar Portfólio</h2>
-                <p>Gestão do portfólio do site - Em desenvolvimento</p>
+                <div class="section-header">
+                    <h2>Gerenciar Portfolio</h2>
+                    <button class="btn-admin-primary" onclick="openAddPortfolioModal()">
+                        <i class="fas fa-plus"></i> Novo Item
+                    </button>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <div class="table-responsive">
+                            <table class="admin-table" id="portfolioTable">
+                                <thead>
+                                    <tr>
+                                        <th>Titulo</th>
+                                        <th>Categoria</th>
+                                        <th>Destaque</th>
+                                        <th>Data</th>
+                                        <th>Acoes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="portfolioTableBody">
+                                    <tr><td colspan="5" class="empty-state">Nenhum item no portfolio</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </section>
 
+            <!-- ===================== DEPOIMENTOS ===================== -->
             <section id="depoimentos-section" class="admin-section">
-                <h2>Gerenciar Depoimentos</h2>
-                <p>Gestão de depoimentos - Em desenvolvimento</p>
+                <div class="section-header">
+                    <h2>Gerenciar Depoimentos</h2>
+                    <button class="btn-admin-primary" onclick="openAddDepoimentoModal()">
+                        <i class="fas fa-plus"></i> Novo Depoimento
+                    </button>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <div class="table-responsive">
+                            <table class="admin-table" id="depoimentosTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Empresa</th>
+                                        <th>Texto</th>
+                                        <th>Ativo</th>
+                                        <th>Acoes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="depoimentosTableBody">
+                                    <tr><td colspan="5" class="empty-state">Nenhum depoimento cadastrado</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </section>
 
+            <!-- ===================== CONFIGURACOES ===================== -->
             <section id="configuracoes-section" class="admin-section">
-                <h2>Configurações do Site</h2>
-                <p>Configurações gerais - Em desenvolvimento</p>
+                <div class="section-header">
+                    <h2>Configuracoes do Site</h2>
+                    <button class="btn-admin-primary" onclick="saveConfiguracoes()">
+                        <i class="fas fa-save"></i> Salvar
+                    </button>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <form id="configForm" class="admin-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="configWhatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</label>
+                                    <input type="text" id="configWhatsapp" placeholder="(11) 99999-9999">
+                                </div>
+                                <div class="form-group">
+                                    <label for="configEmail"><i class="fas fa-envelope"></i> Email</label>
+                                    <input type="email" id="configEmail" placeholder="contato@joaovcantuaria.com">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="configInstagram"><i class="fab fa-instagram"></i> Instagram</label>
+                                    <input type="text" id="configInstagram" placeholder="@joaovcantuaria">
+                                </div>
+                                <div class="form-group">
+                                    <label for="configLinkedin"><i class="fab fa-linkedin"></i> LinkedIn</label>
+                                    <input type="text" id="configLinkedin" placeholder="linkedin.com/in/joaovcantuaria">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="configTitulo"><i class="fas fa-heading"></i> Titulo do Site</label>
+                                    <input type="text" id="configTitulo" placeholder="Joao V. Cantuaria">
+                                </div>
+                                <div class="form-group">
+                                    <label for="configSubtitulo"><i class="fas fa-align-left"></i> Subtitulo</label>
+                                    <input type="text" id="configSubtitulo" placeholder="Estrategias Visuais que Transformam">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="configSobre"><i class="fas fa-info-circle"></i> Texto Sobre</label>
+                                <textarea id="configSobre" rows="4" placeholder="Texto da secao sobre..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </section>
+
         </div>
     </main>
 
+    <!-- ===================== MODAIS ===================== -->
+
+    <!-- Modal Generico -->
+    <div class="admin-modal-overlay" id="adminModalOverlay">
+        <div class="admin-modal" id="adminModal">
+            <div class="admin-modal-header">
+                <h3 id="modalTitle">Modal</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="admin-modal-body" id="modalBody">
+                <!-- Conteudo dinamico -->
+            </div>
+        </div>
+    </div>
+
     <!-- Supabase SDK -->
-    <!-- v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
         const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
 
-        // Inicializar Supabase imediatamente — window.supabase já está disponível aqui
+        // Inicializar Supabase imediatamente
         var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Verificar autenticação e permissão admin ANTES de carregar qualquer coisa
+        // Verificar autenticacao e permissao admin ANTES de carregar qualquer coisa
         (async function() {
             try {
-                // 1. Verificar sessão
                 const { data: { session } } = await supabase.auth.getSession();
                 if (!session) {
                     window.location.replace('admin-login.html');
                     return;
                 }
 
-                // 2. Verificar se é admin
                 const { data: adminData } = await supabase
                     .from('admins')
                     .select('id')
@@ -336,15 +456,15 @@
                     return;
                 }
 
-                // 3. É admin — atualizar nome na interface
                 const adminNameEl = document.querySelector('.admin-user-name');
                 if (adminNameEl) adminNameEl.textContent = session.user.email.split('@')[0];
 
             } catch (e) {
-                console.error('Erro na autenticação:', e);
+                console.error('Erro na autenticacao:', e);
                 window.location.replace('admin-login.html');
             }
         })();
     </script>
-    <script src="admin.js"></script></body>
+    <script src="admin.js"></script>
+</body>
 </html>
