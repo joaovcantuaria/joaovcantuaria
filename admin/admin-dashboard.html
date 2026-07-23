@@ -433,48 +433,41 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
         var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Verificar admin - esperar sessao com retry
-        (async function() {
-            console.log('Dashboard: verificando sessao...');
-            
-            // Tentar pegar sessao ate 10 vezes (a sessao pode demorar a carregar do storage)
-            let session = null;
-            for (let i = 0; i < 10; i++) {
-                const { data } = await supabase.auth.getSession();
-                session = data.session;
-                if (session) break;
-                console.log('Dashboard: sessao nao encontrada, tentativa', i + 1);
-                await new Promise(r => setTimeout(r, 500));
+        // Usar onAuthStateChange - metodo oficial e confiavel
+        // Ele dispara INITIAL_SESSION quando a sessao e carregada do storage
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log('Dashboard auth event:', event);
+
+            if (event === 'INITIAL_SESSION') {
+                if (!session) {
+                    // Realmente nao tem sessao
+                    console.log('Dashboard: sem sessao, redirecionando');
+                    window.location.replace('admin-login.html');
+                    return;
+                }
+
+                // Verificar admin
+                const { data: adminData } = await supabase
+                    .from('admins')
+                    .select('id')
+                    .eq('id', session.user.id)
+                    .maybeSingle();
+
+                if (!adminData) {
+                    await supabase.auth.signOut();
+                    window.location.replace('admin-login.html?erro=acesso_negado');
+                    return;
+                }
+
+                console.log('Dashboard: ADMIN OK -', session.user.email);
+                const adminNameEl = document.querySelector('.admin-user-name');
+                if (adminNameEl) adminNameEl.textContent = session.user.email.split('@')[0];
             }
 
-            if (!session) {
-                console.log('Dashboard: sem sessao apos 10 tentativas, redirecionando');
+            if (event === 'SIGNED_OUT') {
                 window.location.replace('admin-login.html');
-                return;
             }
-
-            console.log('Dashboard: sessao encontrada para', session.user.email);
-
-            // Verificar admin
-            const { data: adminData, error: adminError } = await supabase
-                .from('admins')
-                .select('id')
-                .eq('id', session.user.id)
-                .maybeSingle();
-
-            console.log('Dashboard: admin check:', { adminData, adminError });
-
-            if (!adminData) {
-                console.log('Dashboard: nao e admin');
-                await supabase.auth.signOut();
-                window.location.replace('admin-login.html?erro=acesso_negado');
-                return;
-            }
-
-            console.log('Dashboard: ADMIN CONFIRMADO!');
-            const adminNameEl = document.querySelector('.admin-user-name');
-            if (adminNameEl) adminNameEl.textContent = session.user.email.split('@')[0];
-        })();
+        });
     </script>
     <script src="admin.js"></script>
 </body>
