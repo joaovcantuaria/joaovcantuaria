@@ -438,19 +438,34 @@
         // Verificar autenticacao e permissao admin ANTES de carregar qualquer coisa
         (async function() {
             try {
-                const { data: { session } } = await supabase.auth.getSession();
+                // Aguardar sessao ser restaurada (pode demorar no GitHub Pages)
+                let session = null;
+                for (let i = 0; i < 10; i++) {
+                    const { data } = await supabase.auth.getSession();
+                    session = data.session;
+                    if (session) break;
+                    await new Promise(r => setTimeout(r, 500));
+                }
+
                 if (!session) {
+                    console.log('Sem sessao, redirecionando...');
                     window.location.replace('admin-login.html');
                     return;
                 }
 
-                const { data: adminData } = await supabase
+                console.log('Sessao OK, user:', session.user.id, session.user.email);
+
+                // Verificar se e admin - tentar com e sem RLS
+                const { data: adminData, error: adminError } = await supabase
                     .from('admins')
                     .select('id')
                     .eq('id', session.user.id)
-                    .single();
+                    .maybeSingle();
+
+                console.log('Admin check:', { adminData, adminError });
 
                 if (!adminData) {
+                    console.log('Usuario nao e admin. Saindo...');
                     await supabase.auth.signOut();
                     window.location.replace('admin-login.html?erro=acesso_negado');
                     return;
