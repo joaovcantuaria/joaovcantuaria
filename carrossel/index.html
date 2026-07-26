@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Carrossel - Joao Vitor Cantuaria</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@100;200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #C6A972;
+            --gold-dark: #a8884e;
+            --black: #0a0a0a;
+            --black-soft: #111111;
+            --black-card: #161616;
+            --white: #ffffff;
+            --white-dim: rgba(255,255,255,0.65);
+            --border: rgba(198,169,114,0.18);
+            --border-subtle: rgba(255,255,255,0.06);
+            --font-body: 'DM Sans', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background: var(--black); color: var(--white); line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        .page-header { padding: 3rem 0 2rem; text-align: center; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+        .page-header .brand { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+        .page-header h1 { font-family: var(--font-heading); font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 400; margin-bottom: 0.5rem; }
+        .page-header p { font-size: 0.9rem; color: var(--white-dim); font-weight: 300; max-width: 550px; margin: 0 auto; }
+
+        /* Steps */
+        .step { margin-bottom: 3rem; display: none; }
+        .step.active { display: block; }
+        .step-label { font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .step-title { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 400; margin-bottom: 1.5rem; }
+
+        /* Model Selection */
+        .models-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.25rem; }
+        .model-card {
+            background: var(--black-card); border: 2px solid var(--border-subtle); border-radius: var(--radius);
+            padding: 1.5rem; cursor: pointer; transition: var(--transition); text-align: center;
+        }
+        .model-card:hover { border-color: var(--border); transform: translateY(-3px); }
+        .model-card.selected { border-color: var(--gold); box-shadow: 0 0 20px rgba(198,169,114,0.1); }
+        .model-card .model-preview { width: 100%; aspect-ratio: 3/1; background: var(--black-soft); border-radius: 8px; margin-bottom: 1rem; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
+        .model-card .model-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .model-card .model-info { font-size: 0.78rem; color: var(--white-dim); }
+
+        /* Mini preview layouts */
+        .mini-layout { display: flex; gap: 1px; width: 100%; height: 100%; padding: 4px; }
+        .mini-slide { flex: 1; display: grid; gap: 1px; padding: 1px; }
+        .mini-slot { background: rgba(198,169,114,0.15); border-radius: 2px; }
+
+        /* Upload Section */
+        .upload-area { margin-bottom: 2rem; }
+        .dropzone-carousel {
+            border: 2px dashed var(--border); border-radius: var(--radius); padding: 3rem 2rem;
+            text-align: center; cursor: pointer; transition: var(--transition);
+        }
+        .dropzone-carousel:hover, .dropzone-carousel.dragover { border-color: var(--gold); background: rgba(198,169,114,0.03); }
+        .dropzone-carousel i { font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem; display: block; }
+        .dropzone-carousel p { font-size: 0.85rem; color: var(--white-dim); }
+        .dropzone-carousel small { font-size: 0.72rem; color: rgba(255,255,255,0.25); margin-top: 0.5rem; display: block; }
+
+        .photos-preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; margin-top: 1.5rem; }
+        .photo-thumb { aspect-ratio: 3/4; background: var(--black-soft); border-radius: 6px; overflow: hidden; position: relative; }
+        .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-thumb .remove { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.75); color: var(--white); border: none; width: 18px; height: 18px; font-size: 0.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .photo-count { font-size: 0.82rem; color: var(--gold); margin-top: 0.75rem; }
+
+        /* Text Input */
+        .text-config { margin-bottom: 2rem; }
+        .text-input-group { margin-bottom: 1.25rem; }
+        .text-input-group label { display: block; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white-dim); margin-bottom: 0.4rem; }
+        .text-input-group input { width: 100%; max-width: 400px; background: transparent; border: none; border-bottom: 1px solid var(--border-subtle); padding: 0.7rem 0; font-size: 1rem; color: var(--white); font-family: var(--font-body); outline: none; }
+        .text-input-group input:focus { border-bottom-color: var(--gold); }
+        .text-input-group input::placeholder { color: rgba(255,255,255,0.2); }
+        .text-input-group small { font-size: 0.72rem; color: rgba(255,255,255,0.3); margin-top: 0.3rem; display: block; }
+
+        /* Color picker */
+        .color-options { display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap; }
+        .color-opt { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: var(--transition); }
+        .color-opt:hover, .color-opt.selected { border-color: var(--gold); transform: scale(1.15); }
+
+        /* Buttons */
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; border: none; cursor: pointer; font-family: var(--font-body); transition: var(--transition); text-decoration: none; }
+        .btn-primary { background: var(--gold); color: var(--black); }
+        .btn-primary:hover { background: #d4b87a; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(198,169,114,0.2); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-secondary { background: transparent; color: var(--white); border: 1px solid var(--border-subtle); }
+        .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+        .actions-bar { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+
+        /* Canvas Preview */
+        .canvas-container { margin: 2rem 0; overflow-x: auto; padding-bottom: 1rem; }
+        .canvas-container canvas { display: block; border-radius: 8px; max-height: 400px; }
+        .slides-preview { display: flex; gap: 1rem; margin: 2rem 0; overflow-x: auto; padding-bottom: 1rem; }
+        .slide-card { flex-shrink: 0; width: 180px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-subtle); transition: var(--transition); cursor: pointer; position: relative; }
+        .slide-card:hover { border-color: var(--gold); }
+        .slide-card img { width: 100%; display: block; }
+        .slide-card .slide-num { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); color: var(--gold); font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; }
+        .slide-card .slide-dl { position: absolute; bottom: 8px; right: 8px; background: var(--gold); color: var(--black); border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; cursor: pointer; opacity: 0; transition: opacity 0.3s; }
+        .slide-card:hover .slide-dl { opacity: 1; }
+
+        .download-all { margin-top: 1.5rem; }
+
+        /* Back link */
+        .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--gold); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem; opacity: 0.7; transition: opacity 0.3s; }
+        .back-link:hover { opacity: 1; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .models-grid { grid-template-columns: 1fr 1fr; }
+            .container { padding: 0 1.25rem; }
+            .slide-card { width: 140px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao Site</a>
+
+        <div class="page-header">
+            <p class="brand">Joao Vitor Cantuaria</p>
+            <h1>Gerador de Carrossel</h1>
+            <p>Crie carrosseis infinitos para Instagram com layouts profissionais. Escolha um modelo, suba suas fotos e baixe as laminas prontas para postar.</p>
+        </div>
+
+        <!-- STEP 1: Escolher Modelo -->
+        <div class="step active" id="step1">
+            <span class="step-label"><i class="fas fa-th-large"></i> Passo 1</span>
+            <h2 class="step-title">Escolha o modelo</h2>
+            <div class="models-grid" id="modelsGrid"></div>
+            <div class="actions-bar" style="margin-top:2rem;">
+                <button class="btn btn-primary" id="btnToStep2" disabled>Proximo <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- STEP 2: Upload Fotos + Texto -->
+        <div class="step" id="step2">
+            <span class="step-label"><i class="fas fa-images"></i> Passo 2</span>
+            <h2 class="step-title">Suba suas fotos e personalize</h2>
+
+            <div class="upload-area">
+                <div class="dropzone-carousel" id="carouselDropzone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Arraste suas fotos ou clique para selecionar</p>
+                    <small id="photoLimit">Ate 12 fotos (JPG, PNG, WebP)</small>
+                </div>
+                <input type="file" id="carouselFileInput" style="display:none" multiple accept="image/*">
+                <p class="photo-count" id="photoCount" style="display:none;"></p>
+                <div class="photos-preview" id="photosPreview"></div>
+            </div>
+
+            <div class="text-config">
+                <div class="text-input-group">
+                    <label>Texto decorativo (opcional)</label>
+                    <input type="text" id="carouselText" placeholder="Ex: 25 de Julho, Meu Ensaio, Natureza...">
+                    <small>Aparece na ultima lamina do carrossel</small>
+                </div>
+                <div class="text-input-group">
+                    <label>Cor de fundo do carrossel</label>
+                    <div class="color-options" id="colorOptions">
+                        <div class="color-opt selected" data-color="#ffffff" style="background:#ffffff;"></div>
+                        <div class="color-opt" data-color="#0a0a0a" style="background:#0a0a0a;border:1px solid rgba(255,255,255,0.2);"></div>
+                        <div class="color-opt" data-color="#1a1a1a" style="background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);"></div>
+                        <div class="color-opt" data-color="#f5f0e8" style="background:#f5f0e8;"></div>
+                        <div class="color-opt" data-color="#2c2418" style="background:#2c2418;"></div>
+                        <div class="color-opt" data-color="#e8e0d4" style="background:#e8e0d4;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions-bar">
+                <button class="btn btn-secondary" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> Voltar</button>
+                <button class="btn btn-primary" id="btnGenerate" disabled><i class="fas fa-magic"></i> Gerar Carrossel</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: Preview + Download -->
+        <div class="step" id="step3">
+            <span class="step-label"><i class="fas fa-check-circle"></i> Resultado</span>
+            <h2 class="step-title">Seu carrossel esta pronto!</h2>
+            <p style="font-size:0.85rem;color:var(--white-dim);margin-bottom:1.5rem;">Cada lamina continua exatamente de onde a anterior termina. Basta postar na ordem no Instagram.</p>
+
+            <div class="slides-preview" id="slidesPreview"></div>
+
+            <div class="actions-bar download-all">
+                <button class="btn btn-primary" id="btnDownloadAll"><i class="fas fa-download"></i> Baixar Todas as Laminas</button>
+                <button class="btn btn-secondary" onclick="goToStep(1)"><i class="fas fa-redo"></i> Criar Outro</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden canvas -->
+    <canvas id="mainCanvas" style="display:none;"></canvas>
+
+    <script src="carrossel.js"></script>
+</body>
+</html>
