@@ -271,6 +271,12 @@ function updateGenerateBtn() {
 async function generateCarousel() {
     if (!selectedModel || uploadedPhotos.length === 0) return;
 
+    // Verificar se ja esta cadastrado (sessao)
+    if (!sessionStorage.getItem('carrossel_lead')) {
+        showRegistrationModal();
+        return;
+    }
+
     const btn = document.getElementById('btnGenerate');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
@@ -430,3 +436,99 @@ function isColorLight(hex) {
 // START
 // ========================================
 document.addEventListener('DOMContentLoaded', init);
+
+
+// ========================================
+// REGISTRATION GATE
+// ========================================
+const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+
+function showRegistrationModal() {
+    // Create modal if it doesn't exist
+    if (!document.getElementById('regModal')) {
+        const modal = document.createElement('div');
+        modal.id = 'regModal';
+        modal.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(6px);';
+        modal.innerHTML = `
+            <div style="background:#161616;border:1px solid rgba(198,169,114,0.2);border-radius:16px;padding:2.5rem;max-width:420px;width:100%;">
+                <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400;margin-bottom:0.5rem;">Quase la!</h3>
+                <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:2rem;font-weight:300;">Cadastre-se gratuitamente para gerar seus carrosseis ilimitados.</p>
+                <form id="regForm">
+                    <div style="margin-bottom:1.5rem;">
+                        <label style="display:block;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-bottom:0.4rem;">Seu Nome</label>
+                        <input type="text" id="regNome" required placeholder="Nome completo" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.13);padding:0.7rem 0;font-size:0.95rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;">
+                    </div>
+                    <div style="margin-bottom:1.5rem;">
+                        <label style="display:block;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-bottom:0.4rem;">E-mail</label>
+                        <input type="email" id="regEmail" required placeholder="seu@email.com" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.13);padding:0.7rem 0;font-size:0.95rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;">
+                    </div>
+                    <div style="margin-bottom:1.5rem;">
+                        <label style="display:block;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-bottom:0.4rem;">Telefone</label>
+                        <input type="tel" id="regTelefone" required placeholder="(11) 99999-9999" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.13);padding:0.7rem 0;font-size:0.95rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;">
+                    </div>
+                    <div style="display:flex;gap:0.75rem;margin-top:2rem;">
+                        <button type="button" onclick="document.getElementById('regModal').style.display='none'" style="flex:1;background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);padding:0.75rem;font-family:'DM Sans',sans-serif;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">Cancelar</button>
+                        <button type="submit" id="regSubmitBtn" style="flex:1;background:#C6A972;color:#0a0a0a;border:none;padding:0.75rem;font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">Criar Conta</button>
+                    </div>
+                    <p id="regError" style="color:#f87171;font-size:0.78rem;margin-top:0.75rem;display:none;"></p>
+                </form>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        document.getElementById('regForm').addEventListener('submit', handleRegistration);
+    } else {
+        document.getElementById('regModal').style.display = 'flex';
+    }
+}
+
+async function handleRegistration(e) {
+    e.preventDefault();
+    const nome = document.getElementById('regNome').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const telefone = document.getElementById('regTelefone').value.trim();
+
+    if (!nome || !email || !telefone) {
+        document.getElementById('regError').textContent = 'Preencha todos os campos.';
+        document.getElementById('regError').style.display = 'block';
+        return;
+    }
+
+    const btn = document.getElementById('regSubmitBtn');
+    btn.textContent = 'Salvando...';
+    btn.disabled = true;
+
+    try {
+        // Salvar lead no Supabase
+        await fetch(`${SUPABASE_URL}/rest/v1/cadastros_leads`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+                nome: nome,
+                email: email,
+                telefone: telefone,
+                background_titulo: 'Gerador de Carrossel'
+            })
+        });
+
+        // Salvar na sessao para nao pedir novamente
+        sessionStorage.setItem('carrossel_lead', JSON.stringify({ nome, email }));
+
+        // Fechar modal e gerar
+        document.getElementById('regModal').style.display = 'none';
+        generateCarousel();
+
+    } catch (err) {
+        document.getElementById('regError').textContent = 'Erro ao salvar. Tente novamente.';
+        document.getElementById('regError').style.display = 'block';
+    } finally {
+        btn.textContent = 'Criar Conta';
+        btn.disabled = false;
+    }
+}
