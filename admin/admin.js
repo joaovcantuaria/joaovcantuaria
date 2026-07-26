@@ -977,33 +977,91 @@ async function loadBackgrounds() {
             rankingEl.style.display = 'none';
         }
 
-        // Grid
+        // Agrupar por pasta
         const container = document.getElementById('backgroundsGrid');
         if (!data || data.length === 0) { container.innerHTML = '<p class="empty">Nenhum background cadastrado</p>'; return; }
-        container.innerHTML = data.map(bg => {
-            const thumb = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_200,h_350,c_fill,q_70/${bg.imagem_url}.jpg`;
-            return `<div class="galeria-row" style="align-items:center;">
-                <div style="display:flex;align-items:center;gap:1rem;">
-                    <img src="${thumb}" style="width:45px;height:80px;object-fit:cover;border-radius:6px;border:1px solid var(--border-subtle);">
-                    <div class="galeria-row-info">
-                        <strong>${bg.titulo || 'Sem titulo'}</strong>
-                        <span>${bg.downloads || 0} downloads · ${bg.ativo ? 'Ativo' : 'Inativo'} · ${formatDate(bg.created_at)}</span>
+
+        const pastas = {};
+        data.forEach(bg => {
+            const pasta = bg.pasta || 'Geral';
+            if (!pastas[pasta]) pastas[pasta] = [];
+            pastas[pasta].push(bg);
+        });
+
+        container.innerHTML = Object.entries(pastas).map(([pasta, bgs]) => {
+            const items = bgs.map(bg => {
+                const thumb = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_200,h_350,c_fill,q_70/${bg.imagem_url}.jpg`;
+                return `<div class="galeria-row" style="align-items:center;">
+                    <div style="display:flex;align-items:center;gap:1rem;">
+                        <img src="${thumb}" style="width:45px;height:80px;object-fit:cover;border-radius:6px;border:1px solid var(--border-subtle);">
+                        <div class="galeria-row-info">
+                            <strong>${bg.titulo || 'Sem titulo'}</strong>
+                            <span>${bg.downloads || 0} downloads · ${bg.ativo ? 'Ativo' : 'Inativo'} · ${formatDate(bg.created_at)}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="galeria-row-actions">
-                    <button class="tbl-btn ${bg.ativo ? '' : 'danger'}" onclick="toggleBackground('${bg.id}', ${bg.ativo})" title="${bg.ativo ? 'Desativar' : 'Ativar'}">
-                        <i class="fas fa-${bg.ativo ? 'eye' : 'eye-slash'}"></i>
-                    </button>
-                    <button class="tbl-btn danger" onclick="deleteBackground('${bg.id}')"><i class="fas fa-trash"></i></button>
-                </div>
+                    <div class="galeria-row-actions">
+                        <button class="tbl-btn" onclick="openBgInsights('${bg.id}', '${(bg.titulo||'Sem titulo').replace(/'/g,"\\'")}')" title="Insights"><i class="fas fa-chart-pie"></i></button>
+                        <button class="tbl-btn ${bg.ativo ? '' : 'danger'}" onclick="toggleBackground('${bg.id}', ${bg.ativo})" title="${bg.ativo ? 'Desativar' : 'Ativar'}">
+                            <i class="fas fa-${bg.ativo ? 'eye' : 'eye-slash'}"></i>
+                        </button>
+                        <button class="tbl-btn danger" onclick="deleteBackground('${bg.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+            return `<div style="margin-bottom:2rem;">
+                <p style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;font-weight:500;display:flex;align-items:center;gap:0.5rem;"><i class="fas fa-folder" style="font-size:0.65rem;"></i> ${pasta} <span style="color:var(--white-dim);font-weight:400;">(${bgs.length})</span></p>
+                ${items}
             </div>`;
         }).join('');
     } catch (e) { console.error(e); }
 }
 
+async function openBgInsights(bgId, titulo) {
+    // Buscar downloads desse background
+    const { data: leads } = await supabase.from('cadastros_leads').select('*').eq('background_id', bgId).order('created_at', { ascending: false });
+    const { data: bg } = await supabase.from('backgrounds').select('downloads, created_at').eq('id', bgId).single();
+
+    const totalDl = bg ? bg.downloads || 0 : 0;
+    const diasAtivo = bg ? Math.max(1, Math.floor((Date.now() - new Date(bg.created_at).getTime()) / 86400000)) : 1;
+    const mediadia = (totalDl / diasAtivo).toFixed(1);
+
+    let leadsHTML = '<p style="color:rgba(255,255,255,0.3);font-size:0.82rem;text-align:center;padding:1rem;">Nenhum download registrado ainda.</p>';
+    if (leads && leads.length > 0) {
+        leadsHTML = `<div style="max-height:250px;overflow-y:auto;">` + leads.map(l => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border-subtle);">
+                <div>
+                    <span style="font-size:0.85rem;color:var(--white);">${l.nome}</span>
+                    <span style="font-size:0.75rem;color:var(--white-dim);display:block;">${l.email} · ${l.telefone}</span>
+                </div>
+                <span style="font-size:0.72rem;color:var(--white-dim);">${formatDate(l.created_at)}</span>
+            </div>
+        `).join('') + `</div>`;
+    }
+
+    openModal(`Insights: ${titulo}`, `
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:2rem;">
+            <div style="text-align:center;padding:1rem;background:var(--black-soft);border-radius:8px;">
+                <span style="font-size:1.5rem;font-weight:700;color:var(--gold);display:block;">${totalDl}</span>
+                <span style="font-size:0.68rem;color:var(--white-dim);text-transform:uppercase;letter-spacing:1px;">Downloads</span>
+            </div>
+            <div style="text-align:center;padding:1rem;background:var(--black-soft);border-radius:8px;">
+                <span style="font-size:1.5rem;font-weight:700;color:var(--green);display:block;">${leads ? leads.length : 0}</span>
+                <span style="font-size:0.68rem;color:var(--white-dim);text-transform:uppercase;letter-spacing:1px;">Cadastros</span>
+            </div>
+            <div style="text-align:center;padding:1rem;background:var(--black-soft);border-radius:8px;">
+                <span style="font-size:1.5rem;font-weight:700;color:var(--blue);display:block;">${mediadia}</span>
+                <span style="font-size:0.68rem;color:var(--white-dim);text-transform:uppercase;letter-spacing:1px;">Downloads/dia</span>
+            </div>
+        </div>
+        <p style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--white-dim);margin-bottom:0.75rem;font-weight:500;">Quem baixou</p>
+        ${leadsHTML}
+    `);
+}
+
 function openAddBackgroundModal() {
     openModal('Novo Background', `<form class="modal-form" onsubmit="saveBackground(event)">
         <div class="form-group"><label>Titulo (opcional)</label><input type="text" id="bgTitulo" placeholder="Ex: Paisagem Noturna"></div>
+        <div class="form-group"><label>Pasta / Categoria</label><input type="text" id="bgPasta" placeholder="Ex: Natureza, Cidade, Abstrato..." value="Geral"><small style="color:rgba(255,255,255,0.3);font-size:0.72rem;margin-top:0.3rem;display:block;">Organize por tema. Se a pasta nao existir, sera criada automaticamente.</small></div>
         <div class="form-group">
             <label>Imagem do Wallpaper</label>
             <div class="dropzone" id="bgDropzone" onclick="document.getElementById('bgFileInput').click()">
@@ -1041,6 +1099,7 @@ async function saveBackground(e) {
     if (!bgSelectedFile) { showToast('Selecione uma imagem', 'error'); return; }
 
     const titulo = document.getElementById('bgTitulo').value.trim();
+    const pasta = document.getElementById('bgPasta').value.trim() || 'Geral';
     const btn = document.getElementById('btnSaveBg');
     btn.textContent = 'Enviando...';
     btn.disabled = true;
@@ -1052,6 +1111,7 @@ async function saveBackground(e) {
         const { error } = await supabase.from('backgrounds').insert([{
             titulo: titulo || null,
             imagem_url: publicId,
+            pasta: pasta,
             ativo: true
         }]);
         if (error) throw error;
@@ -1134,6 +1194,10 @@ function openBulkBackgroundModal() {
             <small style="color:rgba(255,255,255,0.3);font-size:0.72rem;margin-top:0.3rem;display:block;">Se preenchido, os titulos serao: "Paisagem 1", "Paisagem 2", etc.</small>
         </div>
         <div class="form-group">
+            <label>Pasta / Categoria</label>
+            <input type="text" id="bulkBgPasta" placeholder="Ex: Natureza, Cidade..." value="Geral">
+        </div>
+        <div class="form-group">
             <label>Imagens</label>
             <div class="dropzone" id="bulkBgDropzone" onclick="document.getElementById('bulkBgInput').click()">
                 <i class="fas fa-images"></i>
@@ -1193,6 +1257,7 @@ async function saveBulkBackgrounds(e) {
     if (bulkBgFiles.length === 0) { showToast('Selecione pelo menos uma imagem', 'error'); return; }
 
     const prefixo = document.getElementById('bulkBgPrefixo').value.trim();
+    const pasta = document.getElementById('bulkBgPasta').value.trim() || 'Geral';
     const btn = document.getElementById('btnBulkBg');
     btn.disabled = true;
 
@@ -1204,7 +1269,7 @@ async function saveBulkBackgrounds(e) {
             if (!publicId) continue;
 
             const titulo = prefixo ? `${prefixo} ${i + 1}` : null;
-            await supabase.from('backgrounds').insert([{ titulo, imagem_url: publicId, ativo: true }]);
+            await supabase.from('backgrounds').insert([{ titulo, imagem_url: publicId, pasta: pasta, ativo: true }]);
             successCount++;
         } catch (err) { console.error('Erro no upload ' + (i+1), err); }
     }
