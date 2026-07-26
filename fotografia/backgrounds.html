@@ -349,8 +349,25 @@
         .bg-back:hover { opacity: 1; }
 
         @media (max-width: 600px) {
-            .bg-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-            .bg-item-overlay { opacity: 1; }
+            .bg-grid { grid-template-columns: 1fr; gap: 1.5rem; max-width: 320px; margin: 0 auto; }
+            .bg-item { border-radius: 16px; }
+            .bg-item-overlay { 
+                opacity: 0;
+                background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.4) 30%, transparent 60%);
+                padding: 1.5rem;
+            }
+            .bg-item-title { font-size: 0.9rem; margin-bottom: 0.75rem; }
+            .bg-item-btn { padding: 0.7rem 1.3rem; font-size: 0.72rem; }
+            /* Tap to show overlay on mobile */
+            .bg-item.tapped .bg-item-overlay { opacity: 1; }
+            /* Hide iphone UI elements on mobile to keep it cleaner */
+            .iphone-statusbar { font-size: 0.45rem; }
+            .iphone-time { font-size: 2.5rem; }
+            .iphone-btn { width: 24px; height: 24px; }
+        }
+
+        @media (min-width: 601px) and (max-width: 900px) {
+            .bg-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         }
     </style>
 </head>
@@ -425,6 +442,29 @@
         let selectedBgId = null;
         let selectedBgTitulo = null;
         let selectedBgUrl = null;
+
+        // Mobile tap-to-reveal overlay
+        let lastTappedItem = null;
+        document.addEventListener('click', (e) => {
+            const bgItem = e.target.closest('.bg-item');
+            if (!bgItem) {
+                // Clicked outside - hide all overlays
+                if (lastTappedItem) { lastTappedItem.classList.remove('tapped'); lastTappedItem = null; }
+                return;
+            }
+            // Only on mobile (no hover)
+            if (window.innerWidth <= 600) {
+                // If clicking the download button, let it through
+                if (e.target.closest('.bg-item-btn')) return;
+                
+                e.preventDefault();
+                if (lastTappedItem && lastTappedItem !== bgItem) {
+                    lastTappedItem.classList.remove('tapped');
+                }
+                bgItem.classList.toggle('tapped');
+                lastTappedItem = bgItem.classList.contains('tapped') ? bgItem : null;
+            }
+        });
 
         // Anti right-click e drag
         document.addEventListener('contextmenu', (e) => {
