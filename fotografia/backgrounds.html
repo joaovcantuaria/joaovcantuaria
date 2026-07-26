@@ -71,9 +71,107 @@
             padding: 1.25rem;
             opacity: 0;
             transition: opacity 0.3s;
+            z-index: 3;
         }
 
         .bg-item:hover .bg-item-overlay { opacity: 1; }
+
+        /* iPhone Lock Screen Mockup */
+        .iphone-ui {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12% 0 8%;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .iphone-statusbar {
+            position: absolute;
+            top: 5%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8%;
+            font-size: 0.5rem;
+            font-weight: 600;
+            opacity: 0.85;
+        }
+
+        .iphone-statusbar-right {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .iphone-lock {
+            font-size: 0.6rem;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+
+        .iphone-date {
+            font-size: 0.55rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            opacity: 0.9;
+        }
+
+        .iphone-time {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -2px;
+            margin-top: 1px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+        }
+
+        .iphone-bottom {
+            position: absolute;
+            bottom: 6%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10%;
+        }
+
+        .iphone-btn {
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
+            opacity: 0.9;
+        }
+
+        .iphone-homebar {
+            position: absolute;
+            bottom: 3%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35%;
+            height: 3px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .iphone-time { font-size: 2.2rem; }
+            .iphone-statusbar { font-size: 0.45rem; }
+            .iphone-btn { width: 22px; height: 22px; font-size: 0.45rem; }
+        }
 
         .bg-item-title {
             font-size: 0.8rem;
@@ -357,8 +455,34 @@
                     const thumb = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400,h_710,c_fill,q_75/${bg.imagem_url}.jpg`;
                     const item = document.createElement('div');
                     item.className = 'bg-item';
+                    
+                    // Gerar hora atual para o mockup
+                    const now = new Date();
+                    const hora = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                    const dias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
+                    const meses = ['jan.', 'fev.', 'mar.', 'abr.', 'mai.', 'jun.', 'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.'];
+                    const dataStr = dias[now.getDay()] + '. ' + now.getDate() + ' de ' + meses[now.getMonth()];
+
                     item.innerHTML = `
                         <img src="${thumb}" alt="${bg.titulo || 'Wallpaper'}" draggable="false">
+                        <div class="iphone-ui">
+                            <div class="iphone-statusbar">
+                                <span>TIM</span>
+                                <div class="iphone-statusbar-right">
+                                    <i class="fas fa-signal" style="font-size:0.4rem;"></i>
+                                    <i class="fas fa-wifi" style="font-size:0.4rem;"></i>
+                                    <i class="fas fa-battery-three-quarters" style="font-size:0.5rem;"></i>
+                                </div>
+                            </div>
+                            <i class="fas fa-lock iphone-lock"></i>
+                            <span class="iphone-date">${dataStr}</span>
+                            <span class="iphone-time">${hora}</span>
+                            <div class="iphone-bottom">
+                                <div class="iphone-btn"><i class="fas fa-flashlight" style="font-size:0.5rem;"></i></div>
+                                <div class="iphone-btn"><i class="fas fa-camera" style="font-size:0.5rem;"></i></div>
+                            </div>
+                            <div class="iphone-homebar"></div>
+                        </div>
                         <div class="bg-item-overlay">
                             <span class="bg-item-title">${bg.titulo || 'Wallpaper'}</span>
                             <button class="bg-item-btn" onclick="requestDownload('${bg.id}', '${(bg.titulo||'Wallpaper').replace(/'/g, "\\'")}', '${bg.imagem_url}')">
