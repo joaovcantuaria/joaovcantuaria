@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backgrounds Exclusivos - Joao Vitor Cantuaria</title>
+    <link rel="stylesheet" href="fotografia.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .bg-page { padding: 6rem 2rem 4rem; min-height: 100vh; }
+
+        .bg-header { text-align: center; margin-bottom: 3rem; }
+        .bg-header .section-label { margin-bottom: 1rem; }
+        .bg-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+        .bg-header p {
+            font-size: 0.9rem;
+            color: var(--white-dim);
+            font-weight: 300;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .bg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .bg-item {
+            position: relative;
+            aspect-ratio: 9/16;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--black-card);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .bg-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(198, 169, 114, 0.1);
+            border-color: var(--border);
+        }
+
+        .bg-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .bg-item-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10,10,10,0.85) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.25rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .bg-item:hover .bg-item-overlay { opacity: 1; }
+
+        .bg-item-title {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .bg-item-btn {
+            background: var(--gold);
+            color: var(--black);
+            border: none;
+            padding: 0.55rem 1rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            width: fit-content;
+        }
+
+        .bg-item-btn:hover { background: #d4b87a; }
+
+        .bg-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--white-dim);
+        }
+
+        .bg-empty i {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        /* Anti screenshot/save */
+        .bg-item img {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Modal de cadastro */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-bg.active { display: flex; }
+
+        .modal-bg-content {
+            background: #161616;
+            border: 1px solid rgba(198,169,114,0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .modal-bg-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 0.4rem;
+        }
+
+        .modal-bg-content > p {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .modal-bg-content .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-bg-content label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.38);
+            margin-bottom: 0.4rem;
+        }
+
+        .modal-bg-content input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.13);
+            padding: 0.7rem 0;
+            font-size: 0.95rem;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+        }
+
+        .modal-bg-content input:focus { border-bottom-color: #C6A972; }
+        .modal-bg-content input::placeholder { color: rgba(255,255,255,0.18); }
+
+        .modal-bg-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        .btn-modal-cancel {
+            flex: 1;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+            padding: 0.75rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .btn-modal-submit {
+            flex: 1;
+            background: #C6A972;
+            color: #0a0a0a;
+            border: none;
+            padding: 0.75rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-modal-submit:hover { background: #d4b87a; }
+        .btn-modal-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .modal-error {
+            color: #f87171;
+            font-size: 0.78rem;
+            margin-top: 0.75rem;
+            display: none;
+        }
+
+        .bg-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .bg-back:hover { opacity: 1; }
+
+        @media (max-width: 600px) {
+            .bg-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+            .bg-item-overlay { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header" class="scrolled">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo"><a href="index.html"><div class="logo-name"><span class="logo-first">Joao Vitor </span><span class="logo-last">Cantuaria</span></div><span class="logo-sub">FOTOGRAFIA</span></a></div>
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link">Fotografia</a></li>
+                        <li><a href="index.html#portfolio" class="nav-link">Portfolio</a></li>
+                        <li><a href="../index.html" class="nav-link">Site Principal</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="bg-page">
+        <div class="container">
+            <a href="index.html" class="bg-back"><i class="fas fa-arrow-left"></i> Voltar</a>
+
+            <div class="bg-header">
+                <span class="section-label">Exclusivos</span>
+                <h1>Backgrounds para Celular</h1>
+                <p>Wallpapers autorais em alta resolucao. Escolha o seu favorito e faca o download gratuito.</p>
+            </div>
+
+            <div id="bgContent">
+                <div class="bg-empty">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Carregando wallpapers...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Cadastro -->
+    <div class="modal-bg" id="cadastroModal">
+        <div class="modal-bg-content">
+            <h3>Quase la!</h3>
+            <p>Preencha seus dados para liberar o download gratuito.</p>
+            <form id="cadastroForm">
+                <div class="form-group">
+                    <label>Seu Nome</label>
+                    <input type="text" id="leadNome" required placeholder="Nome completo">
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="leadEmail" required placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Telefone</label>
+                    <input type="tel" id="leadTelefone" required placeholder="(11) 99999-9999">
+                </div>
+                <div class="modal-bg-actions">
+                    <button type="button" class="btn-modal-cancel" onclick="closeCadastroModal()">Cancelar</button>
+                    <button type="submit" class="btn-modal-submit" id="btnCadastro">Baixar Wallpaper</button>
+                </div>
+                <p class="modal-error" id="cadastroError"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+        const CLOUD_NAME = 'cpfik4th';
+
+        let selectedBgId = null;
+        let selectedBgTitulo = null;
+        let selectedBgUrl = null;
+
+        // Anti right-click e drag
+        document.addEventListener('contextmenu', (e) => {
+            if (e.target.tagName === 'IMG') e.preventDefault();
+        });
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.tagName === 'IMG') e.preventDefault();
+        });
+
+        // Carregar backgrounds
+        async function loadBGs() {
+            try {
+                const res = await fetch(
+                    `${SUPABASE_URL}/rest/v1/backgrounds?ativo=eq.true&select=*&order=created_at.desc`,
+                    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+                );
+                const data = await res.json();
+
+                if (!data || data.length === 0) {
+                    document.getElementById('bgContent').innerHTML = '<div class="bg-empty"><i class="fas fa-image"></i><p>Nenhum wallpaper disponivel no momento.</p></div>';
+                    return;
+                }
+
+                const grid = document.createElement('div');
+                grid.className = 'bg-grid';
+
+                data.forEach(bg => {
+                    const thumb = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400,h_710,c_fill,q_75/${bg.imagem_url}.jpg`;
+                    const item = document.createElement('div');
+                    item.className = 'bg-item';
+                    item.innerHTML = `
+                        <img src="${thumb}" alt="${bg.titulo || 'Wallpaper'}" draggable="false">
+                        <div class="bg-item-overlay">
+                            <span class="bg-item-title">${bg.titulo || 'Wallpaper'}</span>
+                            <button class="bg-item-btn" onclick="requestDownload('${bg.id}', '${(bg.titulo||'Wallpaper').replace(/'/g, "\\'")}', '${bg.imagem_url}')">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(item);
+                });
+
+                document.getElementById('bgContent').innerHTML = '';
+                document.getElementById('bgContent').appendChild(grid);
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('bgContent').innerHTML = '<div class="bg-empty"><i class="fas fa-exclamation-circle"></i><p>Erro ao carregar wallpapers.</p></div>';
+            }
+        }
+
+        // Solicitar download (abre modal de cadastro)
+        function requestDownload(id, titulo, url) {
+            selectedBgId = id;
+            selectedBgTitulo = titulo;
+            selectedBgUrl = url;
+            document.getElementById('cadastroModal').classList.add('active');
+            document.getElementById('leadNome').focus();
+        }
+
+        function closeCadastroModal() {
+            document.getElementById('cadastroModal').classList.remove('active');
+            document.getElementById('cadastroForm').reset();
+            document.getElementById('cadastroError').style.display = 'none';
+        }
+
+        // Submeter cadastro e liberar download
+        document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById('leadNome').value.trim();
+            const email = document.getElementById('leadEmail').value.trim();
+            const telefone = document.getElementById('leadTelefone').value.trim();
+
+            if (!nome || !email || !telefone) {
+                showCadastroError('Preencha todos os campos.');
+                return;
+            }
+
+            const btn = document.getElementById('btnCadastro');
+            btn.textContent = 'Processando...';
+            btn.disabled = true;
+
+            try {
+                // 1. Salvar lead
+                await fetch(`${SUPABASE_URL}/rest/v1/cadastros_leads`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        nome: nome,
+                        email: email,
+                        telefone: telefone,
+                        background_id: selectedBgId,
+                        background_titulo: selectedBgTitulo
+                    })
+                });
+
+                // 2. Incrementar contador de downloads
+                await fetch(`${SUPABASE_URL}/rest/v1/rpc/increment_downloads`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ bg_id: selectedBgId })
+                }).catch(() => {
+                    // Se a funcao RPC nao existir, incrementar manualmente
+                    fetch(`${SUPABASE_URL}/rest/v1/backgrounds?id=eq.${selectedBgId}&select=downloads`, {
+                        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                    }).then(r => r.json()).then(data => {
+                        const current = (data && data[0]) ? data[0].downloads : 0;
+                        fetch(`${SUPABASE_URL}/rest/v1/backgrounds?id=eq.${selectedBgId}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                                'Content-Type': 'application/json',
+                                'Prefer': 'return=minimal'
+                            },
+                            body: JSON.stringify({ downloads: current + 1 })
+                        });
+                    });
+                });
+
+                // 3. Disparar download
+                const downloadUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/fl_attachment/${selectedBgUrl}.jpg`;
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = (selectedBgTitulo || 'wallpaper') + '.jpg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // 4. Fechar modal
+                closeCadastroModal();
+
+            } catch (err) {
+                console.error(err);
+                showCadastroError('Erro ao processar. Tente novamente.');
+            } finally {
+                btn.textContent = 'Baixar Wallpaper';
+                btn.disabled = false;
+            }
+        });
+
+        function showCadastroError(msg) {
+            const el = document.getElementById('cadastroError');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+
+        // Anti print screen (CSS overlay method)
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'PrintScreen') {
+                document.body.style.filter = 'blur(10px)';
+                setTimeout(() => { document.body.style.filter = ''; }, 1500);
+            }
+        });
+
+        // Prevenir Ctrl+S, Ctrl+P
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p')) {
+                e.preventDefault();
+            }
+        });
+
+        // Init
+        loadBGs();
+    </script>
+</body>
+</html>

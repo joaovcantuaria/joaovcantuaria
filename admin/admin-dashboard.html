@@ -104,6 +104,16 @@
                     <span class="card-title">Depoimentos</span>
                     <span class="card-desc">Avaliacoes de clientes</span>
                 </button>
+                <button class="nav-card" data-panel="backgrounds">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span class="card-title">Backgrounds</span>
+                    <span class="card-desc">Wallpapers para download</span>
+                </button>
+                <button class="nav-card" data-panel="cadastros">
+                    <i class="fas fa-address-book"></i>
+                    <span class="card-title">Cadastros</span>
+                    <span class="card-desc">Leads capturados nos downloads</span>
+                </button>
                 <button class="nav-card" data-panel="configuracoes">
                     <i class="fas fa-cog"></i>
                     <span class="card-title">Configuracoes</span>
@@ -282,6 +292,41 @@
                     </thead>
                     <tbody id="depoimentosTableBody">
                         <tr><td colspan="5" class="empty">Nenhum depoimento</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACKGROUNDS -->
+    <div class="panel-overlay" id="panel-backgrounds">
+        <div class="panel-header">
+            <button class="btn-back" onclick="closePanel()"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
+            <h1 class="panel-title">Backgrounds</h1>
+            <button class="btn-action-primary" onclick="openAddBackgroundModal()"><i class="fas fa-plus"></i> Novo Background</button>
+        </div>
+        <div class="panel-content">
+            <div id="backgroundsGrid" class="galerias-grid">
+                <p class="empty">Carregando...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CADASTROS / LEADS -->
+    <div class="panel-overlay" id="panel-cadastros">
+        <div class="panel-header">
+            <button class="btn-back" onclick="closePanel()"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
+            <h1 class="panel-title">Cadastros / Leads</h1>
+            <span class="admin-badge" id="totalLeadsCount"><i class="fas fa-users"></i> 0 leads</span>
+        </div>
+        <div class="panel-content">
+            <div class="table-container">
+                <table class="data-table" id="cadastrosTable">
+                    <thead>
+                        <tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Background</th><th>Data</th><th>Acoes</th></tr>
+                    </thead>
+                    <tbody id="cadastrosTableBody">
+                        <tr><td colspan="6" class="empty">Carregando...</td></tr>
                     </tbody>
                 </table>
             </div>

@@ -93,6 +93,8 @@ function loadPanelData(panel) {
         case 'orcamentos': loadOrcamentos(); break;
         case 'fotografia': loadGalerias(); loadSelecoes(); break;
         case 'entregas': loadEntregas(); break;
+        case 'backgrounds': loadBackgrounds(); break;
+        case 'cadastros': loadCadastros(); break;
         case 'financeiro': loadFinanceiro(); break;
         case 'portfolio': loadPortfolio(); break;
         case 'depoimentos': loadDepoimentos(); break;
@@ -928,4 +930,152 @@ async function uploadToCloudinary(file, tag) {
         console.error('Upload error:', err);
         return null;
     }
+}
+
+
+// ========================================
+// BACKGROUNDS (Wallpapers)
+// ========================================
+async function loadBackgrounds() {
+    try {
+        const { data, error } = await supabase.from('backgrounds').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        const container = document.getElementById('backgroundsGrid');
+        if (!data || data.length === 0) { container.innerHTML = '<p class="empty">Nenhum background cadastrado</p>'; return; }
+        container.innerHTML = data.map(bg => {
+            const thumb = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_200,h_350,c_fill,q_70/${bg.imagem_url}.jpg`;
+            return `<div class="galeria-row" style="align-items:center;">
+                <div style="display:flex;align-items:center;gap:1rem;">
+                    <img src="${thumb}" style="width:45px;height:80px;object-fit:cover;border-radius:6px;border:1px solid var(--border-subtle);">
+                    <div class="galeria-row-info">
+                        <strong>${bg.titulo || 'Sem titulo'}</strong>
+                        <span>${bg.downloads || 0} downloads · ${bg.ativo ? 'Ativo' : 'Inativo'} · ${formatDate(bg.created_at)}</span>
+                    </div>
+                </div>
+                <div class="galeria-row-actions">
+                    <button class="tbl-btn ${bg.ativo ? '' : 'danger'}" onclick="toggleBackground('${bg.id}', ${bg.ativo})" title="${bg.ativo ? 'Desativar' : 'Ativar'}">
+                        <i class="fas fa-${bg.ativo ? 'eye' : 'eye-slash'}"></i>
+                    </button>
+                    <button class="tbl-btn danger" onclick="deleteBackground('${bg.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`;
+        }).join('');
+    } catch (e) { console.error(e); }
+}
+
+function openAddBackgroundModal() {
+    openModal('Novo Background', `<form class="modal-form" onsubmit="saveBackground(event)">
+        <div class="form-group"><label>Titulo (opcional)</label><input type="text" id="bgTitulo" placeholder="Ex: Paisagem Noturna"></div>
+        <div class="form-group">
+            <label>Imagem do Wallpaper</label>
+            <div class="dropzone" id="bgDropzone" onclick="document.getElementById('bgFileInput').click()">
+                <i class="fas fa-mobile-alt"></i>
+                <p>Arraste a imagem ou clique para selecionar</p>
+                <small>Recomendado: 1080x1920px (proporcao celular)</small>
+            </div>
+            <input type="file" id="bgFileInput" style="display:none" accept="image/*" onchange="previewBgFile(this.files)">
+            <div id="bgPreview" style="margin-top:0.75rem;"></div>
+        </div>
+        <div class="form-actions"><button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button><button type="submit" class="btn-submit" id="btnSaveBg">Enviar</button></div>
+    </form>`);
+
+    setTimeout(() => {
+        const dz = document.getElementById('bgDropzone');
+        if (dz) {
+            dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('dragover'); });
+            dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+            dz.addEventListener('drop', (e) => { e.preventDefault(); dz.classList.remove('dragover'); document.getElementById('bgFileInput').files = e.dataTransfer.files; previewBgFile(e.dataTransfer.files); });
+        }
+    }, 100);
+}
+
+let bgSelectedFile = null;
+
+function previewBgFile(files) {
+    if (!files || files.length === 0) return;
+    bgSelectedFile = files[0];
+    const url = URL.createObjectURL(bgSelectedFile);
+    document.getElementById('bgPreview').innerHTML = `<div class="preview-item" style="width:90px;aspect-ratio:9/16;"><img src="${url}"></div>`;
+}
+
+async function saveBackground(e) {
+    e.preventDefault();
+    if (!bgSelectedFile) { showToast('Selecione uma imagem', 'error'); return; }
+
+    const titulo = document.getElementById('bgTitulo').value.trim();
+    const btn = document.getElementById('btnSaveBg');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+
+    try {
+        const publicId = await uploadToCloudinary(bgSelectedFile, 'backgrounds');
+        if (!publicId) throw new Error('Falha no upload');
+
+        const { error } = await supabase.from('backgrounds').insert([{
+            titulo: titulo || null,
+            imagem_url: publicId,
+            ativo: true
+        }]);
+        if (error) throw error;
+
+        showToast('Background adicionado!');
+        bgSelectedFile = null;
+        closeModal();
+        loadBackgrounds();
+    } catch (err) {
+        showToast('Erro: ' + err.message, 'error');
+        btn.textContent = 'Enviar';
+        btn.disabled = false;
+    }
+}
+
+async function toggleBackground(id, currentState) {
+    await supabase.from('backgrounds').update({ ativo: !currentState }).eq('id', id);
+    showToast(currentState ? 'Background desativado' : 'Background ativado');
+    loadBackgrounds();
+}
+
+async function deleteBackground(id) {
+    if (!confirm('Excluir este background?')) return;
+    await supabase.from('backgrounds').delete().eq('id', id);
+    showToast('Background excluido!');
+    loadBackgrounds();
+}
+
+// ========================================
+// CADASTROS / LEADS
+// ========================================
+async function loadCadastros() {
+    try {
+        const { data, error } = await supabase.from('cadastros_leads').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        const tbody = document.getElementById('cadastrosTableBody');
+        const countEl = document.getElementById('totalLeadsCount');
+
+        if (!data || data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="empty">Nenhum cadastro recebido</td></tr>';
+            if (countEl) countEl.innerHTML = '<i class="fas fa-users"></i> 0 leads';
+            return;
+        }
+
+        if (countEl) countEl.innerHTML = `<i class="fas fa-users"></i> ${data.length} lead${data.length !== 1 ? 's' : ''}`;
+
+        tbody.innerHTML = data.map(l => `<tr>
+            <td>${l.nome || '-'}</td>
+            <td>${l.email || '-'}</td>
+            <td>${l.telefone || '-'}</td>
+            <td>${l.background_titulo || '-'}</td>
+            <td>${formatDate(l.created_at)}</td>
+            <td>
+                <button class="tbl-btn danger" onclick="deleteLead('${l.id}')"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>`).join('');
+    } catch (e) { console.error(e); }
+}
+
+async function deleteLead(id) {
+    if (!confirm('Excluir este cadastro?')) return;
+    await supabase.from('cadastros_leads').delete().eq('id', id);
+    showToast('Cadastro excluido!');
+    loadCadastros();
 }
