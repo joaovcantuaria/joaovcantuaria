@@ -1079,3 +1079,100 @@ async function deleteLead(id) {
     showToast('Cadastro excluido!');
     loadCadastros();
 }
+
+
+// ========================================
+// BACKGROUNDS - UPLOAD EM MASSA
+// ========================================
+let bulkBgFiles = [];
+
+function openBulkBackgroundModal() {
+    bulkBgFiles = [];
+    openModal('Upload em Massa', `<form class="modal-form" onsubmit="saveBulkBackgrounds(event)">
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;">Selecione varias imagens de uma vez. Cada uma sera cadastrada como um background individual.</p>
+        <div class="form-group">
+            <label>Prefixo do titulo (opcional)</label>
+            <input type="text" id="bulkBgPrefixo" placeholder="Ex: Paisagem, Abstrato...">
+            <small style="color:rgba(255,255,255,0.3);font-size:0.72rem;margin-top:0.3rem;display:block;">Se preenchido, os titulos serao: "Paisagem 1", "Paisagem 2", etc.</small>
+        </div>
+        <div class="form-group">
+            <label>Imagens</label>
+            <div class="dropzone" id="bulkBgDropzone" onclick="document.getElementById('bulkBgInput').click()">
+                <i class="fas fa-images"></i>
+                <p>Arraste ou clique para selecionar varias imagens</p>
+                <small>JPG, PNG, WebP — selecione quantas quiser</small>
+            </div>
+            <input type="file" id="bulkBgInput" style="display:none" multiple accept="image/*" onchange="handleBulkBgFiles(this.files)">
+            <div id="bulkBgInfo" style="margin-top:0.75rem;font-size:0.85rem;color:var(--gold);display:none;"></div>
+            <div class="preview-grid" id="bulkBgPreview"></div>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+            <button type="submit" class="btn-submit" id="btnBulkBg">Enviar Todos</button>
+        </div>
+    </form>`);
+
+    setTimeout(() => {
+        const dz = document.getElementById('bulkBgDropzone');
+        if (dz) {
+            dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('dragover'); });
+            dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+            dz.addEventListener('drop', (e) => { e.preventDefault(); dz.classList.remove('dragover'); handleBulkBgFiles(e.dataTransfer.files); });
+        }
+    }, 100);
+}
+
+function handleBulkBgFiles(files) {
+    bulkBgFiles = [...bulkBgFiles, ...Array.from(files).filter(f => f.type.startsWith('image/'))];
+    const info = document.getElementById('bulkBgInfo');
+    if (info) { info.style.display = 'block'; info.textContent = bulkBgFiles.length + ' imagem(ns) selecionada(s)'; }
+    const grid = document.getElementById('bulkBgPreview');
+    if (grid) {
+        grid.innerHTML = bulkBgFiles.map((f, i) => {
+            const url = URL.createObjectURL(f);
+            return `<div class="preview-item" style="aspect-ratio:9/16;"><img src="${url}"><button class="remove-preview" onclick="removeBulkBg(${i})"><i class="fas fa-times"></i></button></div>`;
+        }).join('');
+    }
+}
+
+function removeBulkBg(i) {
+    bulkBgFiles.splice(i, 1);
+    handleBulkBgFiles([]);
+    // Re-render (files already updated)
+    const info = document.getElementById('bulkBgInfo');
+    if (info) { info.textContent = bulkBgFiles.length + ' imagem(ns) selecionada(s)'; if (bulkBgFiles.length === 0) info.style.display = 'none'; }
+    const grid = document.getElementById('bulkBgPreview');
+    if (grid) {
+        grid.innerHTML = bulkBgFiles.map((f, i) => {
+            const url = URL.createObjectURL(f);
+            return `<div class="preview-item" style="aspect-ratio:9/16;"><img src="${url}"><button class="remove-preview" onclick="removeBulkBg(${i})"><i class="fas fa-times"></i></button></div>`;
+        }).join('');
+    }
+}
+
+async function saveBulkBackgrounds(e) {
+    e.preventDefault();
+    if (bulkBgFiles.length === 0) { showToast('Selecione pelo menos uma imagem', 'error'); return; }
+
+    const prefixo = document.getElementById('bulkBgPrefixo').value.trim();
+    const btn = document.getElementById('btnBulkBg');
+    btn.disabled = true;
+
+    let successCount = 0;
+    for (let i = 0; i < bulkBgFiles.length; i++) {
+        btn.textContent = `Enviando ${i + 1}/${bulkBgFiles.length}...`;
+        try {
+            const publicId = await uploadToCloudinary(bulkBgFiles[i], 'backgrounds');
+            if (!publicId) continue;
+
+            const titulo = prefixo ? `${prefixo} ${i + 1}` : null;
+            await supabase.from('backgrounds').insert([{ titulo, imagem_url: publicId, ativo: true }]);
+            successCount++;
+        } catch (err) { console.error('Erro no upload ' + (i+1), err); }
+    }
+
+    showToast(`${successCount} background(s) adicionado(s)!`);
+    bulkBgFiles = [];
+    closeModal();
+    loadBackgrounds();
+}
