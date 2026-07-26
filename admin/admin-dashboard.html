@@ -307,8 +307,25 @@
             <button class="btn-action-primary" onclick="openBulkBackgroundModal()" style="margin-left:0.5rem;"><i class="fas fa-layer-group"></i> Upload em Massa</button>
         </div>
         <div class="panel-content">
-            <div id="backgroundsGrid" class="galerias-grid">
-                <p class="empty">Carregando...</p>
+            <!-- Analytics Section -->
+            <div class="sub-section" id="bgAnalytics" style="margin-bottom:2.5rem;">
+                <h3 class="sub-title"><i class="fas fa-chart-bar"></i> Performance</h3>
+                <div class="finance-stats" style="margin-bottom:1.5rem;">
+                    <div class="finance-card" style="border-left:3px solid var(--gold);"><span class="finance-label">Total Downloads</span><span class="finance-value" id="bgTotalDownloads" style="color:var(--gold);">0</span></div>
+                    <div class="finance-card" style="border-left:3px solid var(--green);"><span class="finance-label">Total Cadastros</span><span class="finance-value" id="bgTotalCadastros" style="color:var(--green);">0</span></div>
+                    <div class="finance-card" style="border-left:3px solid var(--blue);"><span class="finance-label">Backgrounds Ativos</span><span class="finance-value" id="bgTotalAtivos" style="color:var(--blue);">0</span></div>
+                </div>
+                <div id="bgRanking" style="display:none;">
+                    <p style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--white-dim);margin-bottom:0.75rem;font-weight:500;">Top Performers</p>
+                    <div id="bgRankingList"></div>
+                </div>
+            </div>
+            <!-- List -->
+            <div class="sub-section">
+                <h3 class="sub-title"><i class="fas fa-images"></i> Todos os Backgrounds</h3>
+                <div id="backgroundsGrid" class="galerias-grid">
+                    <p class="empty">Carregando...</p>
+                </div>
             </div>
         </div>
     </div>

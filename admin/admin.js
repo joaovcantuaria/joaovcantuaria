@@ -940,6 +940,44 @@ async function loadBackgrounds() {
     try {
         const { data, error } = await supabase.from('backgrounds').select('*').order('created_at', { ascending: false });
         if (error) throw error;
+
+        // Analytics
+        const totalDownloads = (data || []).reduce((sum, bg) => sum + (bg.downloads || 0), 0);
+        const totalAtivos = (data || []).filter(bg => bg.ativo).length;
+        document.getElementById('bgTotalDownloads').textContent = totalDownloads;
+        document.getElementById('bgTotalAtivos').textContent = totalAtivos;
+
+        // Total cadastros
+        const { count: cadastrosCount } = await supabase.from('cadastros_leads').select('*', { count: 'exact', head: true }).neq('background_titulo', 'Gerador de Carrossel');
+        document.getElementById('bgTotalCadastros').textContent = cadastrosCount || 0;
+
+        // Ranking top 5
+        const ranked = [...(data || [])].filter(bg => bg.downloads > 0).sort((a, b) => b.downloads - a.downloads).slice(0, 5);
+        const rankingEl = document.getElementById('bgRanking');
+        const rankingList = document.getElementById('bgRankingList');
+        if (ranked.length > 0) {
+            rankingEl.style.display = 'block';
+            const maxDl = ranked[0].downloads;
+            rankingList.innerHTML = ranked.map((bg, i) => {
+                const pct = maxDl > 0 ? (bg.downloads / maxDl) * 100 : 0;
+                return `<div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;">
+                    <span style="font-size:0.75rem;color:var(--gold);font-weight:700;min-width:20px;">#${i+1}</span>
+                    <div style="flex:1;">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                            <span style="font-size:0.82rem;color:var(--white);">${bg.titulo || 'Sem titulo'}</span>
+                            <span style="font-size:0.78rem;color:var(--gold);font-weight:600;">${bg.downloads} downloads</span>
+                        </div>
+                        <div style="width:100%;height:4px;background:var(--border-subtle);border-radius:2px;overflow:hidden;">
+                            <div style="height:100%;width:${pct}%;background:var(--gold);border-radius:2px;"></div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        } else {
+            rankingEl.style.display = 'none';
+        }
+
+        // Grid
         const container = document.getElementById('backgroundsGrid');
         if (!data || data.length === 0) { container.innerHTML = '<p class="empty">Nenhum background cadastrado</p>'; return; }
         container.innerHTML = data.map(bg => {
