@@ -64,6 +64,11 @@
         <section class="nav-cards">
             <h2 class="section-heading"><span class="gold-dot"></span> Gerenciamento</h2>
             <div class="cards-grid">
+                <button class="nav-card" data-panel="briefings">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span class="card-title">Briefings</span>
+                    <span class="card-desc">Questionarios personalizados</span>
+                </button>
                 <button class="nav-card" data-panel="clientes">
                     <i class="fas fa-users"></i>
                     <span class="card-title">Clientes</span>
@@ -124,6 +129,20 @@
     </div>
 
     <!-- ======================== PANEL OVERLAYS ======================== -->
+
+    <!-- BRIEFINGS -->
+    <div class="panel-overlay" id="panel-briefings">
+        <div class="panel-header">
+            <button class="btn-back" onclick="closePanel()"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
+            <h1 class="panel-title">Briefings</h1>
+            <button class="btn-action-primary" onclick="openCreateBriefingModal()"><i class="fas fa-plus"></i> Novo Briefing</button>
+        </div>
+        <div class="panel-content">
+            <div id="briefingsGrid" class="galerias-grid">
+                <p class="empty">Carregando...</p>
+            </div>
+        </div>
+    </div>
 
     <!-- CLIENTES -->
     <div class="panel-overlay" id="panel-clientes">

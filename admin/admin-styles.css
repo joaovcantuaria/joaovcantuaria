@@ -1060,3 +1060,31 @@ body {
     .top-bar-actions { gap: 0.5rem; }
     .btn-back { font-size: 0.68rem; padding: 0.45rem 0.9rem; }
 }
+
+
+/* Tipo de pergunta buttons */
+.tipo-btn, .tipo-btn-active {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: var(--transition);
+    border: 1px solid var(--border-subtle);
+    background: transparent;
+    color: var(--white-dim);
+}
+
+.tipo-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.tipo-btn-active {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+    font-weight: 700;
+}

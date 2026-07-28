@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Briefing - Joao Vitor Cantuaria</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #C6A972;
+            --black: #0a0a0a;
+            --black-soft: #111111;
+            --black-card: #161616;
+            --white: #ffffff;
+            --white-dim: rgba(255,255,255,0.65);
+            --border: rgba(198,169,114,0.18);
+            --border-subtle: rgba(255,255,255,0.06);
+            --green: #4ade80;
+            --font-body: 'DM Sans', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background: var(--black); color: var(--white); line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+        .container { max-width: 650px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+        .brand { text-align: center; margin-bottom: 2.5rem; }
+        .brand-name { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 500; }
+        .brand-name span { color: var(--gold); }
+        .brand-sub { font-size: 0.6rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 3px; margin-top: 3px; }
+
+        .brief-header { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+        .brief-header h1 { font-family: var(--font-heading); font-size: 1.8rem; font-weight: 400; margin-bottom: 0.5rem; }
+        .brief-header p { font-size: 0.9rem; color: var(--white-dim); font-weight: 300; }
+        .brief-header .brief-client { font-size: 0.78rem; color: var(--gold); margin-top: 0.75rem; }
+
+        .question-card {
+            background: var(--black-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.25rem;
+            transition: border-color 0.3s;
+        }
+        .question-card:focus-within { border-color: var(--gold); }
+
+        .question-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        .question-num {
+            font-size: 0.7rem;
+            color: var(--gold);
+            font-weight: 700;
+            min-width: 22px;
+            height: 22px;
+            background: rgba(198,169,114,0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .question-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.6rem 0;
+            font-size: 0.95rem;
+            color: var(--white);
+            font-family: var(--font-body);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .question-input:focus { border-bottom-color: var(--gold); }
+        .question-input::placeholder { color: rgba(255,255,255,0.2); }
+
+        .question-textarea {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            color: var(--white);
+            font-family: var(--font-body);
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+        .question-textarea:focus { border-color: var(--gold); }
+        .question-textarea::placeholder { color: rgba(255,255,255,0.2); }
+
+        .option-group { display: flex; flex-direction: column; gap: 0.6rem; }
+        .option-item {
+            display: flex; align-items: center; gap: 0.75rem;
+            cursor: pointer; padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border-subtle); border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .option-item:hover { border-color: var(--border); }
+        .option-item.selected { border-color: var(--gold); background: rgba(198,169,114,0.05); }
+        .option-radio {
+            width: 18px; height: 18px; border-radius: 50%;
+            border: 2px solid var(--border-subtle); flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .option-item.selected .option-radio { border-color: var(--gold); }
+        .option-item.selected .option-radio::after {
+            content: ''; width: 8px; height: 8px; background: var(--gold); border-radius: 50%;
+        }
+        .option-text { font-size: 0.9rem; color: var(--white-dim); }
+        .option-item.selected .option-text { color: var(--white); }
+
+        .submit-section { text-align: center; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+        .btn-submit-brief {
+            background: var(--gold); color: var(--black); border: none;
+            padding: 0.9rem 3rem; font-size: 0.8rem; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            cursor: pointer; font-family: var(--font-body); transition: all 0.3s;
+        }
+        .btn-submit-brief:hover { background: #d4b87a; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(198,169,114,0.2); }
+        .btn-submit-brief:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .name-input { margin-bottom: 2rem; }
+        .name-input label { display: block; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white-dim); margin-bottom: 0.4rem; }
+        .name-input input { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border-subtle); padding: 0.6rem 0; font-size: 1rem; color: var(--white); font-family: var(--font-body); outline: none; }
+        .name-input input:focus { border-bottom-color: var(--gold); }
+
+        .success-screen { display: none; text-align: center; padding: 4rem 2rem; }
+        .success-screen i { font-size: 3rem; color: var(--green); margin-bottom: 1.5rem; display: block; }
+        .success-screen h2 { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 400; margin-bottom: 0.5rem; }
+        .success-screen p { color: var(--white-dim); font-size: 0.9rem; }
+
+        .error-screen { display: none; text-align: center; padding: 4rem 2rem; }
+        .error-screen i { font-size: 3rem; color: var(--gold); margin-bottom: 1.5rem; display: block; }
+
+        .loading { text-align: center; padding: 4rem 2rem; }
+        .loading i { font-size: 2rem; color: var(--gold); margin-bottom: 1rem; display: block; }
+
+        @media (max-width: 600px) {
+            .container { padding: 2rem 1.25rem 3rem; }
+            .brief-header h1 { font-size: 1.4rem; }
+            .question-card { padding: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand">
+            <div class="brand-name">Joao Vitor <span>Cantuaria</span></div>
+            <div class="brand-sub">Comunicacao e Publicidade</div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loadingState" class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p style="color:var(--white-dim);font-size:0.85rem;">Carregando briefing...</p>
+        </div>
+
+        <!-- Form -->
+        <div id="formState" style="display:none;">
+            <div class="brief-header">
+                <h1 id="briefTitle"></h1>
+                <p id="briefDesc"></p>
+                <p class="brief-client" id="briefClient"></p>
+            </div>
+
+            <div class="name-input">
+                <label>Seu Nome</label>
+                <input type="text" id="respNome" placeholder="Digite seu nome...">
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="submit-section">
+                <button class="btn-submit-brief" id="btnSubmitBrief" onclick="submitBriefing()">
+                    <i class="fas fa-paper-plane"></i> Enviar Respostas
+                </button>
+            </div>
+        </div>
+
+        <!-- Success -->
+        <div id="successState" class="success-screen">
+            <i class="fas fa-check-circle"></i>
+            <h2>Obrigado!</h2>
+            <p>Suas respostas foram enviadas com sucesso.</p>
+        </div>
+
+        <!-- Error -->
+        <div id="errorState" class="error-screen">
+            <i class="fas fa-exclamation-circle"></i>
+            <h2>Briefing nao encontrado</h2>
+            <p style="color:var(--white-dim);font-size:0.9rem;">O link pode estar incorreto ou o briefing foi removido.</p>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+
+        const params = new URLSearchParams(window.location.search);
+        const briefId = params.get('id');
+
+        let currentBriefing = null;
+        let answers = [];
+
+        if (!briefId) { showState('error'); }
+        else { loadBriefing(); }
+
+        async function loadBriefing() {
+            try {
+                const res = await fetch(
+                    `${SUPABASE_URL}/rest/v1/briefings?codigo=eq.${briefId}&ativo=eq.true&select=*`,
+                    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+                );
+                const data = await res.json();
+
+                if (!data || data.length === 0) { showState('error'); return; }
+
+                currentBriefing = data[0];
+                renderForm();
+            } catch (err) {
+                console.error(err);
+                showState('error');
+            }
+        }
+
+        function renderForm() {
+            document.getElementById('briefTitle').textContent = currentBriefing.titulo;
+            document.getElementById('briefDesc').textContent = currentBriefing.descricao || '';
+            if (currentBriefing.cliente_nome) {
+                document.getElementById('briefClient').textContent = 'Preparado para: ' + currentBriefing.cliente_nome;
+            }
+
+            document.title = currentBriefing.titulo + ' - Briefing';
+
+            const perguntas = currentBriefing.perguntas || [];
+            answers = new Array(perguntas.length).fill('');
+
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = perguntas.map((p, idx) => {
+                let inputHTML = '';
+                if (p.tipo === 'curta') {
+                    inputHTML = `<input type="text" class="question-input" placeholder="Sua resposta..." data-idx="${idx}" oninput="answers[${idx}]=this.value">`;
+                } else if (p.tipo === 'longa') {
+                    inputHTML = `<textarea class="question-textarea" placeholder="Sua resposta..." data-idx="${idx}" oninput="answers[${idx}]=this.value"></textarea>`;
+                } else if (p.tipo === 'multipla') {
+                    const opcoes = (p.opcoes || []).map((opt, oi) =>
+                        `<div class="option-item" data-idx="${idx}" data-value="${opt}" onclick="selectOption(${idx}, '${opt.replace(/'/g,"\\'")}', this)">
+                            <div class="option-radio"></div>
+                            <span class="option-text">${opt}</span>
+                        </div>`
+                    ).join('');
+                    inputHTML = `<div class="option-group">${opcoes}</div>`;
+                }
+
+                return `<div class="question-card">
+                    <div class="question-label">
+                        <span class="question-num">${idx+1}</span>
+                        <span>${p.texto}</span>
+                    </div>
+                    ${inputHTML}
+                </div>`;
+            }).join('');
+
+            showState('form');
+        }
+
+        function selectOption(idx, value, element) {
+            answers[idx] = value;
+            // Desselecionar outros
+            const siblings = element.parentElement.querySelectorAll('.option-item');
+            siblings.forEach(s => s.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        async function submitBriefing() {
+            const nome = document.getElementById('respNome').value.trim();
+            const btn = document.getElementById('btnSubmitBrief');
+
+            btn.textContent = 'Enviando...';
+            btn.disabled = true;
+
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/briefing_respostas`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        briefing_id: currentBriefing.id,
+                        respostas: answers,
+                        respondido_por: nome || 'Anonimo'
+                    })
+                });
+
+                showState('success');
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao enviar. Tente novamente.');
+                btn.textContent = 'Enviar Respostas';
+                btn.disabled = false;
+            }
+        }
+
+        function showState(state) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('formState').style.display = 'none';
+            document.getElementById('successState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'none';
+
+            if (state === 'loading') document.getElementById('loadingState').style.display = 'block';
+            if (state === 'form') document.getElementById('formState').style.display = 'block';
+            if (state === 'success') document.getElementById('successState').style.display = 'block';
+            if (state === 'error') document.getElementById('errorState').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

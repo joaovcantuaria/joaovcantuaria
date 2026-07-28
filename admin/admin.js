@@ -88,6 +88,7 @@ function formatDate(dateStr) {
 // ========================================
 function loadPanelData(panel) {
     switch(panel) {
+        case 'briefings': loadBriefings(); break;
         case 'clientes': loadClientes(); break;
         case 'projetos': loadProjetos(); break;
         case 'orcamentos': loadOrcamentos(); break;
@@ -1278,4 +1279,192 @@ async function saveBulkBackgrounds(e) {
     bulkBgFiles = [];
     closeModal();
     loadBackgrounds();
+}
+
+
+// ========================================
+// BRIEFINGS - QUESTIONARIOS
+// ========================================
+let briefingPerguntas = [];
+
+async function loadBriefings() {
+    try {
+        const { data, error } = await supabase.from('briefings').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        const container = document.getElementById('briefingsGrid');
+        if (!data || data.length === 0) { container.innerHTML = '<p class="empty">Nenhum briefing criado</p>'; return; }
+
+        container.innerHTML = data.map(b => {
+            const numPerguntas = b.perguntas ? b.perguntas.length : 0;
+            const link = `${window.location.origin}/briefing/?id=${b.codigo}`;
+            return `<div class="galeria-row">
+                <div class="galeria-row-info">
+                    <strong>${b.titulo}</strong>
+                    <span>${b.cliente_nome ? 'Cliente: ' + b.cliente_nome + ' · ' : ''}${numPerguntas} pergunta${numPerguntas!==1?'s':''} · ${b.ativo ? 'Ativo' : 'Inativo'} · ${formatDate(b.created_at)}</span>
+                </div>
+                <div class="galeria-row-actions">
+                    <button class="tbl-btn" onclick="copyToClipboard('${link}')" title="Copiar link"><i class="fas fa-link"></i></button>
+                    <button class="tbl-btn" onclick="viewBriefingRespostas('${b.id}', '${b.titulo.replace(/'/g,"\\'")}')" title="Ver respostas"><i class="fas fa-eye"></i></button>
+                    <button class="tbl-btn danger" onclick="deleteBriefing('${b.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`;
+        }).join('');
+    } catch (e) { console.error(e); }
+}
+
+function openCreateBriefingModal() {
+    briefingPerguntas = [];
+    openModal('Criar Briefing', `<form class="modal-form" onsubmit="saveBriefing(event)">
+        <div class="form-group"><label>Titulo do Briefing</label><input type="text" id="briefTitulo" required placeholder="Ex: Briefing Ensaio Fotografico"></div>
+        <div class="form-group"><label>Nome do Cliente (opcional)</label><input type="text" id="briefCliente" placeholder="Ex: Maria Silva"></div>
+        <div class="form-group"><label>Descricao (opcional)</label><textarea id="briefDescricao" rows="2" placeholder="Instrucoes para o cliente..."></textarea></div>
+
+        <div style="margin:2rem 0 1rem;border-top:1px solid var(--border-subtle);padding-top:1.5rem;">
+            <p style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;font-weight:500;">Perguntas</p>
+            <div id="perguntasContainer"></div>
+            <button type="button" onclick="addPergunta()" style="width:100%;padding:0.75rem;background:transparent;border:1px dashed var(--border);color:var(--gold);font-family:var(--font-body);font-size:0.82rem;cursor:pointer;margin-top:0.75rem;transition:all 0.3s;">
+                <i class="fas fa-plus"></i> Adicionar Pergunta
+            </button>
+        </div>
+
+        <div class="form-actions"><button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button><button type="submit" class="btn-submit" id="btnSaveBrief">Criar Briefing</button></div>
+    </form>`);
+    // Adicionar 1 pergunta inicial
+    addPergunta();
+}
+
+function addPergunta() {
+    const idx = briefingPerguntas.length;
+    briefingPerguntas.push({ texto: '', tipo: 'curta', opcoes: [] });
+    renderPerguntas();
+}
+
+function removePergunta(idx) {
+    briefingPerguntas.splice(idx, 1);
+    renderPerguntas();
+}
+
+function renderPerguntas() {
+    const container = document.getElementById('perguntasContainer');
+    if (!container) return;
+    container.innerHTML = briefingPerguntas.map((p, idx) => `
+        <div style="background:var(--black-soft);border:1px solid var(--border-subtle);border-radius:8px;padding:1rem;margin-bottom:0.75rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+                <span style="font-size:0.72rem;color:var(--white-dim);font-weight:500;">Pergunta ${idx+1}</span>
+                <button type="button" onclick="removePergunta(${idx})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.85rem;"><i class="fas fa-trash"></i></button>
+            </div>
+            <input type="text" value="${p.texto}" onchange="briefingPerguntas[${idx}].texto=this.value" placeholder="Digite a pergunta..." style="width:100%;background:transparent;border:none;border-bottom:1px solid var(--border-subtle);padding:0.5rem 0;font-size:0.9rem;color:var(--white);font-family:var(--font-body);outline:none;margin-bottom:0.75rem;">
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <button type="button" onclick="setTipoPergunta(${idx},'curta')" class="${p.tipo==='curta'?'tipo-btn-active':'tipo-btn'}">Resposta Curta</button>
+                <button type="button" onclick="setTipoPergunta(${idx},'longa')" class="${p.tipo==='longa'?'tipo-btn-active':'tipo-btn'}">Resposta Longa</button>
+                <button type="button" onclick="setTipoPergunta(${idx},'multipla')" class="${p.tipo==='multipla'?'tipo-btn-active':'tipo-btn'}">Multipla Escolha</button>
+            </div>
+            ${p.tipo === 'multipla' ? `
+                <div style="margin-top:0.75rem;">
+                    <p style="font-size:0.68rem;color:var(--white-dim);margin-bottom:0.5rem;">Opcoes (uma por linha):</p>
+                    <textarea onchange="briefingPerguntas[${idx}].opcoes=this.value.split('\\n').filter(o=>o.trim())" rows="3" placeholder="Opcao 1\nOpcao 2\nOpcao 3" style="width:100%;background:transparent;border:1px solid var(--border-subtle);border-radius:6px;padding:0.5rem;font-size:0.85rem;color:var(--white);font-family:var(--font-body);outline:none;resize:vertical;">${(p.opcoes||[]).join('\n')}</textarea>
+                </div>
+            ` : ''}
+        </div>
+    `).join('');
+}
+
+function setTipoPergunta(idx, tipo) {
+    briefingPerguntas[idx].tipo = tipo;
+    if (tipo !== 'multipla') briefingPerguntas[idx].opcoes = [];
+    renderPerguntas();
+}
+
+async function saveBriefing(e) {
+    e.preventDefault();
+    const titulo = document.getElementById('briefTitulo').value.trim();
+    const clienteNome = document.getElementById('briefCliente').value.trim();
+    const descricao = document.getElementById('briefDescricao').value.trim();
+
+    if (!titulo) { showToast('Preencha o titulo', 'error'); return; }
+    if (briefingPerguntas.length === 0 || !briefingPerguntas[0].texto) { showToast('Adicione pelo menos uma pergunta', 'error'); return; }
+
+    // Filtrar perguntas vazias
+    const perguntas = briefingPerguntas.filter(p => p.texto.trim());
+
+    const codigo = titulo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '') + '-' + Date.now().toString(36);
+
+    const btn = document.getElementById('btnSaveBrief');
+    btn.textContent = 'Salvando...';
+    btn.disabled = true;
+
+    try {
+        const { error } = await supabase.from('briefings').insert([{
+            titulo,
+            descricao: descricao || null,
+            cliente_nome: clienteNome || null,
+            perguntas,
+            codigo,
+            ativo: true
+        }]);
+        if (error) throw error;
+
+        const link = `${window.location.origin}/briefing/?id=${codigo}`;
+        showToast('Briefing criado!');
+        closeModal();
+
+        // Mostrar link
+        setTimeout(() => {
+            openModal('Briefing Criado!', `
+                <div style="text-align:center;padding:1rem;">
+                    <i class="fas fa-check-circle" style="font-size:2.5rem;color:var(--green);margin-bottom:1rem;display:block;"></i>
+                    <p style="font-size:0.9rem;margin-bottom:1.5rem;">Envie este link para o cliente preencher:</p>
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                        <input type="text" value="${link}" readonly style="flex:1;background:var(--black-soft);border:1px solid var(--border-subtle);border-radius:6px;padding:0.7rem;color:var(--gold);font-size:0.82rem;font-family:monospace;">
+                        <button onclick="copyToClipboard('${link}');this.textContent='Copiado!'" style="background:var(--gold);color:var(--black);border:none;padding:0.7rem 1rem;font-size:0.72rem;font-weight:700;cursor:pointer;white-space:nowrap;">Copiar</button>
+                    </div>
+                </div>
+            `);
+        }, 300);
+
+        loadBriefings();
+    } catch (err) {
+        showToast('Erro: ' + err.message, 'error');
+        btn.textContent = 'Criar Briefing';
+        btn.disabled = false;
+    }
+}
+
+async function viewBriefingRespostas(briefingId, titulo) {
+    const { data: respostas } = await supabase.from('briefing_respostas').select('*').eq('briefing_id', briefingId).order('created_at', { ascending: false });
+    const { data: briefing } = await supabase.from('briefings').select('perguntas').eq('id', briefingId).single();
+
+    let html = '';
+    if (!respostas || respostas.length === 0) {
+        html = '<p style="text-align:center;color:rgba(255,255,255,0.3);padding:2rem;">Nenhuma resposta recebida ainda.</p>';
+    } else {
+        html = respostas.map((r, idx) => {
+            const answers = r.respostas || [];
+            const perguntas = briefing ? briefing.perguntas : [];
+            const answersHTML = answers.map((a, i) => {
+                const pergunta = perguntas[i] ? perguntas[i].texto : `Pergunta ${i+1}`;
+                return `<div style="margin-bottom:0.75rem;">
+                    <span style="font-size:0.72rem;color:var(--gold);display:block;margin-bottom:0.2rem;">${pergunta}</span>
+                    <span style="font-size:0.88rem;color:var(--white);">${a || '(vazio)'}</span>
+                </div>`;
+            }).join('');
+            return `<div style="background:var(--black-soft);border:1px solid var(--border-subtle);border-radius:8px;padding:1.25rem;margin-bottom:1rem;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
+                    <span style="font-size:0.82rem;font-weight:500;">${r.respondido_por || 'Anonimo'}</span>
+                    <span style="font-size:0.72rem;color:var(--white-dim);">${formatDate(r.created_at)}</span>
+                </div>
+                ${answersHTML}
+            </div>`;
+        }).join('');
+    }
+
+    openModal(`Respostas: ${titulo} (${respostas ? respostas.length : 0})`, `<div style="max-height:60vh;overflow-y:auto;">${html}</div>`);
+}
+
+async function deleteBriefing(id) {
+    if (!confirm('Excluir este briefing e todas as respostas?')) return;
+    await supabase.from('briefing_respostas').delete().eq('briefing_id', id);
+    await supabase.from('briefings').delete().eq('id', id);
+    showToast('Briefing excluido!');
+    loadBriefings();
 }
