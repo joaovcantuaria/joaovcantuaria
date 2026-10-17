@@ -359,10 +359,12 @@ async function loadSelecoes() {
         if (!data || data.length === 0) { container.innerHTML = '<p class="empty">Nenhuma selecao recebida</p>'; return; }
         container.innerHTML = data.map(s => {
             const numFotos = s.fotos_selecionadas ? s.fotos_selecionadas.length : 0;
+            const codigos = s.fotos_selecionadas ? s.fotos_selecionadas.map(f => f.split('/').pop()).join(', ') : '';
             return `<div class="galeria-row">
                 <div class="galeria-row-info">
                     <strong>${s.nome_cliente || 'Sem nome'}</strong>
                     <span>Galeria: ${s.codigo.toUpperCase()} · ${numFotos} foto(s) · ${formatDate(s.criado_em)}</span>
+                    ${codigos ? `<span style="color:var(--gold);font-family:monospace;font-size:0.7rem;word-break:break-all;line-height:1.8;">${codigos}</span>` : ''}
                     ${s.mensagem ? `<span style="color:rgba(255,255,255,0.4);font-style:italic;font-size:0.78rem;">"${s.mensagem}"</span>` : ''}
                 </div>
                 <div class="galeria-row-actions">
@@ -381,8 +383,46 @@ async function deleteSelecao(id) {
 }
 
 function viewSelecao(fotos) {
-    const html = fotos.map(f => `<img src="https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_300,q_70/${f}.jpg" style="width:100%;border-radius:6px;">`).join('');
-    openModal('Fotos Selecionadas (' + fotos.length + ')', `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.5rem;">${html}</div>`);
+    // Extrair o codigo legivel de cada foto (parte final do public_id)
+    const fotosComCodigo = fotos.map(f => {
+        const codigo = f.split('/').pop(); // pega a parte depois da ultima barra
+        const thumb = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_300,q_70/${f}.jpg`;
+        return { publicId: f, codigo, thumb };
+    });
+
+    const grid = fotosComCodigo.map(f => `
+        <div style="position:relative;">
+            <img src="${f.thumb}" style="width:100%;border-radius:6px;display:block;">
+            <div style="background:rgba(0,0,0,0.75);color:#C6A972;font-size:0.6rem;font-family:monospace;padding:0.25rem 0.4rem;text-align:center;border-radius:0 0 6px 6px;letter-spacing:0.03em;word-break:break-all;">
+                ${f.codigo}
+            </div>
+        </div>
+    `).join('');
+
+    const codigosLista = fotosComCodigo.map(f => f.codigo).join('\n');
+
+    openModal('Fotos Selecionadas (' + fotos.length + ')', `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border-subtle);">
+            <span style="font-size:0.78rem;color:var(--white-dim);">${fotos.length} foto${fotos.length!==1?'s':''} selecionadas</span>
+            <button onclick="downloadCodigosTxt(${JSON.stringify(fotosComCodigo.map(f=>f.codigo)).replace(/"/g,'&quot;')})" style="background:var(--gold);color:var(--black);border:none;padding:0.45rem 1rem;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:var(--font-body);display:inline-flex;align-items:center;gap:0.4rem;">
+                <i class="fas fa-file-alt"></i> Baixar Codigos (.txt)
+            </button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.75rem;">${grid}</div>
+    `);
+}
+
+function downloadCodigosTxt(codigos) {
+    const conteudo = codigos.join('\n');
+    const blob = new Blob([conteudo], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'codigos_selecionados.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 }
 
 // ========================================
