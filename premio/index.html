@@ -1007,14 +1007,12 @@ function checkAlreadyPlayed() {
         document.getElementById('spinCounter').style.display = 'none';
     }
 }
-checkAlreadyPlayed();
-renderSpinCounter();
 
 // ============================================================
 // FLUXO
 // ============================================================
 let dadosLead = null;
-let girosDisponiveis = 1; // começa com 1 giro
+let girosDisponiveis = 1;
 
 function renderSpinCounter() {
     const num  = document.getElementById('spinCountNum');
@@ -1032,6 +1030,10 @@ function renderSpinCounter() {
         dots.appendChild(dot);
     }
 }
+
+// Inicializar DEPOIS das declarações
+checkAlreadyPlayed();
+renderSpinCounter();
 
 document.getElementById('btnGirar').addEventListener('click', () => {
     if (spinning) return;
