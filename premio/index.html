@@ -3,487 +3,559 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎂 Roleta de Aniversário - João Vitor Cantuária</title>
+    <title>🎂 Gire e Ganhe! - João Vitor Cantuária</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #C6A972;
-            --gold-light: #e8c97a;
-            --gold-dark: #a8884e;
-            --black: #0a0a0a;
-            --black-soft: #111111;
-            --black-card: #181818;
-            --white: #ffffff;
-            --white-dim: rgba(255,255,255,0.7);
-            --red: #e85454;
+            --gold: #C6A054;
+            --gold-light: #F0C875;
+            --gold-dark: #8B6914;
+            --black: #0D0B08;
+            --bg: #100E0A;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html,body { width:100%; height:100%; }
 
         body {
             font-family: 'DM Sans', sans-serif;
-            background: var(--black);
-            color: var(--white);
+            background: var(--bg);
+            color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            position: relative;
         }
 
-        /* ---- PARTICLES BG ---- */
-        .particles {
+        /* ====== BOKEH BG ====== */
+        .scene-bg {
             position: fixed;
             inset: 0;
-            pointer-events: none;
             z-index: 0;
             overflow: hidden;
+            pointer-events: none;
         }
-        .particle {
+
+        /* Warm radial glow center */
+        .scene-bg::before {
+            content: '';
             position: absolute;
-            width: 4px;
-            height: 4px;
+            top: 35%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vw; height: 70vw;
+            background: radial-gradient(ellipse, rgba(140,90,10,0.35) 0%, transparent 70%);
+        }
+
+        /* Gift boxes - CSS art */
+        .gift {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .gift-box {
+            width: 100%;
+            height: 78%;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .gift-lid {
+            position: absolute;
+            top: -16%;
+            left: -8%;
+            width: 116%;
+            height: 28%;
+            border-radius: 4px;
+        }
+
+        .gift-ribbon-v {
+            position: absolute;
+            left: 50%; transform: translateX(-50%);
+            width: 14%;
+            height: 100%;
+            top: 0;
+            border-radius: 2px;
+        }
+
+        .gift-ribbon-h {
+            position: absolute;
+            top: 30%; height: 14%;
+            width: 100%; left: 0;
+            border-radius: 2px;
+        }
+
+        .gift-bow {
+            position: absolute;
+            top: -38%; left: 50%;
+            transform: translateX(-50%);
+            width: 44%; height: 24%;
+        }
+
+        .gift-bow::before, .gift-bow::after {
+            content: '';
+            position: absolute;
+            width: 50%; height: 100%;
             background: var(--gold);
             border-radius: 50%;
-            opacity: 0;
-            animation: float linear infinite;
+            top: 0;
+        }
+        .gift-bow::before { left: 0; transform: rotate(-20deg); transform-origin: right center; }
+        .gift-bow::after  { right: 0; transform: rotate(20deg); transform-origin: left center; }
+
+        /* Gold ribbons floating */
+        .ribbon {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid rgba(192,150,60,0.4);
+            pointer-events: none;
+            transform: rotate(-35deg);
         }
 
-        @keyframes float {
-            0%   { transform: translateY(100vh) scale(0); opacity: 0; }
-            10%  { opacity: 0.6; }
-            90%  { opacity: 0.3; }
-            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        /* Bokeh circles */
+        .bokeh {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bokehPulse ease-in-out infinite alternate;
         }
 
-        /* ---- HEADER ---- */
-        .header {
+        @keyframes bokehPulse {
+            from { opacity: 0.3; transform: scale(1); }
+            to   { opacity: 0.6; transform: scale(1.15); }
+        }
+
+        /* ====== PAGE WRAPPER ====== */
+        .page {
             position: relative;
             z-index: 10;
-            text-align: center;
-            padding: 2rem 1rem 1rem;
-        }
-
-        .brand {
-            font-size: 0.65rem;
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .birthday-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, rgba(198,169,114,0.15), rgba(198,169,114,0.05));
-            border: 1px solid rgba(198,169,114,0.3);
-            padding: 0.4rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--gold);
-            letter-spacing: 0.08em;
-            margin-bottom: 1rem;
-        }
-
-        .page-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.6rem, 5vw, 2.6rem);
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 0.5rem;
-        }
-
-        .page-title span { color: var(--gold); }
-
-        .page-subtitle {
-            font-size: 0.9rem;
-            color: var(--white-dim);
-            font-weight: 300;
-            max-width: 480px;
-            margin: 0 auto 0.5rem;
-        }
-
-        /* ---- COUNTDOWN ---- */
-        .countdown-bar {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 1rem auto 0;
-            flex-wrap: wrap;
-        }
-
-        .countdown-item {
-            text-align: center;
-            min-width: 60px;
-        }
-
-        .countdown-num {
-            display: block;
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--gold);
-            line-height: 1;
-        }
-
-        .countdown-label {
-            font-size: 0.6rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
-            margin-top: 0.2rem;
-        }
-
-        .countdown-sep {
-            font-size: 1.5rem;
-            color: var(--gold);
-            opacity: 0.5;
-            align-self: center;
-            margin-top: -0.5rem;
-        }
-
-        /* ---- MAIN LAYOUT ---- */
-        .main {
-            position: relative;
-            z-index: 10;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 1.5rem 1rem 3rem;
+            padding: 2rem 1rem 3rem;
         }
 
-        /* ---- WHEEL CONTAINER ---- */
-        .wheel-container {
+        /* ====== HEADER ====== */
+        .top-brand {
+            font-size: 0.62rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: rgba(192,150,60,0.7);
+            margin-bottom: 0.75rem;
+        }
+
+        .badge-aniversario {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(192,150,60,0.08);
+            border: 1px solid rgba(192,150,60,0.35);
+            border-radius: 50px;
+            padding: 0.38rem 1.1rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 7vw, 4rem);
+            font-weight: 900;
+            line-height: 1.05;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-title .gold { color: var(--gold-light); }
+
+        .hero-sub {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.55);
+            text-align: center;
+            max-width: 420px;
+            line-height: 1.65;
+            font-weight: 300;
+        }
+
+        /* ====== COUNTDOWN ====== */
+        .countdown {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .cd-block {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(192,150,60,0.25);
+            border-radius: 10px;
+            padding: 0.6rem 1.1rem;
+            text-align: center;
+            min-width: 64px;
+        }
+
+        .cd-num {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--gold-light);
+            line-height: 1;
+        }
+
+        .cd-lbl {
+            display: block;
+            font-size: 0.5rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.35);
+            margin-top: 0.25rem;
+        }
+
+        .cd-sep {
+            font-size: 1.4rem;
+            color: rgba(192,150,60,0.4);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ====== WHEEL SECTION ====== */
+        .wheel-section {
             position: relative;
-            width: min(380px, 90vw);
-            height: min(380px, 90vw);
-            margin: 1rem auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Pointer/arrow */
-        .wheel-pointer {
+        /* Arrow pointer */
+        .pointer-wrap {
             position: absolute;
-            top: -18px;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 20;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+            z-index: 30;
         }
 
-        .wheel-pointer svg {
-            width: 36px;
-            height: 44px;
+        .pointer-wrap svg {
+            width: 32px;
+            height: 38px;
+            filter: drop-shadow(0 2px 8px rgba(192,150,60,0.6));
         }
 
-        canvas#wheelCanvas {
+        .wheel-wrap {
+            position: relative;
+            /* Outer gold ring */
+            padding: 8px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--gold-light) 0deg, var(--gold-dark) 60deg,
+                var(--gold-light) 120deg, var(--gold-dark) 180deg,
+                var(--gold-light) 240deg, var(--gold-dark) 300deg,
+                var(--gold-light) 360deg
+            );
+            box-shadow:
+                0 0 0 4px #1a1510,
+                0 0 30px rgba(192,150,60,0.4),
+                0 20px 60px rgba(0,0,0,0.7);
+        }
+
+        .wheel-inner {
+            padding: 5px;
+            border-radius: 50%;
+            background: #1a1510;
+        }
+
+        canvas#wheel {
             display: block;
             border-radius: 50%;
-            box-shadow:
-                0 0 0 6px #1a1a1a,
-                0 0 0 10px var(--gold),
-                0 0 40px rgba(198,169,114,0.2),
-                0 20px 60px rgba(0,0,0,0.6);
         }
 
-        /* Center button on wheel */
-        .wheel-center-btn {
+        /* Center button */
+        .spin-btn {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 72px;
-            height: 72px;
+            z-index: 20;
+            width: 76px; height: 76px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
-            border: 4px solid #1a1a1a;
-            color: var(--black);
+            background: linear-gradient(145deg, #F0C875, #A07020);
+            border: 4px solid #1a1510;
+            color: #1a1510;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
             cursor: pointer;
-            z-index: 15;
-            box-shadow: 0 4px 20px rgba(198,169,114,0.4);
+            box-shadow: 0 4px 20px rgba(192,150,60,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
             transition: all 0.2s;
-            line-height: 1.2;
+            text-transform: uppercase;
         }
 
-        .wheel-center-btn:hover {
+        .spin-btn:hover:not(:disabled) {
             transform: translate(-50%, -50%) scale(1.08);
-            box-shadow: 0 6px 30px rgba(198,169,114,0.5);
+            box-shadow: 0 8px 35px rgba(192,150,60,0.6);
         }
 
-        .wheel-center-btn:disabled {
-            opacity: 0.6;
+        .spin-btn:disabled {
+            opacity: 0.55;
             cursor: not-allowed;
             transform: translate(-50%, -50%);
         }
 
-        /* ---- CTA BELOW WHEEL ---- */
         .spin-hint {
-            font-size: 0.78rem;
-            color: rgba(255,255,255,0.4);
-            text-align: center;
-            margin-top: 0.75rem;
-            font-style: italic;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.35);
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
-        /* ---- PRIZES LIST ---- */
-        .prizes-row {
+        /* ====== PRIZE PILLS ====== */
+        .pills-row {
             display: flex;
-            gap: 0.5rem;
             flex-wrap: wrap;
+            gap: 0.5rem;
             justify-content: center;
             margin-top: 1.5rem;
-            max-width: 480px;
+            max-width: 520px;
         }
 
-        .prize-pill {
-            padding: 0.35rem 0.9rem;
+        .pill {
+            padding: 0.35rem 0.85rem;
             border-radius: 50px;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             font-weight: 700;
             border: 1px solid;
         }
 
-        /* ---- MODAL CADASTRO ---- */
-        .modal-overlay {
+        /* ====== MODAL CADASTRO ====== */
+        .modal-bg {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.88);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            backdrop-filter: blur(6px);
-        }
-
-        .modal-overlay.active { display: flex; }
-
-        .modal-box {
-            background: var(--black-card);
-            border: 1px solid rgba(198,169,114,0.25);
-            border-radius: 20px;
-            padding: 2.5rem 2rem;
-            width: 100%;
-            max-width: 440px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            animation: modalIn 0.3s ease;
-        }
-
-        @keyframes modalIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to   { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-icon {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 0.4rem;
-        }
-
-        .modal-sub {
-            font-size: 0.82rem;
-            color: var(--white-dim);
-            text-align: center;
-            margin-bottom: 2rem;
-            font-weight: 300;
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.65rem;
-            font-weight: 600;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 0.4rem;
-        }
-
-        .form-group input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(255,255,255,0.12);
-            padding: 0.7rem 0;
-            font-size: 0.95rem;
-            color: var(--white);
-            font-family: 'DM Sans', sans-serif;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus { border-bottom-color: var(--gold); }
-        .form-group input::placeholder { color: rgba(255,255,255,0.18); }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-        .btn-spin-now {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
-            color: var(--black);
-            border: none;
-            border-radius: 10px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin-top: 1.5rem;
-            transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(198,169,114,0.25);
-        }
-
-        .btn-spin-now:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(198,169,114,0.35);
-        }
-
-        .btn-spin-now:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-        .form-error {
-            color: var(--red);
-            font-size: 0.78rem;
-            margin-top: 0.75rem;
-            text-align: center;
-            display: none;
-        }
-
-        .btn-cancel-modal {
-            display: block;
-            width: 100%;
-            text-align: center;
-            margin-top: 0.75rem;
-            background: none;
-            border: none;
-            color: rgba(255,255,255,0.35);
-            font-size: 0.78rem;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif;
-        }
-
-        /* ---- RESULT MODAL ---- */
-        .result-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            z-index: 2000;
+            background: rgba(0,0,0,0.85);
+            z-index: 500;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
             backdrop-filter: blur(8px);
         }
 
-        .result-overlay.active { display: flex; }
+        .modal-bg.on { display: flex; }
 
-        .result-box {
-            background: var(--black-card);
+        .modal-card {
+            background: #18140D;
+            border: 1px solid rgba(192,150,60,0.3);
             border-radius: 24px;
-            padding: 3rem 2rem 2.5rem;
+            padding: 2.5rem 2rem;
             width: 100%;
-            max-width: 440px;
-            text-align: center;
-            animation: modalIn 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            max-width: 430px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+            animation: popIn 0.3s cubic-bezier(.175,.885,.32,1.275);
         }
 
-        .result-box::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        @keyframes popIn {
+            from { transform: scale(0.88); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
         }
 
-        .result-confetti {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .result-label {
-            font-size: 0.68rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .result-name {
+        .modal-card h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            font-weight: 400;
-            margin-bottom: 1.5rem;
-            color: var(--white-dim);
-        }
-
-        .result-discount {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(4rem, 18vw, 6rem);
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--gold);
-            line-height: 1;
-            margin-bottom: 0;
-            text-shadow: 0 0 40px rgba(198,169,114,0.4);
+            text-align: center;
+            margin-bottom: 0.4rem;
         }
 
-        .result-discount-label {
-            font-size: 0.85rem;
-            color: var(--white-dim);
+        .modal-card .modal-sub {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.45);
+            text-align: center;
             margin-bottom: 2rem;
             font-weight: 300;
         }
 
-        .cupom-box {
-            background: rgba(198,169,114,0.06);
-            border: 1px solid rgba(198,169,114,0.25);
-            border-radius: 12px;
-            padding: 1.25rem 1.5rem;
+        .field {
+            margin-bottom: 1.25rem;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(192,150,60,0.6);
+            margin-bottom: 0.4rem;
+        }
+
+        .field input {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.92rem;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .field input:focus { border-color: var(--gold); }
+        .field input::placeholder { color: rgba(255,255,255,0.18); }
+
+        .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .btn-confirmar {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #F0C875, #A07020);
+            color: #1a1510;
+            border: none;
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            box-shadow: 0 6px 25px rgba(192,150,60,0.3);
+            transition: all 0.25s;
+        }
+
+        .btn-confirmar:hover { transform: translateY(-2px); box-shadow: 0 10px 35px rgba(192,150,60,0.4); }
+        .btn-confirmar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .modal-err {
+            color: #f87171;
+            font-size: 0.76rem;
+            text-align: center;
+            margin-top: 0.6rem;
+            display: none;
+        }
+
+        .btn-cancelar-modal {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 0.6rem;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* ====== RESULT OVERLAY ====== */
+        .result-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 600;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .result-bg.on { display: flex; }
+
+        .result-card {
+            background: linear-gradient(160deg, #1E1810 0%, #120F08 100%);
+            border: 1px solid rgba(192,150,60,0.4);
+            border-radius: 28px;
+            padding: 3rem 2.5rem 2.5rem;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: popIn 0.4s cubic-bezier(.175,.885,.32,1.275);
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+        }
+
+        .result-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+        .result-tag {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-hello {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.65);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-pct {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4.5rem, 18vw, 6.5rem);
+            font-weight: 900;
+            color: var(--gold-light);
+            line-height: 1;
+            text-shadow: 0 0 50px rgba(192,150,60,0.35);
+        }
+
+        .result-sublabel {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.25rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .cupom-wrap {
+            background: rgba(192,150,60,0.07);
+            border: 1px solid rgba(192,150,60,0.3);
+            border-radius: 14px;
+            padding: 1.25rem 1.75rem;
             margin-bottom: 1.5rem;
         }
 
-        .cupom-label {
-            font-size: 0.62rem;
-            letter-spacing: 0.2em;
+        .cupom-lbl {
+            font-size: 0.58rem;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.35);
             margin-bottom: 0.4rem;
         }
 
         .cupom-code {
-            font-family: monospace;
-            font-size: 1.3rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: var(--gold);
-            letter-spacing: 0.1em;
+            color: var(--gold-light);
+            letter-spacing: 0.12em;
         }
 
-        .cupom-validity {
-            font-size: 0.72rem;
-            color: rgba(255,255,255,0.4);
+        .cupom-valid {
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.3);
             margin-top: 0.4rem;
         }
 
-        .btn-whatsapp {
+        .btn-wpp {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -491,511 +563,671 @@
             width: 100%;
             padding: 0.9rem;
             background: #25D366;
-            color: white;
+            color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             cursor: pointer;
-            margin-top: 0.75rem;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.25s;
         }
 
-        .btn-whatsapp:hover { background: #1fb856; transform: translateY(-2px); }
+        .btn-wpp:hover { background: #1db356; transform: translateY(-2px); }
 
         .result-terms {
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.25);
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.2);
             margin-top: 1.25rem;
             line-height: 1.5;
         }
 
-        /* ---- PASSOU A VEZ RESULT ---- */
-        .result-miss .result-discount {
-            font-size: 2.5rem;
-            color: rgba(255,255,255,0.3);
+        /* Passou / Tente outra */
+        .result-miss-pct {
+            font-size: 2.2rem;
+            color: rgba(255,255,255,0.25);
+            margin: 1rem 0 1.5rem;
+            font-family: 'Playfair Display', serif;
         }
 
-        /* ---- FOOTER ---- */
-        .footer {
-            position: relative;
-            z-index: 10;
+        .btn-fechar-result {
+            display: block;
+            width: 100%;
             text-align: center;
-            padding: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 0.75rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.5);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            cursor: pointer;
+            margin-top: 0.75rem;
+            transition: all 0.2s;
         }
 
-        .footer p { font-size: 0.72rem; color: rgba(255,255,255,0.25); }
+        .btn-fechar-result:hover { background: rgba(255,255,255,0.08); }
 
-        /* ---- RESPONSIVE ---- */
-        @media (max-width: 480px) {
-            .modal-box { padding: 2rem 1.5rem; }
-            .form-row { grid-template-columns: 1fr; }
-            .result-box { padding: 2.5rem 1.5rem 2rem; }
+        /* Already played */
+        .already-played {
+            background: rgba(192,150,60,0.06);
+            border: 1px solid rgba(192,150,60,0.2);
+            border-radius: 14px;
+            padding: 1.5rem;
+            text-align: center;
+            max-width: 400px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .already-played p:first-child {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .already-played h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .already-played p.sub {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.45);
+            font-weight: 300;
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 500px) {
+            .fields-row { grid-template-columns: 1fr; }
+            .modal-card { padding: 2rem 1.5rem; }
+            .result-card { padding: 2.5rem 1.5rem 2rem; }
+            .spin-btn { width: 64px; height: 64px; font-size: 0.6rem; }
         }
     </style>
 </head>
 <body>
 
-<!-- Particles -->
-<div class="particles" id="particles"></div>
+<!-- ===== SCENE BACKGROUND ===== -->
+<div class="scene-bg" id="sceneBg"></div>
 
-<!-- Header -->
-<header class="header">
-    <p class="brand">João Vitor Cantuária · Fotografia</p>
-    <div class="birthday-badge">🎂 Especial de Aniversário</div>
-    <h1 class="page-title">Gire e <span>Ganhe!</span></h1>
-    <p class="page-subtitle">Hoje e amanhã — 19 e 20 de outubro. Descontos exclusivos em ensaios fotográficos. Gire a roleta e descubra o seu!</p>
+<!-- ===== PAGE ===== -->
+<div class="page">
+    <p class="top-brand">João Vitor Cantuária · Fotografia</p>
+    <div class="badge-aniversario">🎂 Especial de Aniversário</div>
+
+    <h1 class="hero-title">Gire e <span class="gold">Ganhe!</span></h1>
+    <p class="hero-sub">Descontos exclusivos em ensaios fotográficos.<br>Gire a roleta e descubra o seu!</p>
 
     <!-- Countdown -->
-    <div class="countdown-bar">
-        <div class="countdown-item">
-            <span class="countdown-num" id="cdHoras">00</span>
-            <span class="countdown-label">Horas</span>
-        </div>
-        <span class="countdown-sep">:</span>
-        <div class="countdown-item">
-            <span class="countdown-num" id="cdMinutos">00</span>
-            <span class="countdown-label">Minutos</span>
-        </div>
-        <span class="countdown-sep">:</span>
-        <div class="countdown-item">
-            <span class="countdown-num" id="cdSegundos">00</span>
-            <span class="countdown-label">Segundos</span>
-        </div>
+    <div class="countdown">
+        <div class="cd-block"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">Horas</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-block"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">Minutos</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-block"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">Segundos</span></div>
     </div>
-</header>
 
-<!-- Main -->
-<main class="main">
     <!-- Wheel -->
-    <div class="wheel-container">
-        <!-- Arrow pointer -->
-        <div class="wheel-pointer">
-            <svg viewBox="0 0 36 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="18,44 0,8 36,8" fill="#C6A972"/>
-                <polygon points="18,38 4,10 32,10" fill="#e8c97a"/>
+    <div class="wheel-section">
+        <!-- Pointer -->
+        <div class="pointer-wrap">
+            <svg viewBox="0 0 32 38" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="16,38 0,0 32,0" fill="#F0C875"/>
+                <polygon points="16,32 3,2 29,2" fill="#C6A054" opacity="0.5"/>
             </svg>
         </div>
 
-        <canvas id="wheelCanvas"></canvas>
+        <div class="wheel-wrap">
+            <div class="wheel-inner">
+                <canvas id="wheel"></canvas>
+            </div>
+        </div>
 
-        <button class="wheel-center-btn" id="btnGirar">GIRAR!</button>
+        <button class="spin-btn" id="btnGirar">GIRAR!</button>
     </div>
 
-    <p class="spin-hint">Clique no botão para girar</p>
+    <p class="spin-hint">🎁 Clique no botão para girar</p>
 
-    <!-- Prizes pills -->
-    <div class="prizes-row">
-        <span class="prize-pill" style="background:rgba(74,222,128,0.1);color:#4ade80;border-color:rgba(74,222,128,0.3);">20% OFF</span>
-        <span class="prize-pill" style="background:rgba(96,165,250,0.1);color:#60a5fa;border-color:rgba(96,165,250,0.3);">30% OFF</span>
-        <span class="prize-pill" style="background:rgba(251,191,36,0.1);color:#fbbf24;border-color:rgba(251,191,36,0.3);">50% OFF</span>
-        <span class="prize-pill" style="background:rgba(198,169,114,0.1);color:#C6A972;border-color:rgba(198,169,114,0.3);">100% OFF ✨</span>
-        <span class="prize-pill" style="background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.35);border-color:rgba(255,255,255,0.1);">Passou a vez</span>
+    <!-- Already played notice -->
+    <div class="already-played" id="alreadyPlayed">
+        <p>🎰</p>
+        <h3>Você já participou!</h3>
+        <p class="sub">Cada pessoa pode girar apenas uma vez. Obrigado por participar! 🎉</p>
     </div>
-</main>
 
-<!-- Modal Cadastro -->
-<div class="modal-overlay" id="modalCadastro">
-    <div class="modal-box">
-        <div class="modal-icon">🎰</div>
-        <h2 class="modal-title">Quase lá!</h2>
+    <!-- Pills -->
+    <div class="pills-row">
+        <span class="pill" style="background:rgba(74,222,128,0.1);color:#4ade80;border-color:rgba(74,222,128,0.3);">🎁 20% OFF</span>
+        <span class="pill" style="background:rgba(96,165,250,0.1);color:#60a5fa;border-color:rgba(96,165,250,0.3);">🎁 30% OFF</span>
+        <span class="pill" style="background:rgba(251,191,36,0.1);color:#fbbf24;border-color:rgba(251,191,36,0.3);">🎁 50% OFF</span>
+        <span class="pill" style="background:rgba(198,160,84,0.1);color:#C6A054;border-color:rgba(198,160,84,0.3);">🎁 100% OFF</span>
+        <span class="pill" style="background:rgba(167,139,250,0.1);color:#a78bfa;border-color:rgba(167,139,250,0.25);">Tente outra vez</span>
+        <span class="pill" style="background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.08);">Passou a vez</span>
+    </div>
+</div>
+
+<!-- ===== MODAL CADASTRO ===== -->
+<div class="modal-bg" id="modalCadastro">
+    <div class="modal-card">
+        <div style="font-size:2rem;text-align:center;margin-bottom:0.75rem;">🎰</div>
+        <h2>Quase lá!</h2>
         <p class="modal-sub">Preencha seus dados para liberar a roleta. É grátis e sem compromisso!</p>
 
-        <form id="cadastroForm" onsubmit="confirmarGiro(event)">
-            <div class="form-group">
+        <form id="formCadastro" onsubmit="confirmarGiro(event)">
+            <div class="field">
                 <label>Nome Completo</label>
-                <input type="text" id="fNome" required placeholder="Seu nome completo">
+                <input type="text" id="fNome" required placeholder="Seu nome completo" autocomplete="name">
             </div>
-            <div class="form-row">
-                <div class="form-group">
+            <div class="fields-row">
+                <div class="field">
                     <label>Telefone / WhatsApp</label>
-                    <input type="tel" id="fTelefone" required placeholder="(00) 00000-0000">
+                    <input type="tel" id="fTel" required placeholder="(00) 00000-0000" autocomplete="tel">
                 </div>
-                <div class="form-group">
+                <div class="field">
                     <label>Cidade</label>
                     <input type="text" id="fCidade" required placeholder="Sua cidade">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="field">
                 <label>E-mail</label>
-                <input type="email" id="fEmail" required placeholder="seu@email.com">
+                <input type="email" id="fEmail" required placeholder="seu@email.com" autocomplete="email">
             </div>
-
-            <button type="submit" class="btn-spin-now" id="btnConfirmarGiro">
-                🎲 Girar a Roleta Agora!
-            </button>
-            <p class="form-error" id="formError"></p>
+            <button type="submit" class="btn-confirmar" id="btnConfirmar">🎲 Girar a Roleta Agora!</button>
+            <p class="modal-err" id="modalErr"></p>
         </form>
-
-        <button class="btn-cancel-modal" onclick="fecharModalCadastro()">Cancelar</button>
+        <button class="btn-cancelar-modal" onclick="fecharModal()">Cancelar</button>
     </div>
 </div>
 
-<!-- Modal Resultado -->
-<div class="result-overlay" id="resultOverlay">
-    <div class="result-box" id="resultBox">
-        <div class="result-confetti" id="resultEmoji">🎉</div>
-        <p class="result-label" id="resultLabel">Parabéns!</p>
-        <p class="result-name" id="resultNomeDisplay"></p>
-        <div class="result-discount" id="resultDiscount">30%</div>
-        <p class="result-discount-label" id="resultDiscountLabel">de desconto no seu ensaio!</p>
+<!-- ===== RESULT OVERLAY ===== -->
+<div class="result-bg" id="resultBg">
+    <div class="result-card" id="resultCard">
+        <div class="result-emoji" id="rEmoji">🎉</div>
+        <p class="result-tag" id="rTag">Parabéns!</p>
+        <p class="result-hello" id="rHello"></p>
+        <div class="result-pct" id="rPct">30%</div>
+        <p class="result-sublabel" id="rSub">de desconto no seu ensaio!</p>
 
-        <div class="cupom-box" id="cupomBox">
-            <p class="cupom-label">Seu cupom exclusivo</p>
-            <p class="cupom-code" id="cupomCode">JVC-XXXX</p>
-            <p class="cupom-validity">Válido até 21/10/2026 · Apresente no agendamento</p>
+        <div class="cupom-wrap" id="rCupomWrap">
+            <p class="cupom-lbl">Seu cupom exclusivo</p>
+            <p class="cupom-code" id="rCupom">JVC30-XXXX</p>
+            <p class="cupom-valid">Válido até 21/10/2026 · Apresente no agendamento</p>
         </div>
 
-        <a id="btnWhatsapp" href="#" target="_blank" rel="noopener" class="btn-whatsapp">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <a id="rWppBtn" href="#" target="_blank" rel="noopener" class="btn-wpp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             Agendar no WhatsApp
         </a>
 
-        <p class="result-terms" id="resultTerms">Válido apenas para novos ensaios. Não cumulativo com outras promoções. Válido até 21/10/2026.</p>
+        <p class="result-terms" id="rTerms">Válido apenas para novos ensaios. Não cumulativo. Válido até 21/10/2026.</p>
     </div>
 </div>
 
-<footer class="footer">
-    <p>João Vitor Cantuária · Fotografia © 2026</p>
-</footer>
-
 <script>
-// ====================================================
-// CONFIGURAÇÃO
-// ====================================================
+// ============================================================
+// CONFIG
+// ============================================================
 const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
-const WHATSAPP_NUM = '5538999209694';
+const WPP = '5538999209694';
 
-// ====================================================
-// DEFINIÇÃO DOS SEGMENTOS
-// Pesos reais: Passou(3), 20%(2), 30%(4), 50%(2), 100%(0)
-// A fatia 100% aparece visualmente mas NUNCA é sorteada
-// ====================================================
-const SEGMENTS = [
-    { label: 'Passou\na vez',  desconto: null,   cor: '#2a2a2a', textCor: '#888888', peso: 3 },
-    { label: '20%',            desconto: '20%',  cor: '#1a3a2a', textCor: '#4ade80', peso: 2 },
-    { label: '30%',            desconto: '30%',  cor: '#1a2a3a', textCor: '#60a5fa', peso: 4 },
-    { label: '50%',            desconto: '50%',  cor: '#2a2a1a', textCor: '#fbbf24', peso: 2 },
-    { label: '100%',           desconto: '100%', cor: '#1a0a1a', textCor: '#C6A972', peso: 0 }, // peso 0 = nunca cai
+// ============================================================
+// SEGMENTOS - 13 fatias
+// peso: probabilidade real. 100% tem peso 0 (aparece mas nunca cai)
+// "Tente outra vez" permite nova tentativa mas NÃO salva lead
+// ============================================================
+const SEGS = [
+    { label:'PASSOU\nA VEZ',    sub:'',         icon:'⊘',  cor:'#1C1915', txt:'#555555', desconto:null,   peso:3, tipo:'passou'  },
+    { label:'20%',              sub:'OFF',       icon:'🎁', cor:'#0D2518', txt:'#4ade80', desconto:'20%',  peso:2, tipo:'premio'  },
+    { label:'30%',              sub:'OFF',       icon:'🎁', cor:'#0D1C2E', txt:'#60a5fa', desconto:'30%',  peso:4, tipo:'premio'  },
+    { label:'30%',              sub:'OFF',       icon:'🎁', cor:'#0D1C2E', txt:'#60a5fa', desconto:'30%',  peso:0, tipo:'premio'  }, // duplicate visual
+    { label:'50%',              sub:'OFF',       icon:'🎁', cor:'#1E1A0A', txt:'#fbbf24', desconto:'50%',  peso:2, tipo:'premio'  },
+    { label:'100%',             sub:'OFF',       icon:'🎁', cor:'#1A0D20', txt:'#C6A054', desconto:'100%', peso:0, tipo:'premio'  },
+    { label:'TENTE\nOUTRA VEZ', sub:'',          icon:'🔄', cor:'#1A1020', txt:'#a78bfa', desconto:null,   peso:1, tipo:'tente'   },
+    { label:'PASSOU\nA VEZ',    sub:'',          icon:'⊘',  cor:'#1C1915', txt:'#555555', desconto:null,   peso:0, tipo:'passou'  }, // visual duplicate
+    { label:'20%',              sub:'OFF',       icon:'🎁', cor:'#0D2518', txt:'#4ade80', desconto:'20%',  peso:0, tipo:'premio'  }, // visual
+    { label:'30%',              sub:'OFF',       icon:'🎁', cor:'#0D1C2E', txt:'#60a5fa', desconto:'30%',  peso:0, tipo:'premio'  }, // visual
+    { label:'PASSOU\nA VEZ',    sub:'',          icon:'⊘',  cor:'#1C1915', txt:'#555555', desconto:null,   peso:0, tipo:'passou'  }, // visual
+    { label:'50%',              sub:'OFF',       icon:'🎁', cor:'#1E1A0A', txt:'#fbbf24', desconto:'50%',  peso:0, tipo:'premio'  }, // visual
+    { label:'100%',             sub:'OFF',       icon:'🎁', cor:'#1A0D20', txt:'#C6A054', desconto:'100%', peso:0, tipo:'premio'  }, // visual
 ];
 
-// Montar array de resultados possíveis baseado nos pesos
+// Pool: índices com peso > 0 (o sorteio real)
 const POOL = [];
-SEGMENTS.forEach((s, idx) => {
-    for (let i = 0; i < s.peso; i++) POOL.push(idx);
-});
-// POOL terá: [0,0,0, 1,1, 2,2,2,2, 3,3]  — 100% (idx 4) NUNCA entra
+SEGS.forEach((s, i) => { for (let p = 0; p < s.peso; p++) POOL.push(i); });
+// POOL: [0,0,0, 1,1, 2,2,2,2, 4,4, 6]
+// Garantia: 100%(idx5,12), visual 100%(idx12) — NUNCA no pool
 
-// ====================================================
-// ROLETA - DESENHO
-// ====================================================
-const canvas = document.getElementById('wheelCanvas');
+// ============================================================
+// CANVAS WHEEL
+// ============================================================
+const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
-const SIZE = Math.min(380, window.innerWidth * 0.88);
-canvas.width = SIZE;
-canvas.height = SIZE;
-const cx = SIZE / 2, cy = SIZE / 2, radius = SIZE / 2 - 4;
+const W = Math.min(320, window.innerWidth * 0.80);
+canvas.width = canvas.height = W;
+const CX = W/2, CY = W/2, R = W/2 - 2;
+const N = SEGS.length;
+const ARC = (2 * Math.PI) / N;
+let rot = 0, spinning = false;
 
-// Ângulos de cada segmento (TODOS têm fatia igual visualmente)
-const NUM_SEG = SEGMENTS.length;
-const ARC = (2 * Math.PI) / NUM_SEG;
-let currentAngle = 0;
-let spinning = false;
+function drawSeg(i, rotation) {
+    const s = SEGS[i];
+    const start = rotation + i * ARC;
+    const end   = start + ARC;
+
+    // Fill
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, R, start, end);
+    ctx.closePath();
+    ctx.fillStyle = s.cor;
+    ctx.fill();
+
+    // Subtle inner glow on segment
+    const grad = ctx.createRadialGradient(CX, CY, R*0.3, CX, CY, R);
+    grad.addColorStop(0, 'rgba(255,255,255,0.04)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.2)');
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, R, start, end);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Divider
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.lineTo(CX + R * Math.cos(start), CY + R * Math.sin(start));
+    ctx.strokeStyle = 'rgba(192,150,60,0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Text
+    ctx.save();
+    ctx.translate(CX, CY);
+    ctx.rotate(start + ARC / 2);
+
+    const lines = s.label.split('\n');
+    const fs = W < 280 ? 10 : 11;
+    ctx.font = `800 ${fs}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = s.txt;
+    ctx.textAlign = 'right';
+
+    if (s.sub) {
+        // Has sub (OFF)
+        ctx.font = `900 ${fs+4}px 'DM Sans', sans-serif`;
+        ctx.fillText(lines[0], R - 16, -fs/2);
+        ctx.font = `700 ${fs-1}px 'DM Sans', sans-serif`;
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.fillText(s.sub, R - 16, fs + 2);
+    } else {
+        lines.forEach((line, li) => {
+            const yOff = (li - (lines.length-1)/2) * (fs+2);
+            ctx.fillText(line, R - 16, yOff + fs/3);
+        });
+    }
+    ctx.restore();
+}
 
 function drawWheel(rotation) {
-    ctx.clearRect(0, 0, SIZE, SIZE);
+    ctx.clearRect(0, 0, W, W);
+    for (let i = 0; i < N; i++) drawSeg(i, rotation);
 
-    SEGMENTS.forEach((seg, i) => {
-        const start = rotation + i * ARC;
-        const end   = start + ARC;
-
-        // Fatia
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, radius, start, end);
-        ctx.closePath();
-        ctx.fillStyle = seg.cor;
-        ctx.fill();
-        ctx.strokeStyle = '#0a0a0a';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Texto
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(start + ARC / 2);
-        ctx.textAlign = 'right';
-        ctx.fillStyle = seg.textCor;
-
-        const lines = seg.label.split('\n');
-        const fontSize = SIZE < 300 ? 13 : 15;
-        ctx.font = `800 ${fontSize}px 'DM Sans', sans-serif`;
-
-        lines.forEach((line, li) => {
-            const yOff = (li - (lines.length - 1) / 2) * (fontSize + 3);
-            ctx.fillText(line, radius - 14, yOff + fontSize / 3);
-        });
-
-        // Separador dourado
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(radius, 0);
-        ctx.strokeStyle = 'rgba(198,169,114,0.3)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        ctx.restore();
-    });
-
-    // Centro circle
+    // Center cap
     ctx.beginPath();
-    ctx.arc(cx, cy, 38, 0, 2 * Math.PI);
-    ctx.fillStyle = '#1a1a1a';
+    ctx.arc(CX, CY, 40, 0, 2*Math.PI);
+    ctx.fillStyle = '#18140D';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(198,169,114,0.4)';
+    ctx.strokeStyle = 'rgba(192,150,60,0.5)';
     ctx.lineWidth = 2;
     ctx.stroke();
 }
 
 drawWheel(0);
 
-// ====================================================
-// FLUXO: CADASTRO → GIRO → RESULTADO
-// ====================================================
-let dadosCadastro = null;
+// ============================================================
+// SCENE BACKGROUND - gifts + bokeh
+// ============================================================
+function buildScene() {
+    const bg = document.getElementById('sceneBg');
+
+    // Bokeh dots
+    const bokehColors = ['rgba(192,150,60,0.4)','rgba(255,200,80,0.3)','rgba(140,90,10,0.5)','rgba(255,255,200,0.2)'];
+    for (let i = 0; i < 18; i++) {
+        const b = document.createElement('div');
+        b.className = 'bokeh';
+        const size = 20 + Math.random() * 80;
+        Object.assign(b.style, {
+            width: size+'px', height: size+'px',
+            left: Math.random()*100+'vw', top: Math.random()*100+'vh',
+            background: bokehColors[Math.floor(Math.random()*bokehColors.length)],
+            filter: `blur(${8+Math.random()*20}px)`,
+            animationDuration: (3+Math.random()*4)+'s',
+            animationDelay: (Math.random()*4)+'s'
+        });
+        bg.appendChild(b);
+    }
+
+    // Ribbons
+    const ribbonPositions = [['-5vw','20vh','12vw','14vw'],['85vw','60vh','18vw','8vw'],['10vw','75vh','8vw','10vw'],['70vw','10vh','14vw','18vw']];
+    ribbonPositions.forEach(([l,t,w,h]) => {
+        const r = document.createElement('div');
+        r.className = 'ribbon';
+        Object.assign(r.style, { left:l, top:t, width:w, height:h });
+        bg.appendChild(r);
+    });
+
+    // CSS Gift boxes (purely decorative)
+    const giftData = [
+        { left:'-2vw', bottom:'5vh', size:'10vw', max:'120px', baseCol:'#1a1200', lidCol:'#2a1e00', ribCol:'#C6A054', opacity:'0.5', rotate:'-8deg' },
+        { right:'-3vw', bottom:'8vh', size:'12vw', max:'140px', baseCol:'#120D08', lidCol:'#1E1400', ribCol:'#A07020', opacity:'0.45', rotate:'6deg' },
+        { left:'4vw', bottom:'0', size:'7vw', max:'90px', baseCol:'#0D0C08', lidCol:'#181200', ribCol:'#C6A054', opacity:'0.35', rotate:'3deg' },
+        { right:'6vw', bottom:'2vh', size:'8vw', max:'100px', baseCol:'#100D06', lidCol:'#1A1400', ribCol:'#8B6914', opacity:'0.4', rotate:'-5deg' },
+        { left:'1vw', top:'15vh', size:'6vw', max:'75px', baseCol:'#100D06', lidCol:'#181200', ribCol:'#C6A054', opacity:'0.25', rotate:'12deg' },
+        { right:'2vw', top:'20vh', size:'5vw', max:'65px', baseCol:'#0D0C08', lidCol:'#151000', ribCol:'#A07020', opacity:'0.2', rotate:'-15deg' },
+    ];
+
+    giftData.forEach(g => {
+        const wrap = document.createElement('div');
+        wrap.className = 'gift';
+        const sz = `min(${g.size}, ${g.max})`;
+        Object.assign(wrap.style, {
+            width: sz, height: sz,
+            opacity: g.opacity,
+            transform: `rotate(${g.rotate})`,
+            ...(g.left ? {left: g.left} : {right: g.right}),
+            ...(g.top ? {top: g.top} : {bottom: g.bottom})
+        });
+        wrap.innerHTML = `
+            <div class="gift-box" style="background:${g.baseCol};">
+                <div class="gift-ribbon-v" style="background:${g.ribCol};opacity:0.8;"></div>
+                <div class="gift-ribbon-h" style="background:${g.ribCol};opacity:0.8;"></div>
+            </div>
+            <div class="gift-lid" style="background:${g.lidCol};">
+                <div class="gift-ribbon-v" style="background:${g.ribCol};opacity:0.8;position:absolute;left:50%;transform:translateX(-50%);width:14%;height:100%;top:0;"></div>
+            </div>
+            <div class="gift-bow"></div>
+        `;
+        bg.appendChild(wrap);
+    });
+}
+
+buildScene();
+
+// ============================================================
+// COUNTDOWN até 21/10/2026 00:00
+// ============================================================
+function tick() {
+    const end  = new Date('2026-10-21T00:00:00');
+    const diff = end - new Date();
+    if (diff <= 0) {
+        document.querySelector('.countdown').innerHTML = '<p style="color:rgba(255,255,255,0.3);font-size:0.82rem;">Promoção encerrada.</p>';
+        document.getElementById('btnGirar').disabled = true;
+        return;
+    }
+    const h = Math.floor(diff/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
+    document.getElementById('cdH').textContent = String(h).padStart(2,'0');
+    document.getElementById('cdM').textContent = String(m).padStart(2,'0');
+    document.getElementById('cdS').textContent = String(s).padStart(2,'0');
+}
+tick(); setInterval(tick, 1000);
+
+// ============================================================
+// CHECK: já participou? (localStorage por email)
+// ============================================================
+function checkAlreadyPlayed() {
+    const played = localStorage.getItem('jvc_roleta_played');
+    if (played) {
+        document.getElementById('btnGirar').disabled = true;
+        document.getElementById('btnGirar').textContent = 'Já Girou!';
+        document.getElementById('alreadyPlayed').style.display = 'block';
+    }
+}
+checkAlreadyPlayed();
+
+// ============================================================
+// FLUXO
+// ============================================================
+let dadosLead = null;
 
 document.getElementById('btnGirar').addEventListener('click', () => {
     if (spinning) return;
-    abrirModalCadastro();
+    abrirModal();
 });
 
-function abrirModalCadastro() {
-    document.getElementById('modalCadastro').classList.add('active');
+function abrirModal() {
+    document.getElementById('modalCadastro').classList.add('on');
+    setTimeout(() => document.getElementById('fNome').focus(), 100);
 }
 
-function fecharModalCadastro() {
-    document.getElementById('modalCadastro').classList.remove('active');
+function fecharModal() {
+    document.getElementById('modalCadastro').classList.remove('on');
 }
 
 async function confirmarGiro(e) {
     e.preventDefault();
-    const btn  = document.getElementById('btnConfirmarGiro');
-    const erro = document.getElementById('formError');
+    const btn = document.getElementById('btnConfirmar');
+    const err = document.getElementById('modalErr');
 
-    const nome     = document.getElementById('fNome').value.trim();
-    const telefone = document.getElementById('fTelefone').value.trim();
-    const email    = document.getElementById('fEmail').value.trim();
-    const cidade   = document.getElementById('fCidade').value.trim();
+    const nome   = document.getElementById('fNome').value.trim();
+    const tel    = document.getElementById('fTel').value.trim();
+    const email  = document.getElementById('fEmail').value.trim();
+    const cidade = document.getElementById('fCidade').value.trim();
 
-    if (!nome || !telefone || !email || !cidade) {
-        erro.textContent = 'Preencha todos os campos.';
-        erro.style.display = 'block';
+    if (!nome || !tel || !email || !cidade) {
+        err.textContent = 'Preencha todos os campos.';
+        err.style.display = 'block';
         return;
     }
 
-    btn.textContent = 'Aguarde...';
+    // Verificar se email já girou (backend check)
+    btn.textContent = 'Verificando...';
     btn.disabled = true;
-    erro.style.display = 'none';
+    err.style.display = 'none';
 
-    dadosCadastro = { nome, telefone, email, cidade };
+    try {
+        const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/roleta_leads?email=eq.${encodeURIComponent(email)}&select=id`,
+            { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+        );
+        const existing = await res.json();
 
-    fecharModalCadastro();
+        if (existing && existing.length > 0) {
+            err.textContent = 'Este e-mail já participou! Cada pessoa pode girar apenas uma vez.';
+            err.style.display = 'block';
+            btn.textContent = '🎲 Girar a Roleta Agora!';
+            btn.disabled = false;
+            return;
+        }
+    } catch (_) { /* se falhar a verificação, deixa girar */ }
+
+    dadosLead = { nome, tel, email, cidade };
+    fecharModal();
     girarRoleta();
+
+    btn.textContent = '🎲 Girar a Roleta Agora!';
+    btn.disabled = false;
 }
 
-// ====================================================
+// ============================================================
 // ANIMAÇÃO DA ROLETA
-// ====================================================
+// ============================================================
 function girarRoleta() {
     spinning = true;
     document.getElementById('btnGirar').disabled = true;
 
-    // Sortear resultado (nunca 100%)
+    // Sortear índice real (dos que têm peso > 0 no POOL)
     const winIdx = POOL[Math.floor(Math.random() * POOL.length)];
 
-    // Calcular ângulo de parada
-    // O ponteiro aponta para o TOPO (270° = -π/2 em coordenadas canvas)
-    // Queremos que o segmento winIdx fique apontado pelo ponteiro
-    const segCenter = winIdx * ARC + ARC / 2; // centro do segmento vencedor
-    const pointer   = -Math.PI / 2;            // 270°
-    const extra     = 8 * 2 * Math.PI;         // 8 voltas completas
-    // Rotação necessária para alinhar
-    const diff = (pointer - segCenter + 2 * Math.PI) % (2 * Math.PI);
-    const targetRotation = currentAngle + extra + diff;
+    // Calcular rotação para parar no segmento vencedor
+    const segCenter = winIdx * ARC + ARC / 2;
+    const pointer   = -Math.PI / 2; // topo
+    const voltas    = 8 + Math.floor(Math.random() * 4);
+    const diff      = ((pointer - segCenter) % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
+    const target    = rot + voltas * 2 * Math.PI + diff;
 
-    const duration = 5000 + Math.random() * 1500;
-    const startTime = performance.now();
-    const startAngle = currentAngle;
+    const dur = 5500 + Math.random() * 1500;
+    const t0  = performance.now();
+    const r0  = rot;
 
-    function easeOut(t) {
-        return 1 - Math.pow(1 - t, 4);
-    }
+    function ease(t) { return 1 - Math.pow(1 - t, 4); }
 
-    function animate(now) {
-        const elapsed = now - startTime;
-        const t = Math.min(elapsed / duration, 1);
-        currentAngle = startAngle + (targetRotation - startAngle) * easeOut(t);
-        drawWheel(currentAngle);
-
-        if (t < 1) {
-            requestAnimationFrame(animate);
-        } else {
-            currentAngle = targetRotation % (2 * Math.PI);
+    function step(now) {
+        const t = Math.min((now - t0) / dur, 1);
+        rot = r0 + (target - r0) * ease(t);
+        drawWheel(rot);
+        if (t < 1) { requestAnimationFrame(step); }
+        else {
+            rot = target % (2 * Math.PI);
             spinning = false;
-            mostrarResultado(winIdx);
+            exibirResultado(winIdx);
+        }
+    }
+    requestAnimationFrame(step);
+}
+
+// ============================================================
+// EXIBIR RESULTADO
+// ============================================================
+async function exibirResultado(winIdx) {
+    const seg  = SEGS[winIdx];
+    const nome = dadosLead.nome.split(' ')[0];
+
+    const isTente  = seg.tipo === 'tente';
+    const isPassou = seg.tipo === 'passou';
+    const isPremio = seg.tipo === 'premio';
+
+    const rBg   = document.getElementById('resultBg');
+    const rCard = document.getElementById('resultCard');
+
+    document.getElementById('rEmoji').textContent  = isPremio ? '🎉' : (isTente ? '🔄' : '😅');
+    document.getElementById('rTag').textContent    = isPremio ? 'Parabéns!' : (isTente ? 'Quase!' : 'Que pena!');
+    document.getElementById('rHello').textContent  = nome + (isPremio ? ', você ganhou:' : isTente ? ', tente de novo!' : ', desta vez não foi...');
+    document.getElementById('rPct').textContent    = isPremio ? seg.label : (isTente ? '🔄' : '');
+    document.getElementById('rSub').textContent    = isPremio ? 'de desconto no seu ensaio!' : (isTente ? 'Gire novamente — boa sorte!' : 'Obrigado por participar! 🎂');
+
+    const cupomWrap = document.getElementById('rCupomWrap');
+    const wppBtn    = document.getElementById('rWppBtn');
+    const terms     = document.getElementById('rTerms');
+
+    if (isPremio) {
+        const cupom = gerarCupom(seg.desconto);
+        document.getElementById('rCupom').textContent = cupom;
+        cupomWrap.style.display = '';
+        wppBtn.style.display    = '';
+        terms.style.display     = '';
+
+        const msg = encodeURIComponent(`Olá João! Ganhei ${seg.label} de desconto na Roleta de Aniversário! 🎉\nMeu cupom: ${cupom}\nNome: ${dadosLead.nome}`);
+        wppBtn.href = `https://wa.me/${WPP}?text=${msg}`;
+
+        // Salvar no Supabase
+        try {
+            await fetch(`${SUPABASE_URL}/rest/v1/roleta_leads`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                    nome: dadosLead.nome,
+                    telefone: dadosLead.tel,
+                    email: dadosLead.email,
+                    cidade: dadosLead.cidade,
+                    desconto: seg.desconto,
+                    cupom: cupom
+                })
+            });
+        } catch (err) { console.error('Supabase save error:', err); }
+
+        // Marcar como jogado
+        localStorage.setItem('jvc_roleta_played', '1');
+
+    } else if (isTente) {
+        cupomWrap.style.display = 'none';
+        wppBtn.style.display    = 'none';
+        terms.style.display     = 'none';
+
+        // Botão girar de novo
+        const existing = rCard.querySelector('.btn-tente');
+        if (!existing) {
+            const btn = document.createElement('button');
+            btn.className = 'btn-fechar-result btn-tente';
+            btn.textContent = '🎰 Girar Novamente';
+            btn.onclick = () => {
+                rBg.classList.remove('on');
+                btn.remove();
+                spinning = false;
+                document.getElementById('btnGirar').disabled = false;
+                dadosLead = null; // precisa cadastrar de novo
+            };
+            rCard.appendChild(btn);
+        }
+
+    } else {
+        // Passou a vez - também marca como jogado, não pode mais
+        cupomWrap.style.display = 'none';
+        wppBtn.style.display    = 'none';
+        terms.style.display     = 'none';
+
+        // Salvar mesmo passando a vez (para impedir nova tentativa)
+        try {
+            await fetch(`${SUPABASE_URL}/rest/v1/roleta_leads`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                    nome: dadosLead.nome,
+                    telefone: dadosLead.tel,
+                    email: dadosLead.email,
+                    cidade: dadosLead.cidade,
+                    desconto: 'Passou a vez',
+                    cupom: 'SEM-CUPOM'
+                })
+            });
+        } catch (_) {}
+
+        localStorage.setItem('jvc_roleta_played', '1');
+
+        // Botão fechar
+        const existing2 = rCard.querySelector('.btn-passou');
+        if (!existing2) {
+            const btn2 = document.createElement('button');
+            btn2.className = 'btn-fechar-result btn-passou';
+            btn2.textContent = 'Fechar';
+            btn2.onclick = () => {
+                rBg.classList.remove('on');
+                checkAlreadyPlayed();
+            };
+            rCard.appendChild(btn2);
         }
     }
 
-    requestAnimationFrame(animate);
+    rBg.classList.add('on');
 }
 
-// ====================================================
-// MOSTRAR RESULTADO
-// ====================================================
-async function mostrarResultado(winIdx) {
-    const seg = SEGMENTS[winIdx];
-    const nome = dadosCadastro.nome.split(' ')[0];
-
-    const resultBox = document.getElementById('resultBox');
-    const overlay   = document.getElementById('resultOverlay');
-
-    // Determinar conteúdo
-    const passou = seg.desconto === null;
-
-    document.getElementById('resultEmoji').textContent  = passou ? '😅' : '🎉';
-    document.getElementById('resultLabel').textContent  = passou ? 'Que pena!' : 'Parabéns!';
-    document.getElementById('resultNomeDisplay').textContent = nome + (passou ? ', desta vez não foi...' : ', você ganhou:');
-    document.getElementById('resultDiscount').textContent   = passou ? 'Passou\na vez' : seg.label;
-    document.getElementById('resultDiscountLabel').textContent = passou ? 'Tente novamente! 😄' : 'de desconto no seu ensaio!';
-
-    if (passou) {
-        resultBox.classList.add('result-miss');
-        document.getElementById('cupomBox').style.display = 'none';
-        document.getElementById('btnWhatsapp').style.display = 'none';
-        document.getElementById('resultTerms').style.display = 'none';
-
-        // Botão tentar de novo
-        const btnTentar = document.createElement('button');
-        btnTentar.textContent = '🎲 Tentar Novamente';
-        btnTentar.className = 'btn-spin-now';
-        btnTentar.style.marginTop = '1.5rem';
-        btnTentar.onclick = () => {
-            overlay.classList.remove('active');
-            resultBox.classList.remove('result-miss');
-            document.getElementById('cupomBox').style.display = '';
-            document.getElementById('btnWhatsapp').style.display = '';
-            document.getElementById('resultTerms').style.display = '';
-            btnTentar.remove();
-            document.getElementById('btnGirar').disabled = false;
-            dadosCadastro = null;
-        };
-        resultBox.appendChild(btnTentar);
-
-        overlay.classList.add('active');
-        return; // Não salva no banco se passou a vez
-    }
-
-    // Gerar cupom único
-    const cupom = gerarCupom(seg.desconto);
-    document.getElementById('cupomCode').textContent = cupom;
-
-    // Configurar WhatsApp
-    const msgWpp = encodeURIComponent(
-        `Olá João! Participei da sua Roleta de Aniversário e ganhei ${seg.label} de desconto no ensaio! 🎉\nMeu cupom: ${cupom}\nNome: ${dadosCadastro.nome}`
-    );
-    document.getElementById('btnWhatsapp').href = `https://wa.me/${WHATSAPP_NUM}?text=${msgWpp}`;
-
-    overlay.classList.add('active');
-
-    // Salvar no Supabase
-    try {
-        await fetch(`${SUPABASE_URL}/rest/v1/roleta_leads`, {
-            method: 'POST',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json',
-                'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({
-                nome: dadosCadastro.nome,
-                telefone: dadosCadastro.telefone,
-                email: dadosCadastro.email,
-                cidade: dadosCadastro.cidade,
-                desconto: seg.label,
-                cupom: cupom
-            })
-        });
-    } catch (err) {
-        console.error('Erro ao salvar lead:', err);
-    }
-}
-
-// ====================================================
+// ============================================================
 // GERAR CUPOM
-// ====================================================
+// ============================================================
 function gerarCupom(desconto) {
-    const pct = desconto.replace('%', '');
+    const pct   = desconto.replace('%','');
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let code = '';
-    for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+    for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random()*chars.length)];
     return `JVC${pct}-${code}`;
 }
-
-// ====================================================
-// COUNTDOWN até fim do dia 20/10/2026
-// ====================================================
-function updateCountdown() {
-    const end = new Date('2026-10-21T00:00:00');
-    const now = new Date();
-    const diff = end - now;
-
-    if (diff <= 0) {
-        document.querySelector('.countdown-bar').innerHTML = '<p style="color:rgba(255,255,255,0.3);font-size:0.82rem;">Promoção encerrada.</p>';
-        document.getElementById('btnGirar').disabled = true;
-        return;
-    }
-
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-
-    document.getElementById('cdHoras').textContent   = String(h).padStart(2, '0');
-    document.getElementById('cdMinutos').textContent = String(m).padStart(2, '0');
-    document.getElementById('cdSegundos').textContent = String(s).padStart(2, '0');
-}
-
-updateCountdown();
-setInterval(updateCountdown, 1000);
-
-// ====================================================
-// PARTICLES
-// ====================================================
-function createParticles() {
-    const container = document.getElementById('particles');
-    for (let i = 0; i < 25; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        p.style.left = Math.random() * 100 + 'vw';
-        p.style.width = p.style.height = (2 + Math.random() * 4) + 'px';
-        p.style.animationDuration = (8 + Math.random() * 12) + 's';
-        p.style.animationDelay = (Math.random() * 10) + 's';
-        if (Math.random() > 0.5) {
-            p.style.background = Math.random() > 0.5 ? '#ffffff' : '#C6A972';
-            p.style.borderRadius = '0';
-            p.style.transform = 'rotate(45deg)';
-        }
-        container.appendChild(p);
-    }
-}
-
-createParticles();
 </script>
 </body>
 </html>
