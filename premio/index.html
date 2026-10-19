@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Roleta de Aniversário - João Vitor Cantuária</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #C6A972;
+            --gold-light: #e8c97a;
+            --gold-dark: #a8884e;
+            --black: #0a0a0a;
+            --black-soft: #111111;
+            --black-card: #181818;
+            --white: #ffffff;
+            --white-dim: rgba(255,255,255,0.7);
+            --red: #e85454;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ---- PARTICLES BG ---- */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+            10%  { opacity: 0.6; }
+            90%  { opacity: 0.3; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        /* ---- HEADER ---- */
+        .header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+        }
+
+        .brand {
+            font-size: 0.65rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .birthday-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(198,169,114,0.15), rgba(198,169,114,0.05));
+            border: 1px solid rgba(198,169,114,0.3);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 0.08em;
+            margin-bottom: 1rem;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 5vw, 2.6rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title span { color: var(--gold); }
+
+        .page-subtitle {
+            font-size: 0.9rem;
+            color: var(--white-dim);
+            font-weight: 300;
+            max-width: 480px;
+            margin: 0 auto 0.5rem;
+        }
+
+        /* ---- COUNTDOWN ---- */
+        .countdown-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem auto 0;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .countdown-num {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-top: 0.2rem;
+        }
+
+        .countdown-sep {
+            font-size: 1.5rem;
+            color: var(--gold);
+            opacity: 0.5;
+            align-self: center;
+            margin-top: -0.5rem;
+        }
+
+        /* ---- MAIN LAYOUT ---- */
+        .main {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem 3rem;
+        }
+
+        /* ---- WHEEL CONTAINER ---- */
+        .wheel-container {
+            position: relative;
+            width: min(380px, 90vw);
+            height: min(380px, 90vw);
+            margin: 1rem auto;
+        }
+
+        /* Pointer/arrow */
+        .wheel-pointer {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+        }
+
+        .wheel-pointer svg {
+            width: 36px;
+            height: 44px;
+        }
+
+        canvas#wheelCanvas {
+            display: block;
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 6px #1a1a1a,
+                0 0 0 10px var(--gold),
+                0 0 40px rgba(198,169,114,0.2),
+                0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        /* Center button on wheel */
+        .wheel-center-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+            border: 4px solid #1a1a1a;
+            color: var(--black);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            z-index: 15;
+            box-shadow: 0 4px 20px rgba(198,169,114,0.4);
+            transition: all 0.2s;
+            line-height: 1.2;
+        }
+
+        .wheel-center-btn:hover {
+            transform: translate(-50%, -50%) scale(1.08);
+            box-shadow: 0 6px 30px rgba(198,169,114,0.5);
+        }
+
+        .wheel-center-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: translate(-50%, -50%);
+        }
+
+        /* ---- CTA BELOW WHEEL ---- */
+        .spin-hint {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            margin-top: 0.75rem;
+            font-style: italic;
+        }
+
+        /* ---- PRIZES LIST ---- */
+        .prizes-row {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1.5rem;
+            max-width: 480px;
+        }
+
+        .prize-pill {
+            padding: 0.35rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            border: 1px solid;
+        }
+
+        /* ---- MODAL CADASTRO ---- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: var(--black-card);
+            border: 1px solid rgba(198,169,114,0.25);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to   { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-icon {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 0.4rem;
+        }
+
+        .modal-sub {
+            font-size: 0.82rem;
+            color: var(--white-dim);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            padding: 0.7rem 0;
+            font-size: 0.95rem;
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus { border-bottom-color: var(--gold); }
+        .form-group input::placeholder { color: rgba(255,255,255,0.18); }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .btn-spin-now {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+            color: var(--black);
+            border: none;
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(198,169,114,0.25);
+        }
+
+        .btn-spin-now:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(198,169,114,0.35);
+        }
+
+        .btn-spin-now:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .form-error {
+            color: var(--red);
+            font-size: 0.78rem;
+            margin-top: 0.75rem;
+            text-align: center;
+            display: none;
+        }
+
+        .btn-cancel-modal {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 0.75rem;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.35);
+            font-size: 0.78rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* ---- RESULT MODAL ---- */
+        .result-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .result-overlay.active { display: flex; }
+
+        .result-box {
+            background: var(--black-card);
+            border-radius: 24px;
+            padding: 3rem 2rem 2.5rem;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            animation: modalIn 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .result-confetti {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-label {
+            font-size: 0.68rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .result-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            color: var(--white-dim);
+        }
+
+        .result-discount {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4rem, 18vw, 6rem);
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 0;
+            text-shadow: 0 0 40px rgba(198,169,114,0.4);
+        }
+
+        .result-discount-label {
+            font-size: 0.85rem;
+            color: var(--white-dim);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .cupom-box {
+            background: rgba(198,169,114,0.06);
+            border: 1px solid rgba(198,169,114,0.25);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cupom-label {
+            font-size: 0.62rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 0.4rem;
+        }
+
+        .cupom-code {
+            font-family: monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+        }
+
+        .cupom-validity {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 0.4rem;
+        }
+
+        .btn-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            width: 100%;
+            padding: 0.9rem;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 0.75rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-whatsapp:hover { background: #1fb856; transform: translateY(-2px); }
+
+        .result-terms {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.25);
+            margin-top: 1.25rem;
+            line-height: 1.5;
+        }
+
+        /* ---- PASSOU A VEZ RESULT ---- */
+        .result-miss .result-discount {
+            font-size: 2.5rem;
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* ---- FOOTER ---- */
+        .footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer p { font-size: 0.72rem; color: rgba(255,255,255,0.25); }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 480px) {
+            .modal-box { padding: 2rem 1.5rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .result-box { padding: 2.5rem 1.5rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Header -->
+<header class="header">
+    <p class="brand">João Vitor Cantuária · Fotografia</p>
+    <div class="birthday-badge">🎂 Especial de Aniversário</div>
+    <h1 class="page-title">Gire e <span>Ganhe!</span></h1>
+    <p class="page-subtitle">Hoje e amanhã — 19 e 20 de outubro. Descontos exclusivos em ensaios fotográficos. Gire a roleta e descubra o seu!</p>
+
+    <!-- Countdown -->
+    <div class="countdown-bar">
+        <div class="countdown-item">
+            <span class="countdown-num" id="cdHoras">00</span>
+            <span class="countdown-label">Horas</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-item">
+            <span class="countdown-num" id="cdMinutos">00</span>
+            <span class="countdown-label">Minutos</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-item">
+            <span class="countdown-num" id="cdSegundos">00</span>
+            <span class="countdown-label">Segundos</span>
+        </div>
+    </div>
+</header>
+
+<!-- Main -->
+<main class="main">
+    <!-- Wheel -->
+    <div class="wheel-container">
+        <!-- Arrow pointer -->
+        <div class="wheel-pointer">
+            <svg viewBox="0 0 36 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="18,44 0,8 36,8" fill="#C6A972"/>
+                <polygon points="18,38 4,10 32,10" fill="#e8c97a"/>
+            </svg>
+        </div>
+
+        <canvas id="wheelCanvas"></canvas>
+
+        <button class="wheel-center-btn" id="btnGirar">GIRAR!</button>
+    </div>
+
+    <p class="spin-hint">Clique no botão para girar</p>
+
+    <!-- Prizes pills -->
+    <div class="prizes-row">
+        <span class="prize-pill" style="background:rgba(74,222,128,0.1);color:#4ade80;border-color:rgba(74,222,128,0.3);">20% OFF</span>
+        <span class="prize-pill" style="background:rgba(96,165,250,0.1);color:#60a5fa;border-color:rgba(96,165,250,0.3);">30% OFF</span>
+        <span class="prize-pill" style="background:rgba(251,191,36,0.1);color:#fbbf24;border-color:rgba(251,191,36,0.3);">50% OFF</span>
+        <span class="prize-pill" style="background:rgba(198,169,114,0.1);color:#C6A972;border-color:rgba(198,169,114,0.3);">100% OFF ✨</span>
+        <span class="prize-pill" style="background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.35);border-color:rgba(255,255,255,0.1);">Passou a vez</span>
+    </div>
+</main>
+
+<!-- Modal Cadastro -->
+<div class="modal-overlay" id="modalCadastro">
+    <div class="modal-box">
+        <div class="modal-icon">🎰</div>
+        <h2 class="modal-title">Quase lá!</h2>
+        <p class="modal-sub">Preencha seus dados para liberar a roleta. É grátis e sem compromisso!</p>
+
+        <form id="cadastroForm" onsubmit="confirmarGiro(event)">
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" id="fNome" required placeholder="Seu nome completo">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Telefone / WhatsApp</label>
+                    <input type="tel" id="fTelefone" required placeholder="(00) 00000-0000">
+                </div>
+                <div class="form-group">
+                    <label>Cidade</label>
+                    <input type="text" id="fCidade" required placeholder="Sua cidade">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="fEmail" required placeholder="seu@email.com">
+            </div>
+
+            <button type="submit" class="btn-spin-now" id="btnConfirmarGiro">
+                🎲 Girar a Roleta Agora!
+            </button>
+            <p class="form-error" id="formError"></p>
+        </form>
+
+        <button class="btn-cancel-modal" onclick="fecharModalCadastro()">Cancelar</button>
+    </div>
+</div>
+
+<!-- Modal Resultado -->
+<div class="result-overlay" id="resultOverlay">
+    <div class="result-box" id="resultBox">
+        <div class="result-confetti" id="resultEmoji">🎉</div>
+        <p class="result-label" id="resultLabel">Parabéns!</p>
+        <p class="result-name" id="resultNomeDisplay"></p>
+        <div class="result-discount" id="resultDiscount">30%</div>
+        <p class="result-discount-label" id="resultDiscountLabel">de desconto no seu ensaio!</p>
+
+        <div class="cupom-box" id="cupomBox">
+            <p class="cupom-label">Seu cupom exclusivo</p>
+            <p class="cupom-code" id="cupomCode">JVC-XXXX</p>
+            <p class="cupom-validity">Válido até 21/10/2026 · Apresente no agendamento</p>
+        </div>
+
+        <a id="btnWhatsapp" href="#" target="_blank" rel="noopener" class="btn-whatsapp">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Agendar no WhatsApp
+        </a>
+
+        <p class="result-terms" id="resultTerms">Válido apenas para novos ensaios. Não cumulativo com outras promoções. Válido até 21/10/2026.</p>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>João Vitor Cantuária · Fotografia © 2026</p>
+</footer>
+
+<script>
+// ====================================================
+// CONFIGURAÇÃO
+// ====================================================
+const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+const WHATSAPP_NUM = '5538999209694';
+
+// ====================================================
+// DEFINIÇÃO DOS SEGMENTOS
+// Pesos reais: Passou(3), 20%(2), 30%(4), 50%(2), 100%(0)
+// A fatia 100% aparece visualmente mas NUNCA é sorteada
+// ====================================================
+const SEGMENTS = [
+    { label: 'Passou\na vez',  desconto: null,   cor: '#2a2a2a', textCor: '#888888', peso: 3 },
+    { label: '20%',            desconto: '20%',  cor: '#1a3a2a', textCor: '#4ade80', peso: 2 },
+    { label: '30%',            desconto: '30%',  cor: '#1a2a3a', textCor: '#60a5fa', peso: 4 },
+    { label: '50%',            desconto: '50%',  cor: '#2a2a1a', textCor: '#fbbf24', peso: 2 },
+    { label: '100%',           desconto: '100%', cor: '#1a0a1a', textCor: '#C6A972', peso: 0 }, // peso 0 = nunca cai
+];
+
+// Montar array de resultados possíveis baseado nos pesos
+const POOL = [];
+SEGMENTS.forEach((s, idx) => {
+    for (let i = 0; i < s.peso; i++) POOL.push(idx);
+});
+// POOL terá: [0,0,0, 1,1, 2,2,2,2, 3,3]  — 100% (idx 4) NUNCA entra
+
+// ====================================================
+// ROLETA - DESENHO
+// ====================================================
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const SIZE = Math.min(380, window.innerWidth * 0.88);
+canvas.width = SIZE;
+canvas.height = SIZE;
+const cx = SIZE / 2, cy = SIZE / 2, radius = SIZE / 2 - 4;
+
+// Ângulos de cada segmento (TODOS têm fatia igual visualmente)
+const NUM_SEG = SEGMENTS.length;
+const ARC = (2 * Math.PI) / NUM_SEG;
+let currentAngle = 0;
+let spinning = false;
+
+function drawWheel(rotation) {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+
+    SEGMENTS.forEach((seg, i) => {
+        const start = rotation + i * ARC;
+        const end   = start + ARC;
+
+        // Fatia
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, start, end);
+        ctx.closePath();
+        ctx.fillStyle = seg.cor;
+        ctx.fill();
+        ctx.strokeStyle = '#0a0a0a';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Texto
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(start + ARC / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = seg.textCor;
+
+        const lines = seg.label.split('\n');
+        const fontSize = SIZE < 300 ? 13 : 15;
+        ctx.font = `800 ${fontSize}px 'DM Sans', sans-serif`;
+
+        lines.forEach((line, li) => {
+            const yOff = (li - (lines.length - 1) / 2) * (fontSize + 3);
+            ctx.fillText(line, radius - 14, yOff + fontSize / 3);
+        });
+
+        // Separador dourado
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(radius, 0);
+        ctx.strokeStyle = 'rgba(198,169,114,0.3)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.restore();
+    });
+
+    // Centro circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, 38, 0, 2 * Math.PI);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(198,169,114,0.4)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+
+drawWheel(0);
+
+// ====================================================
+// FLUXO: CADASTRO → GIRO → RESULTADO
+// ====================================================
+let dadosCadastro = null;
+
+document.getElementById('btnGirar').addEventListener('click', () => {
+    if (spinning) return;
+    abrirModalCadastro();
+});
+
+function abrirModalCadastro() {
+    document.getElementById('modalCadastro').classList.add('active');
+}
+
+function fecharModalCadastro() {
+    document.getElementById('modalCadastro').classList.remove('active');
+}
+
+async function confirmarGiro(e) {
+    e.preventDefault();
+    const btn  = document.getElementById('btnConfirmarGiro');
+    const erro = document.getElementById('formError');
+
+    const nome     = document.getElementById('fNome').value.trim();
+    const telefone = document.getElementById('fTelefone').value.trim();
+    const email    = document.getElementById('fEmail').value.trim();
+    const cidade   = document.getElementById('fCidade').value.trim();
+
+    if (!nome || !telefone || !email || !cidade) {
+        erro.textContent = 'Preencha todos os campos.';
+        erro.style.display = 'block';
+        return;
+    }
+
+    btn.textContent = 'Aguarde...';
+    btn.disabled = true;
+    erro.style.display = 'none';
+
+    dadosCadastro = { nome, telefone, email, cidade };
+
+    fecharModalCadastro();
+    girarRoleta();
+}
+
+// ====================================================
+// ANIMAÇÃO DA ROLETA
+// ====================================================
+function girarRoleta() {
+    spinning = true;
+    document.getElementById('btnGirar').disabled = true;
+
+    // Sortear resultado (nunca 100%)
+    const winIdx = POOL[Math.floor(Math.random() * POOL.length)];
+
+    // Calcular ângulo de parada
+    // O ponteiro aponta para o TOPO (270° = -π/2 em coordenadas canvas)
+    // Queremos que o segmento winIdx fique apontado pelo ponteiro
+    const segCenter = winIdx * ARC + ARC / 2; // centro do segmento vencedor
+    const pointer   = -Math.PI / 2;            // 270°
+    const extra     = 8 * 2 * Math.PI;         // 8 voltas completas
+    // Rotação necessária para alinhar
+    const diff = (pointer - segCenter + 2 * Math.PI) % (2 * Math.PI);
+    const targetRotation = currentAngle + extra + diff;
+
+    const duration = 5000 + Math.random() * 1500;
+    const startTime = performance.now();
+    const startAngle = currentAngle;
+
+    function easeOut(t) {
+        return 1 - Math.pow(1 - t, 4);
+    }
+
+    function animate(now) {
+        const elapsed = now - startTime;
+        const t = Math.min(elapsed / duration, 1);
+        currentAngle = startAngle + (targetRotation - startAngle) * easeOut(t);
+        drawWheel(currentAngle);
+
+        if (t < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            currentAngle = targetRotation % (2 * Math.PI);
+            spinning = false;
+            mostrarResultado(winIdx);
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+// ====================================================
+// MOSTRAR RESULTADO
+// ====================================================
+async function mostrarResultado(winIdx) {
+    const seg = SEGMENTS[winIdx];
+    const nome = dadosCadastro.nome.split(' ')[0];
+
+    const resultBox = document.getElementById('resultBox');
+    const overlay   = document.getElementById('resultOverlay');
+
+    // Determinar conteúdo
+    const passou = seg.desconto === null;
+
+    document.getElementById('resultEmoji').textContent  = passou ? '😅' : '🎉';
+    document.getElementById('resultLabel').textContent  = passou ? 'Que pena!' : 'Parabéns!';
+    document.getElementById('resultNomeDisplay').textContent = nome + (passou ? ', desta vez não foi...' : ', você ganhou:');
+    document.getElementById('resultDiscount').textContent   = passou ? 'Passou\na vez' : seg.label;
+    document.getElementById('resultDiscountLabel').textContent = passou ? 'Tente novamente! 😄' : 'de desconto no seu ensaio!';
+
+    if (passou) {
+        resultBox.classList.add('result-miss');
+        document.getElementById('cupomBox').style.display = 'none';
+        document.getElementById('btnWhatsapp').style.display = 'none';
+        document.getElementById('resultTerms').style.display = 'none';
+
+        // Botão tentar de novo
+        const btnTentar = document.createElement('button');
+        btnTentar.textContent = '🎲 Tentar Novamente';
+        btnTentar.className = 'btn-spin-now';
+        btnTentar.style.marginTop = '1.5rem';
+        btnTentar.onclick = () => {
+            overlay.classList.remove('active');
+            resultBox.classList.remove('result-miss');
+            document.getElementById('cupomBox').style.display = '';
+            document.getElementById('btnWhatsapp').style.display = '';
+            document.getElementById('resultTerms').style.display = '';
+            btnTentar.remove();
+            document.getElementById('btnGirar').disabled = false;
+            dadosCadastro = null;
+        };
+        resultBox.appendChild(btnTentar);
+
+        overlay.classList.add('active');
+        return; // Não salva no banco se passou a vez
+    }
+
+    // Gerar cupom único
+    const cupom = gerarCupom(seg.desconto);
+    document.getElementById('cupomCode').textContent = cupom;
+
+    // Configurar WhatsApp
+    const msgWpp = encodeURIComponent(
+        `Olá João! Participei da sua Roleta de Aniversário e ganhei ${seg.label} de desconto no ensaio! 🎉\nMeu cupom: ${cupom}\nNome: ${dadosCadastro.nome}`
+    );
+    document.getElementById('btnWhatsapp').href = `https://wa.me/${WHATSAPP_NUM}?text=${msgWpp}`;
+
+    overlay.classList.add('active');
+
+    // Salvar no Supabase
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/roleta_leads`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+                nome: dadosCadastro.nome,
+                telefone: dadosCadastro.telefone,
+                email: dadosCadastro.email,
+                cidade: dadosCadastro.cidade,
+                desconto: seg.label,
+                cupom: cupom
+            })
+        });
+    } catch (err) {
+        console.error('Erro ao salvar lead:', err);
+    }
+}
+
+// ====================================================
+// GERAR CUPOM
+// ====================================================
+function gerarCupom(desconto) {
+    const pct = desconto.replace('%', '');
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+    return `JVC${pct}-${code}`;
+}
+
+// ====================================================
+// COUNTDOWN até fim do dia 20/10/2026
+// ====================================================
+function updateCountdown() {
+    const end = new Date('2026-10-21T00:00:00');
+    const now = new Date();
+    const diff = end - now;
+
+    if (diff <= 0) {
+        document.querySelector('.countdown-bar').innerHTML = '<p style="color:rgba(255,255,255,0.3);font-size:0.82rem;">Promoção encerrada.</p>';
+        document.getElementById('btnGirar').disabled = true;
+        return;
+    }
+
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    document.getElementById('cdHoras').textContent   = String(h).padStart(2, '0');
+    document.getElementById('cdMinutos').textContent = String(m).padStart(2, '0');
+    document.getElementById('cdSegundos').textContent = String(s).padStart(2, '0');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ====================================================
+// PARTICLES
+// ====================================================
+function createParticles() {
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.width = p.style.height = (2 + Math.random() * 4) + 'px';
+        p.style.animationDuration = (8 + Math.random() * 12) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        if (Math.random() > 0.5) {
+            p.style.background = Math.random() > 0.5 ? '#ffffff' : '#C6A972';
+            p.style.borderRadius = '0';
+            p.style.transform = 'rotate(45deg)';
+        }
+        container.appendChild(p);
+    }
+}
+
+createParticles();
+</script>
+</body>
+</html>

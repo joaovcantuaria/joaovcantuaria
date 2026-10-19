@@ -69,6 +69,11 @@
                     <span class="card-title">Briefings</span>
                     <span class="card-desc">Questionarios personalizados</span>
                 </button>
+                <button class="nav-card" data-panel="roleta">
+                    <i class="fas fa-dharmachakra"></i>
+                    <span class="card-title">Roleta / Leads</span>
+                    <span class="card-desc">Participantes e cupons gerados</span>
+                </button>
                 <button class="nav-card" data-panel="clientes">
                     <i class="fas fa-users"></i>
                     <span class="card-title">Clientes</span>
@@ -129,6 +134,57 @@
     </div>
 
     <!-- ======================== PANEL OVERLAYS ======================== -->
+
+    <!-- ROLETA / LEADS -->
+    <div class="panel-overlay" id="panel-roleta">
+        <div class="panel-header">
+            <button class="btn-back" onclick="closePanel()"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
+            <h1 class="panel-title">Roleta de Aniversário</h1>
+            <span class="admin-badge" id="roletaTotalBadge"><i class="fas fa-users"></i> 0 participantes</span>
+        </div>
+        <div class="panel-content">
+            <!-- Stats -->
+            <div class="finance-stats" style="margin-bottom:2rem;" id="roletaStats">
+                <div class="finance-card" style="border-left:3px solid var(--gold);">
+                    <span class="finance-label">Total Participantes</span>
+                    <span class="finance-value" id="roletaStatTotal" style="color:var(--gold);">0</span>
+                </div>
+                <div class="finance-card" style="border-left:3px solid var(--green);">
+                    <span class="finance-label">Cupons Gerados</span>
+                    <span class="finance-value" id="roletaStatCupons" style="color:var(--green);">0</span>
+                </div>
+                <div class="finance-card" style="border-left:3px solid var(--blue);">
+                    <span class="finance-label">Passou a Vez</span>
+                    <span class="finance-value" id="roletaStatPassou" style="color:var(--blue);">0</span>
+                </div>
+            </div>
+            <!-- Breakdown por desconto -->
+            <div id="roletaBreakdown" style="margin-bottom:2rem;display:none;">
+                <p style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--white-dim);margin-bottom:0.75rem;font-weight:500;">Distribuição de Prêmios</p>
+                <div id="roletaBreakdownList" style="display:flex;gap:0.75rem;flex-wrap:wrap;"></div>
+            </div>
+            <!-- Tabela -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Email</th>
+                            <th>Cidade</th>
+                            <th>Desconto</th>
+                            <th>Cupom</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roletaTableBody">
+                        <tr><td colspan="8" class="empty">Carregando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <!-- BRIEFINGS -->
     <div class="panel-overlay" id="panel-briefings">

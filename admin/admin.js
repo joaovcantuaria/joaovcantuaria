@@ -89,6 +89,7 @@ function formatDate(dateStr) {
 function loadPanelData(panel) {
     switch(panel) {
         case 'briefings': loadBriefings(); break;
+        case 'roleta': loadRoletaLeads(); break;
         case 'clientes': loadClientes(); break;
         case 'projetos': loadProjetos(); break;
         case 'orcamentos': loadOrcamentos(); break;
@@ -1507,4 +1508,108 @@ async function deleteBriefing(id) {
     await supabase.from('briefings').delete().eq('id', id);
     showToast('Briefing excluido!');
     loadBriefings();
+}
+
+
+// ========================================
+// ROLETA - LEADS E CUPONS
+// ========================================
+async function loadRoletaLeads() {
+    try {
+        const { data, error } = await supabase
+            .from('roleta_leads')
+            .select('*')
+            .order('criado_em', { ascending: false });
+
+        if (error) throw error;
+
+        const leads = data || [];
+        const total = leads.length;
+        const cupons = leads.filter(l => l.desconto).length;
+        const passou = leads.filter(l => !l.desconto).length;
+
+        // Stats
+        document.getElementById('roletaStatTotal').textContent = total;
+        document.getElementById('roletaStatCupons').textContent = cupons;
+        document.getElementById('roletaStatPassou').textContent = passou;
+        const badge = document.getElementById('roletaTotalBadge');
+        if (badge) badge.innerHTML = `<i class="fas fa-users"></i> ${total} participante${total !== 1 ? 's' : ''}`;
+
+        // Breakdown por desconto
+        const breakdown = {};
+        leads.forEach(l => {
+            const key = l.desconto || 'Passou a vez';
+            breakdown[key] = (breakdown[key] || 0) + 1;
+        });
+
+        const bdEl = document.getElementById('roletaBreakdown');
+        const bdList = document.getElementById('roletaBreakdownList');
+        if (Object.keys(breakdown).length > 0) {
+            bdEl.style.display = 'block';
+            const colors = {
+                '20%': '#4ade80',
+                '30%': '#60a5fa',
+                '50%': '#fbbf24',
+                '100%': '#C6A972',
+                'Passou a vez': 'rgba(255,255,255,0.3)'
+            };
+            bdList.innerHTML = Object.entries(breakdown)
+                .sort((a, b) => b[1] - a[1])
+                .map(([key, count]) => {
+                    const color = colors[key] || '#C6A972';
+                    return `<div style="background:var(--black-card);border:1px solid var(--border-subtle);border-radius:8px;padding:0.75rem 1.25rem;display:flex;align-items:center;gap:0.75rem;">
+                        <span style="font-size:1rem;font-weight:800;color:${color};">${key}</span>
+                        <span style="font-size:0.72rem;color:var(--white-dim);">${count} pessoa${count !== 1 ? 's' : ''}</span>
+                    </div>`;
+                }).join('');
+        }
+
+        // Tabela
+        const tbody = document.getElementById('roletaTableBody');
+        if (leads.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="empty">Nenhum participante ainda</td></tr>';
+            return;
+        }
+
+        const descColors = {
+            '20%': 'badge-success',
+            '30%': 'badge-info',
+            '50%': 'badge-warning',
+            '100%': 'badge-purple'
+        };
+
+        tbody.innerHTML = leads.map(l => `
+            <tr>
+                <td>${l.nome}</td>
+                <td>${l.telefone}</td>
+                <td>${l.email}</td>
+                <td>${l.cidade}</td>
+                <td>${l.desconto
+                    ? `<span class="badge ${descColors[l.desconto] || 'badge-success'}">${l.desconto}</span>`
+                    : '<span style="color:rgba(255,255,255,0.3);font-size:0.78rem;">Passou</span>'
+                }</td>
+                <td style="font-family:monospace;font-size:0.82rem;color:var(--gold);">${l.cupom || '-'}</td>
+                <td>${formatDate(l.criado_em)}</td>
+                <td>
+                    <a href="https://wa.me/55${l.telefone.replace(/\D/g,'')}" target="_blank" class="tbl-btn" title="WhatsApp">
+                        <i class="fab fa-whatsapp" style="color:#25D366;"></i>
+                    </a>
+                    <button class="tbl-btn danger" onclick="deleteRoletaLead('${l.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+
+    } catch (e) {
+        console.error('Erro roleta leads:', e);
+    }
+}
+
+async function deleteRoletaLead(id) {
+    if (!confirm('Remover este participante?')) return;
+    const { error } = await supabase.from('roleta_leads').delete().eq('id', id);
+    if (error) { showToast('Erro ao remover', 'error'); return; }
+    showToast('Removido!');
+    loadRoletaLeads();
 }
