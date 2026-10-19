@@ -693,6 +693,22 @@
 
     <p class="spin-hint">🎁 Clique no botão para girar</p>
 
+    <!-- Spin counter -->
+    <div id="spinCounter" style="
+        display:flex;
+        align-items:center;
+        gap:0.75rem;
+        margin-top:0.75rem;
+        background:rgba(192,150,60,0.07);
+        border:1px solid rgba(192,150,60,0.2);
+        border-radius:50px;
+        padding:0.5rem 1.25rem;
+    ">
+        <span style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(192,150,60,0.6);font-weight:700;">Giros disponíveis</span>
+        <div style="display:flex;gap:0.35rem;" id="spinDots"></div>
+        <span id="spinCountNum" style="font-size:1.1rem;font-weight:900;color:var(--gold-light);line-height:1;">1</span>
+    </div>
+
     <!-- Already played notice -->
     <div class="already-played" id="alreadyPlayed">
         <p>🎰</p>
@@ -988,14 +1004,34 @@ function checkAlreadyPlayed() {
         document.getElementById('btnGirar').disabled = true;
         document.getElementById('btnGirar').textContent = 'Já Girou!';
         document.getElementById('alreadyPlayed').style.display = 'block';
+        document.getElementById('spinCounter').style.display = 'none';
     }
 }
 checkAlreadyPlayed();
+renderSpinCounter();
 
 // ============================================================
 // FLUXO
 // ============================================================
 let dadosLead = null;
+let girosDisponiveis = 1; // começa com 1 giro
+
+function renderSpinCounter() {
+    const num  = document.getElementById('spinCountNum');
+    const dots = document.getElementById('spinDots');
+    if (!num || !dots) return;
+    num.textContent = girosDisponiveis;
+    dots.innerHTML = '';
+    for (let i = 0; i < Math.min(girosDisponiveis, 5); i++) {
+        const dot = document.createElement('div');
+        Object.assign(dot.style, {
+            width: '8px', height: '8px', borderRadius: '50%',
+            background: 'var(--gold-light)',
+            boxShadow: '0 0 6px rgba(240,200,117,0.5)'
+        });
+        dots.appendChild(dot);
+    }
+}
 
 document.getElementById('btnGirar').addEventListener('click', () => {
     if (spinning) return;
@@ -1050,6 +1086,11 @@ async function confirmarGiro(e) {
 
     dadosLead = { nome, tel, email, cidade };
     fecharModal();
+
+    // Decrementar giro disponível
+    girosDisponiveis = Math.max(0, girosDisponiveis - 1);
+    renderSpinCounter();
+
     girarRoleta();
 
     btn.textContent = '🎲 Girar a Roleta Agora!';
@@ -1156,18 +1197,23 @@ async function exibirResultado(winIdx) {
         wppBtn.style.display    = 'none';
         terms.style.display     = 'none';
 
+        // Ganhar +1 giro
+        girosDisponiveis += 1;
+        renderSpinCounter();
+
         // Botão girar de novo
         const existing = rCard.querySelector('.btn-tente');
         if (!existing) {
             const btn = document.createElement('button');
             btn.className = 'btn-fechar-result btn-tente';
-            btn.textContent = '🎰 Girar Novamente';
+            btn.style.cssText = 'background:linear-gradient(135deg,#F0C875,#A07020);color:#1a1510;font-weight:900;border:none;';
+            btn.textContent = `🎰 Girar Novamente (${girosDisponiveis} giro${girosDisponiveis > 1 ? 's' : ''} disponível${girosDisponiveis > 1 ? 'is' : ''})`;
             btn.onclick = () => {
                 rBg.classList.remove('on');
                 btn.remove();
                 spinning = false;
                 document.getElementById('btnGirar').disabled = false;
-                dadosLead = null; // precisa cadastrar de novo
+                dadosLead = null;
             };
             rCard.appendChild(btn);
         }
