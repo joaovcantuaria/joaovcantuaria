@@ -7,6 +7,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+
+    <!-- Meta Pixel -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1637637344613171');
+    fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=1637637344613171&ev=PageView&noscript=1"/>
+    </noscript>
+    <!-- Fim Meta Pixel -->
     <style>
         :root {
             --gold: #C6A054;
@@ -1119,6 +1138,18 @@ async function confirmarGiro(e) {
     dadosLead = { nome, tel, email, cidade };
     fecharModal();
 
+    // Evento Meta Pixel - Lead (cadastro confirmado)
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'Lead', {
+            content_name: 'Roleta Aniversario',
+            content_category: 'Fotografia',
+            value: 0,
+            currency: 'BRL'
+        });
+        // API de Conversoes server-side
+        sendConversionAPI('Lead', { nome, email, telefone: tel, cidade });
+    }
+
     // Decrementar giro disponível
     girosDisponiveis = Math.max(0, girosDisponiveis - 1);
     renderSpinCounter();
@@ -1224,6 +1255,26 @@ async function exibirResultado(winIdx) {
         // Marcar como jogado
         localStorage.setItem('jvc_roleta_played', '1');
 
+        // Evento Meta Pixel - Purchase (cupom gerado)
+        if (typeof fbq !== 'undefined') {
+            const valorDesconto = seg.desconto === '20%' ? 0.2 : seg.desconto === '30%' ? 0.3 : seg.desconto === '50%' ? 0.5 : 1;
+            fbq('track', 'Purchase', {
+                content_name: 'Cupom Ensaio Fotografico ' + seg.desconto,
+                content_category: 'Fotografia',
+                value: valorDesconto,
+                currency: 'BRL',
+                coupon: cupom
+            });
+            sendConversionAPI('Purchase', {
+                nome: dadosLead.nome,
+                email: dadosLead.email,
+                telefone: dadosLead.tel,
+                cidade: dadosLead.cidade,
+                desconto: seg.desconto,
+                cupom: cupom
+            });
+        }
+
     } else if (isTente) {
         cupomWrap.style.display = 'none';
         wppBtn.style.display    = 'none';
@@ -1305,6 +1356,66 @@ function gerarCupom(desconto) {
     let code = '';
     for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random()*chars.length)];
     return `JVC${pct}-${code}`;
+}
+
+// ============================================================
+// META API DE CONVERSOES (Server-Side)
+// ============================================================
+async function sendConversionAPI(eventName, userData) {
+    const pixelId = '1637637344613171';
+    const token   = 'EAATnphF6KwIBS3H4aXSbvWxCZB6zh0y31ReRdWgqAJxfEOgE3N5rpcie43cXJ4LLhrZC1N8lBBHJj9kThqhhN3NS8HgWtxxJZCMhIossiEL0SWpvIaC5nNG8j46i8w7c4wQ2sPP0wocK0NGNXyTjqqnnYbffuyWZBtzsZCnDcJpwbIRNQ8oMpXTZCiOmUZBEgZDZD';
+
+    // Hash simples SHA256 (usando SubtleCrypto nativo do browser)
+    async function sha256(str) {
+        if (!str) return undefined;
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str.toLowerCase().trim()));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+
+    try {
+        const [emailHash, phoneHash] = await Promise.all([
+            sha256(userData.email),
+            sha256(userData.telefone ? userData.telefone.replace(/\D/g,'') : '')
+        ]);
+
+        const payload = {
+            data: [{
+                event_name: eventName,
+                event_time: Math.floor(Date.now() / 1000),
+                event_source_url: window.location.href,
+                action_source: 'website',
+                user_data: {
+                    em: emailHash ? [emailHash] : undefined,
+                    ph: phoneHash ? [phoneHash] : undefined,
+                    client_ip_address: undefined,
+                    client_user_agent: navigator.userAgent,
+                    fbp: getCookie('_fbp'),
+                    fbc: getCookie('_fbc')
+                },
+                custom_data: {
+                    content_name: eventName === 'Lead' ? 'Roleta Aniversario' : ('Cupom ' + (userData.desconto || '')),
+                    currency: 'BRL',
+                    value: 0
+                }
+            }]
+        };
+
+        await fetch(
+            `https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${token}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }
+        );
+    } catch (e) {
+        console.warn('Meta CAPI error:', e);
+    }
+}
+
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)'));
+    return match ? match[2] : undefined;
 }
 </script>
 </body>
