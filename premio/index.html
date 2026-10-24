@@ -753,6 +753,24 @@
                 <label>E-mail</label>
                 <input type="email" id="fEmail" required placeholder="seu@email.com" autocomplete="email">
             </div>
+
+            <!-- Aceite dos Termos -->
+            <div style="margin-top:1.25rem;padding:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;">
+                <label style="display:flex;align-items:flex-start;gap:0.75rem;cursor:pointer;">
+                    <input type="checkbox" id="fAceite" required style="
+                        width:18px;height:18px;min-width:18px;
+                        accent-color:#C6A054;
+                        margin-top:2px;
+                        cursor:pointer;
+                    ">
+                    <span style="font-size:0.78rem;color:rgba(255,255,255,0.5);font-weight:300;line-height:1.5;">
+                        Li e aceito os
+                        <a href="termos.html" target="_blank" style="color:var(--gold-light);text-decoration:underline;">Termos e Condições da Promoção</a>,
+                        incluindo o recebimento de comunicações e campanhas via WhatsApp de João Vitor Cantuária.
+                    </span>
+                </label>
+            </div>
+
             <button type="submit" class="btn-confirmar" id="btnConfirmar">🎲 Girar a Roleta Agora!</button>
             <p class="modal-err" id="modalErr"></p>
         </form>
@@ -1058,9 +1076,16 @@ async function confirmarGiro(e) {
     const tel    = document.getElementById('fTel').value.trim();
     const email  = document.getElementById('fEmail').value.trim();
     const cidade = document.getElementById('fCidade').value.trim();
+    const aceite = document.getElementById('fAceite').checked;
 
     if (!nome || !tel || !email || !cidade) {
         err.textContent = 'Preencha todos os campos.';
+        err.style.display = 'block';
+        return;
+    }
+
+    if (!aceite) {
+        err.textContent = 'Você precisa aceitar os Termos e Condições para participar.';
         err.style.display = 'block';
         return;
     }
