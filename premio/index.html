@@ -1055,7 +1055,12 @@ renderSpinCounter();
 
 document.getElementById('btnGirar').addEventListener('click', () => {
     if (spinning) return;
-    abrirModal();
+    // Se ja tem dados (vem de "Tente outra vez"), girar direto sem recadastrar
+    if (dadosLead) {
+        girarRoleta();
+    } else {
+        abrirModal();
+    }
 });
 
 function abrirModal() {
@@ -1240,7 +1245,7 @@ async function exibirResultado(winIdx) {
                 btn.remove();
                 spinning = false;
                 document.getElementById('btnGirar').disabled = false;
-                dadosLead = null;
+                // Manter dadosLead - nao precisa recadastrar
             };
             rCard.appendChild(btn);
         }
