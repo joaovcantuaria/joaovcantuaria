@@ -154,10 +154,21 @@ function openAddClientModal() {
         <input type="hidden" id="clientId" value="">
         <div class="form-group"><label>Nome Completo</label><input type="text" id="clientNome" required placeholder="Nome do cliente"></div>
         <div class="form-row">
-            <div class="form-group"><label>Email</label><input type="email" id="clientEmail" placeholder="email@exemplo.com"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="clientEmail" required placeholder="email@exemplo.com"></div>
             <div class="form-group"><label>Telefone</label><input type="text" id="clientTelefone" placeholder="(11) 99999-9999"></div>
         </div>
         <div class="form-group"><label>Empresa</label><input type="text" id="clientEmpresa" placeholder="Empresa"></div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Senha de Acesso</label>
+                <input type="password" id="clientSenha" placeholder="Minimo 6 caracteres" autocomplete="new-password">
+                <small style="color:rgba(255,255,255,0.3);font-size:0.72rem;margin-top:0.3rem;display:block;">Deixe em branco para nao criar login</small>
+            </div>
+            <div class="form-group">
+                <label>Confirmar Senha</label>
+                <input type="password" id="clientSenhaConf" placeholder="Repita a senha" autocomplete="new-password">
+            </div>
+        </div>
         <div class="form-actions"><button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button><button type="submit" class="btn-submit">Salvar</button></div>
     </form>`);
 }
@@ -180,12 +191,60 @@ async function openEditClientModal(id) {
 async function saveClient(e) {
     e.preventDefault();
     const id = document.getElementById('clientId').value;
-    const payload = { nome_completo: document.getElementById('clientNome').value, email: document.getElementById('clientEmail').value, telefone: document.getElementById('clientTelefone').value, empresa: document.getElementById('clientEmpresa').value };
+    const nome = document.getElementById('clientNome').value;
+    const email = document.getElementById('clientEmail').value;
+    const telefone = document.getElementById('clientTelefone').value;
+    const empresa = document.getElementById('clientEmpresa').value;
+    const senha = document.getElementById('clientSenha') ? document.getElementById('clientSenha').value : '';
+    const senhaConf = document.getElementById('clientSenhaConf') ? document.getElementById('clientSenhaConf').value : '';
+
+    // Validar senha se preenchida
+    if (senha && senha.length < 6) { showToast('Senha deve ter no minimo 6 caracteres', 'error'); return; }
+    if (senha && senha !== senhaConf) { showToast('As senhas nao coincidem', 'error'); return; }
+
     try {
-        if (id) { await supabase.from('usuarios').update(payload).eq('id', id); showToast('Cliente atualizado!'); }
-        else { await supabase.from('usuarios').insert([payload]); showToast('Cliente adicionado!'); }
-        closeModal(); loadClientes(); loadDashboardStats();
-    } catch (e) { showToast('Erro: ' + e.message, 'error'); }
+        if (id) {
+            // Editar — apenas atualiza a tabela usuarios
+            const { error } = await supabase.from('usuarios').update({ nome_completo: nome, email, telefone, empresa }).eq('id', id);
+            if (error) throw error;
+            showToast('Cliente atualizado!');
+        } else {
+            // Novo cliente
+            if (senha) {
+                // Criar com login: usar signUp para criar auth user
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: email,
+                    password: senha,
+                    options: { data: { nome_completo: nome } }
+                });
+                if (authError) throw authError;
+
+                const userId = authData.user.id;
+
+                // Salvar dados na tabela usuarios
+                const { error: dbError } = await supabase.from('usuarios').insert([{
+                    id: userId,
+                    email,
+                    nome_completo: nome,
+                    telefone,
+                    empresa: empresa || ''
+                }]);
+                if (dbError) console.error('Erro ao salvar dados do usuario:', dbError);
+
+                showToast('Cliente criado com login!');
+            } else {
+                // Criar sem login — apenas salva no banco
+                const { error } = await supabase.from('usuarios').insert([{ nome_completo: nome, email, telefone, empresa: empresa || '' }]);
+                if (error) throw error;
+                showToast('Cliente adicionado (sem login)!');
+            }
+        }
+        closeModal();
+        loadClientes();
+        loadDashboardStats();
+    } catch (error) {
+        showToast('Erro: ' + error.message, 'error');
+    }
 }
 
 async function deleteClient(id) {
@@ -826,9 +885,21 @@ async function deleteEntrega(id) {
 function openAddEntregaModal() {
     entregaCapaFile = null;
     entregaFotosFiles = [];
-    openModal('Nova Entrega de Fotos', `<form class="modal-form" onsubmit="saveEntrega(event)">
+
+    // Carregar clientes para o dropdown
+    supabase.from('usuarios').select('id, nome_completo, email').order('nome_completo').then(({ data: clientes }) => {
+        const opts = (clientes || []).map(c => `<option value="${c.id}">${c.nome_completo || c.email}</option>`).join('');
+
+        openModal('Nova Entrega de Fotos', `<form class="modal-form" onsubmit="saveEntrega(event)">
         <div class="form-group">
-            <label>Nome do Cliente</label>
+            <label>Cliente Vinculado (para acesso pelo login)</label>
+            <select id="entregaClienteId">
+                <option value="">Nenhum (acesso somente por link)</option>
+                ${opts}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Nome do Cliente (exibido na pagina)</label>
             <input type="text" id="entregaCliente" required placeholder="Nome completo do cliente">
         </div>
         <div class="form-group">
@@ -864,21 +935,30 @@ function openAddEntregaModal() {
         </div>
     </form>`);
 
-    // Drag & drop for capa
-    setTimeout(() => {
-        const capaDz = document.getElementById('capaDropzone');
-        if (capaDz) {
-            capaDz.addEventListener('dragover', (e) => { e.preventDefault(); capaDz.classList.add('dragover'); });
-            capaDz.addEventListener('dragleave', () => capaDz.classList.remove('dragover'));
-            capaDz.addEventListener('drop', (e) => { e.preventDefault(); capaDz.classList.remove('dragover'); handleCapaFile(e.dataTransfer.files); });
-        }
-        const fotosDz = document.getElementById('fotosDropzone');
-        if (fotosDz) {
-            fotosDz.addEventListener('dragover', (e) => { e.preventDefault(); fotosDz.classList.add('dragover'); });
-            fotosDz.addEventListener('dragleave', () => fotosDz.classList.remove('dragover'));
-            fotosDz.addEventListener('drop', (e) => { e.preventDefault(); fotosDz.classList.remove('dragover'); handleEntregaFotos(e.dataTransfer.files); });
-        }
-    }, 100);
+        // Ao selecionar cliente, preenche nome automaticamente
+        setTimeout(() => {
+            const sel = document.getElementById('entregaClienteId');
+            if (sel) {
+                sel.addEventListener('change', () => {
+                    const selected = (clientes || []).find(c => c.id === sel.value);
+                    if (selected) document.getElementById('entregaCliente').value = selected.nome_completo || selected.email;
+                });
+            }
+            // Drag & drop
+            const capaDz = document.getElementById('capaDropzone');
+            if (capaDz) {
+                capaDz.addEventListener('dragover', (e) => { e.preventDefault(); capaDz.classList.add('dragover'); });
+                capaDz.addEventListener('dragleave', () => capaDz.classList.remove('dragover'));
+                capaDz.addEventListener('drop', (e) => { e.preventDefault(); capaDz.classList.remove('dragover'); handleCapaFile(e.dataTransfer.files); });
+            }
+            const fotosDz = document.getElementById('fotosDropzone');
+            if (fotosDz) {
+                fotosDz.addEventListener('dragover', (e) => { e.preventDefault(); fotosDz.classList.add('dragover'); });
+                fotosDz.addEventListener('dragleave', () => fotosDz.classList.remove('dragover'));
+                fotosDz.addEventListener('drop', (e) => { e.preventDefault(); fotosDz.classList.remove('dragover'); handleEntregaFotos(e.dataTransfer.files); });
+            }
+        }, 100);
+    });
 }
 
 function handleCapaFile(files) {
@@ -938,8 +1018,10 @@ async function saveEntrega(e) {
         btn.textContent = 'Salvando...';
 
         // 3. Salvar no Supabase
+        const clienteId = document.getElementById('entregaClienteId') ? document.getElementById('entregaClienteId').value : null;
         const { error } = await supabase.from('entregas').insert([{
             cliente_nome: clienteNome,
+            cliente_id: clienteId || null,
             codigo: codigo,
             historia: historia,
             capa_url: capaId,

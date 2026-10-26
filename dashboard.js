@@ -570,3 +570,111 @@ waitForSupabaseReady(() => {
         }
     });
 });
+
+// ========================================
+// MINHAS ENTREGAS
+// ========================================
+async function loadEntregasCliente() {
+    const grid = document.getElementById('entregasClienteGrid');
+    if (!grid) return;
+
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+
+        const { data: entregas, error } = await supabase
+            .from('entregas')
+            .select('*')
+            .eq('cliente_id', session.user.id)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!entregas || entregas.length === 0) {
+            grid.innerHTML = '<p style="color:#999;font-style:italic;">Nenhuma entrega disponível ainda.</p>';
+            return;
+        }
+
+        const CLOUD_NAME = 'cpfik4th';
+        grid.innerHTML = entregas.map(e => {
+            const capaUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_600,h_400,c_fill,q_80/${e.capa_url}.jpg`;
+            const link = `${window.location.origin}/entrega/?id=${e.codigo}`;
+            const numFotos = e.fotos ? e.fotos.length : 0;
+            return `
+                <div style="background:var(--black-card,#161616);border:1px solid rgba(255,215,0,0.15);border-radius:12px;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;" onmouseenter="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 30px rgba(255,215,0,0.1)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+                    <div style="position:relative;aspect-ratio:3/2;overflow:hidden;">
+                        <img src="${capaUrl}" alt="${e.cliente_nome}" style="width:100%;height:100%;object-fit:cover;">
+                        <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);"></div>
+                    </div>
+                    <div style="padding:1.25rem;">
+                        <h3 style="font-size:1rem;font-weight:600;margin-bottom:0.4rem;">${e.cliente_nome}</h3>
+                        <p style="font-size:0.78rem;color:#999;margin-bottom:1rem;">${numFotos} foto${numFotos!==1?'s':''} · ${new Date(e.created_at).toLocaleDateString('pt-BR')}</p>
+                        <a href="${link}" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1.25rem;background:#FFD700;color:#000;border-radius:8px;text-decoration:none;font-size:0.78rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;transition:all 0.3s;">
+                            <i class="fas fa-images"></i> Ver Fotos
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+    } catch (err) {
+        console.error('Erro ao carregar entregas:', err);
+        if (grid) grid.innerHTML = '<p style="color:#f87171;">Erro ao carregar entregas.</p>';
+    }
+}
+
+// ========================================
+// ALTERAR SENHA
+// ========================================
+const alterarSenhaForm = document.getElementById('alterarSenhaForm');
+if (alterarSenhaForm) {
+    alterarSenhaForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const novaSenha = document.getElementById('novaSenha').value;
+        const confirmar = document.getElementById('confirmarSenha').value;
+        const msg = document.getElementById('msgAlterarSenha');
+        const btn = document.getElementById('btnAlterarSenha');
+
+        if (novaSenha.length < 6) {
+            msg.textContent = 'A senha deve ter no minimo 6 caracteres.';
+            msg.style.color = '#f87171';
+            msg.style.display = 'block';
+            return;
+        }
+        if (novaSenha !== confirmar) {
+            msg.textContent = 'As senhas nao coincidem.';
+            msg.style.color = '#f87171';
+            msg.style.display = 'block';
+            return;
+        }
+
+        btn.textContent = 'Salvando...';
+        btn.disabled = true;
+
+        try {
+            const { error } = await supabase.auth.updateUser({ password: novaSenha });
+            if (error) throw error;
+
+            msg.textContent = 'Senha alterada com sucesso!';
+            msg.style.color = '#4ade80';
+            msg.style.display = 'block';
+            alterarSenhaForm.reset();
+        } catch (err) {
+            msg.textContent = 'Erro: ' + err.message;
+            msg.style.color = '#f87171';
+            msg.style.display = 'block';
+        } finally {
+            btn.textContent = 'Salvar Nova Senha';
+            btn.disabled = false;
+        }
+    });
+}
+
+// Carregar entregas quando a secao for acessada
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+        if (item.getAttribute('href') === '#entregas') {
+            loadEntregasCliente();
+        }
+    });
+});
