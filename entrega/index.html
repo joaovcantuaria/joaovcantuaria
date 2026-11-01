@@ -165,10 +165,11 @@
 
         async function loadEntrega() {
             try {
-                const res = await fetch(
-                    `${SUPABASE_URL}/rest/v1/entregas?codigo=eq.${entregaId}&select=*`,
-                    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
-                );
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_entrega`, {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_codigo: entregaId })
+                });
                 const data = await res.json();
 
                 if (!data || data.length === 0) { showError(); return; }

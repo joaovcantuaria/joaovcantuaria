@@ -1120,13 +1120,14 @@ async function confirmarGiro(e) {
     err.style.display = 'none';
 
     try {
-        const res = await fetch(
-            `${SUPABASE_URL}/rest/v1/roleta_leads?email=eq.${encodeURIComponent(email)}&select=id`,
-            { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
-        );
-        const existing = await res.json();
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/roleta_ja_participou`, {
+            method: 'POST',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ p_email: email })
+        });
+        const jaParticipou = await res.json();
 
-        if (existing && existing.length > 0) {
+        if (jaParticipou === true) {
             err.textContent = 'Este e-mail já participou! Cada pessoa pode girar apenas uma vez.';
             err.style.display = 'block';
             btn.textContent = '🎲 Girar a Roleta Agora!';
@@ -1140,14 +1141,15 @@ async function confirmarGiro(e) {
 
     // Evento Meta Pixel - Lead (cadastro confirmado)
     if (typeof fbq !== 'undefined') {
+        const eventId = newEventId();
         fbq('track', 'Lead', {
             content_name: 'Roleta Aniversario',
             content_category: 'Fotografia',
             value: 0,
             currency: 'BRL'
-        });
+        }, { eventID: eventId });
         // API de Conversoes server-side
-        sendConversionAPI('Lead', { nome, email, telefone: tel, cidade });
+        sendConversionAPI('Lead', eventId, { email, telefone: tel });
     }
 
     // Decrementar giro disponível
@@ -1258,20 +1260,18 @@ async function exibirResultado(winIdx) {
         // Evento Meta Pixel - Purchase (cupom gerado)
         if (typeof fbq !== 'undefined') {
             const valorDesconto = seg.desconto === '20%' ? 0.2 : seg.desconto === '30%' ? 0.3 : seg.desconto === '50%' ? 0.5 : 1;
+            const eventId = newEventId();
             fbq('track', 'Purchase', {
                 content_name: 'Cupom Ensaio Fotografico ' + seg.desconto,
                 content_category: 'Fotografia',
                 value: valorDesconto,
                 currency: 'BRL',
                 coupon: cupom
-            });
-            sendConversionAPI('Purchase', {
-                nome: dadosLead.nome,
+            }, { eventID: eventId });
+            sendConversionAPI('Purchase', eventId, {
                 email: dadosLead.email,
                 telefone: dadosLead.tel,
-                cidade: dadosLead.cidade,
-                desconto: seg.desconto,
-                cupom: cupom
+                desconto: seg.desconto
             });
         }
 
@@ -1359,55 +1359,28 @@ function gerarCupom(desconto) {
 }
 
 // ============================================================
-// META API DE CONVERSOES (Server-Side)
+// META API DE CONVERSOES (via Supabase Edge Function - token fica no servidor)
 // ============================================================
-async function sendConversionAPI(eventName, userData) {
-    const pixelId = '1637637344613171';
-    const token   = 'EAATnphF6KwIBS3H4aXSbvWxCZB6zh0y31ReRdWgqAJxfEOgE3N5rpcie43cXJ4LLhrZC1N8lBBHJj9kThqhhN3NS8HgWtxxJZCMhIossiEL0SWpvIaC5nNG8j46i8w7c4wQ2sPP0wocK0NGNXyTjqqnnYbffuyWZBtzsZCnDcJpwbIRNQ8oMpXTZCiOmUZBEgZDZD';
+function newEventId() {
+    return (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2));
+}
 
-    // Hash simples SHA256 (usando SubtleCrypto nativo do browser)
-    async function sha256(str) {
-        if (!str) return undefined;
-        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str.toLowerCase().trim()));
-        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-    }
-
+async function sendConversionAPI(eventName, eventId, userData) {
     try {
-        const [emailHash, phoneHash] = await Promise.all([
-            sha256(userData.email),
-            sha256(userData.telefone ? userData.telefone.replace(/\D/g,'') : '')
-        ]);
-
-        const payload = {
-            data: [{
+        await fetch(`${SUPABASE_URL}/functions/v1/meta-capi`, {
+            method: 'POST',
+            headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
                 event_name: eventName,
-                event_time: Math.floor(Date.now() / 1000),
+                event_id: eventId,
                 event_source_url: window.location.href,
-                action_source: 'website',
-                user_data: {
-                    em: emailHash ? [emailHash] : undefined,
-                    ph: phoneHash ? [phoneHash] : undefined,
-                    client_ip_address: undefined,
-                    client_user_agent: navigator.userAgent,
-                    fbp: getCookie('_fbp'),
-                    fbc: getCookie('_fbc')
-                },
-                custom_data: {
-                    content_name: eventName === 'Lead' ? 'Roleta Aniversario' : ('Cupom ' + (userData.desconto || '')),
-                    currency: 'BRL',
-                    value: 0
-                }
-            }]
-        };
-
-        await fetch(
-            `https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${token}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }
-        );
+                email: userData.email,
+                telefone: userData.telefone,
+                fbp: getCookie('_fbp'),
+                fbc: getCookie('_fbc'),
+                content_name: eventName === 'Lead' ? 'Roleta Aniversario' : ('Cupom ' + (userData.desconto || ''))
+            })
+        });
     } catch (e) {
         console.warn('Meta CAPI error:', e);
     }

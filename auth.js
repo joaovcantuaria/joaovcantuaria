@@ -151,24 +151,27 @@ async function registerUser(userData) {
             email: userData.email,
             password: userData.password,
             options: {
+                // Lidos pelo trigger handle_new_user, que cria a linha em usuarios
                 data: {
-                    nome_completo: `${userData.firstName} ${userData.lastName}`
+                    nome_completo: `${userData.firstName} ${userData.lastName}`,
+                    telefone: userData.phone,
+                    empresa: userData.company || ''
                 }
             }
         });
 
         if (authError) throw authError;
 
-        // 2. Salvar dados adicionais na tabela usuarios
+        // 2. Garantir dados na tabela usuarios (o trigger ja cria; aqui ignora duplicado)
         const { error: dbError } = await supabase
             .from('usuarios')
-            .insert([{
+            .upsert([{
                 id: authData.user.id,
                 email: userData.email,
                 nome_completo: `${userData.firstName} ${userData.lastName}`,
                 telefone: userData.phone,
                 empresa: userData.company || ''
-            }]);
+            }], { onConflict: 'id', ignoreDuplicates: true });
 
         if (dbError) {
             console.error('Erro ao salvar dados:', dbError);

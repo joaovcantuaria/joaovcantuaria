@@ -83,6 +83,11 @@ function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('pt-BR');
 }
 
+// Escapa texto vindo do banco antes de colocar em innerHTML (evita XSS)
+function esc(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
 // ========================================
 // LOAD PANEL DATA
 // ========================================
@@ -137,10 +142,10 @@ async function loadClientes() {
         const tbody = document.getElementById('clientesTableBody');
         if (!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="empty">Nenhum cliente cadastrado</td></tr>'; return; }
         tbody.innerHTML = data.map(c => `<tr>
-            <td>${c.nome_completo || '-'}</td>
-            <td>${c.email || '-'}</td>
-            <td>${c.telefone || '-'}</td>
-            <td>${c.empresa || '-'}</td>
+            <td>${esc(c.nome_completo || '-')}</td>
+            <td>${esc(c.email || '-')}</td>
+            <td>${esc(c.telefone || '-')}</td>
+            <td>${esc(c.empresa || '-')}</td>
             <td>
                 <button class="tbl-btn" onclick="openEditClientModal('${c.id}')"><i class="fas fa-edit"></i></button>
                 <button class="tbl-btn danger" onclick="deleteClient('${c.id}')"><i class="fas fa-trash"></i></button>
@@ -178,12 +183,12 @@ async function openEditClientModal(id) {
     if (!c) return;
     openModal('Editar Cliente', `<form class="modal-form" onsubmit="saveClient(event)">
         <input type="hidden" id="clientId" value="${c.id}">
-        <div class="form-group"><label>Nome Completo</label><input type="text" id="clientNome" required value="${c.nome_completo||''}"></div>
+        <div class="form-group"><label>Nome Completo</label><input type="text" id="clientNome" required value="${esc(c.nome_completo||'')}"></div>
         <div class="form-row">
-            <div class="form-group"><label>Email</label><input type="email" id="clientEmail" value="${c.email||''}"></div>
-            <div class="form-group"><label>Telefone</label><input type="text" id="clientTelefone" value="${c.telefone||''}"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="clientEmail" value="${esc(c.email||'')}"></div>
+            <div class="form-group"><label>Telefone</label><input type="text" id="clientTelefone" value="${esc(c.telefone||'')}"></div>
         </div>
-        <div class="form-group"><label>Empresa</label><input type="text" id="clientEmpresa" value="${c.empresa||''}"></div>
+        <div class="form-group"><label>Empresa</label><input type="text" id="clientEmpresa" value="${esc(c.empresa||'')}"></div>
         <div class="form-actions"><button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button><button type="submit" class="btn-submit">Salvar</button></div>
     </form>`);
 }
@@ -215,20 +220,21 @@ async function saveClient(e) {
                 const { data: authData, error: authError } = await supabase.auth.signUp({
                     email: email,
                     password: senha,
-                    options: { data: { nome_completo: nome } }
+                    // Lidos pelo trigger handle_new_user, que cria a linha em usuarios
+                    options: { data: { nome_completo: nome, telefone, empresa: empresa || '' } }
                 });
                 if (authError) throw authError;
 
                 const userId = authData.user.id;
 
                 // Salvar dados na tabela usuarios
-                const { error: dbError } = await supabase.from('usuarios').insert([{
+                const { error: dbError } = await supabase.from('usuarios').upsert([{
                     id: userId,
                     email,
                     nome_completo: nome,
                     telefone,
                     empresa: empresa || ''
-                }]);
+                }], { onConflict: 'id', ignoreDuplicates: true });
                 if (dbError) console.error('Erro ao salvar dados do usuario:', dbError);
 
                 showToast('Cliente criado com login!');
@@ -279,7 +285,7 @@ async function loadProjetos() {
 
 async function getClientesOptions(selectedId) {
     const { data } = await supabase.from('usuarios').select('id, nome_completo').order('nome_completo');
-    return (data || []).map(c => `<option value="${c.id}" ${c.id===selectedId?'selected':''}>${c.nome_completo||c.id}</option>`).join('');
+    return (data || []).map(c => `<option value="${c.id}" ${c.id===selectedId?'selected':''}>${esc(c.nome_completo||c.id)}</option>`).join('');
 }
 
 async function openAddProjectModal() {
@@ -422,13 +428,13 @@ async function loadSelecoes() {
             const codigos = s.fotos_selecionadas ? s.fotos_selecionadas.map(f => f.split('/').pop()).join(', ') : '';
             return `<div class="galeria-row">
                 <div class="galeria-row-info">
-                    <strong>${s.nome_cliente || 'Sem nome'}</strong>
-                    <span>Galeria: ${s.codigo.toUpperCase()} · ${numFotos} foto(s) · ${formatDate(s.criado_em)}</span>
-                    ${codigos ? `<span style="color:var(--gold);font-family:monospace;font-size:0.7rem;word-break:break-all;line-height:1.8;">${codigos}</span>` : ''}
-                    ${s.mensagem ? `<span style="color:rgba(255,255,255,0.4);font-style:italic;font-size:0.78rem;">"${s.mensagem}"</span>` : ''}
+                    <strong>${esc(s.nome_cliente || 'Sem nome')}</strong>
+                    <span>Galeria: ${esc(s.codigo.toUpperCase())} · ${numFotos} foto(s) · ${formatDate(s.criado_em)}</span>
+                    ${codigos ? `<span style="color:var(--gold);font-family:monospace;font-size:0.7rem;word-break:break-all;line-height:1.8;">${esc(codigos)}</span>` : ''}
+                    ${s.mensagem ? `<span style="color:rgba(255,255,255,0.4);font-style:italic;font-size:0.78rem;">"${esc(s.mensagem)}"</span>` : ''}
                 </div>
                 <div class="galeria-row-actions">
-                    <button class="tbl-btn" onclick="viewSelecao(${JSON.stringify(s.fotos_selecionadas).replace(/"/g,'&quot;')})" title="Ver fotos"><i class="fas fa-eye"></i></button>
+                    <button class="tbl-btn" onclick="viewSelecao(${esc(JSON.stringify(s.fotos_selecionadas))})" title="Ver fotos"><i class="fas fa-eye"></i></button>
                     <button class="tbl-btn danger" onclick="deleteSelecao('${s.id}')"><i class="fas fa-trash"></i></button>
                 </div>
             </div>`;
@@ -452,9 +458,9 @@ function viewSelecao(fotos) {
 
     const grid = fotosComCodigo.map(f => `
         <div style="position:relative;">
-            <img src="${f.thumb}" style="width:100%;border-radius:6px;display:block;">
+            <img src="${esc(f.thumb)}" style="width:100%;border-radius:6px;display:block;">
             <div style="background:rgba(0,0,0,0.75);color:#C6A972;font-size:0.6rem;font-family:monospace;padding:0.25rem 0.4rem;text-align:center;border-radius:0 0 6px 6px;letter-spacing:0.03em;word-break:break-all;">
-                ${f.codigo}
+                ${esc(f.codigo)}
             </div>
         </div>
     `).join('');
@@ -888,7 +894,7 @@ function openAddEntregaModal() {
 
     // Carregar clientes para o dropdown
     supabase.from('usuarios').select('id, nome_completo, email').order('nome_completo').then(({ data: clientes }) => {
-        const opts = (clientes || []).map(c => `<option value="${c.id}">${c.nome_completo || c.email}</option>`).join('');
+        const opts = (clientes || []).map(c => `<option value="${c.id}">${esc(c.nome_completo || c.email)}</option>`).join('');
 
         openModal('Nova Entrega de Fotos', `<form class="modal-form" onsubmit="saveEntrega(event)">
         <div class="form-group">
@@ -1154,8 +1160,8 @@ async function openBgInsights(bgId, titulo) {
         leadsHTML = `<div style="max-height:250px;overflow-y:auto;">` + leads.map(l => `
             <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border-subtle);">
                 <div>
-                    <span style="font-size:0.85rem;color:var(--white);">${l.nome}</span>
-                    <span style="font-size:0.75rem;color:var(--white-dim);display:block;">${l.email} · ${l.telefone}</span>
+                    <span style="font-size:0.85rem;color:var(--white);">${esc(l.nome)}</span>
+                    <span style="font-size:0.75rem;color:var(--white-dim);display:block;">${esc(l.email)} · ${esc(l.telefone)}</span>
                 </div>
                 <span style="font-size:0.72rem;color:var(--white-dim);">${formatDate(l.created_at)}</span>
             </div>
@@ -1283,10 +1289,10 @@ async function loadCadastros() {
         if (countEl) countEl.innerHTML = `<i class="fas fa-users"></i> ${data.length} lead${data.length !== 1 ? 's' : ''}`;
 
         tbody.innerHTML = data.map(l => `<tr>
-            <td>${l.nome || '-'}</td>
-            <td>${l.email || '-'}</td>
-            <td>${l.telefone || '-'}</td>
-            <td>${l.background_titulo || '-'}</td>
+            <td>${esc(l.nome || '-')}</td>
+            <td>${esc(l.email || '-')}</td>
+            <td>${esc(l.telefone || '-')}</td>
+            <td>${esc(l.background_titulo || '-')}</td>
             <td>${formatDate(l.created_at)}</td>
             <td>
                 <button class="tbl-btn danger" onclick="deleteLead('${l.id}')"><i class="fas fa-trash"></i></button>
@@ -1567,13 +1573,13 @@ async function viewBriefingRespostas(briefingId, titulo) {
             const answersHTML = answers.map((a, i) => {
                 const pergunta = perguntas[i] ? perguntas[i].texto : `Pergunta ${i+1}`;
                 return `<div style="margin-bottom:0.75rem;">
-                    <span style="font-size:0.72rem;color:var(--gold);display:block;margin-bottom:0.2rem;">${pergunta}</span>
-                    <span style="font-size:0.88rem;color:var(--white);">${a || '(vazio)'}</span>
+                    <span style="font-size:0.72rem;color:var(--gold);display:block;margin-bottom:0.2rem;">${esc(pergunta)}</span>
+                    <span style="font-size:0.88rem;color:var(--white);">${esc(a || '(vazio)')}</span>
                 </div>`;
             }).join('');
             return `<div style="background:var(--black-soft);border:1px solid var(--border-subtle);border-radius:8px;padding:1.25rem;margin-bottom:1rem;">
                 <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-                    <span style="font-size:0.82rem;font-weight:500;">${r.respondido_por || 'Anonimo'}</span>
+                    <span style="font-size:0.82rem;font-weight:500;">${esc(r.respondido_por || 'Anonimo')}</span>
                     <span style="font-size:0.72rem;color:var(--white-dim);">${formatDate(r.created_at)}</span>
                 </div>
                 ${answersHTML}
@@ -1662,15 +1668,15 @@ async function loadRoletaLeads() {
 
         tbody.innerHTML = leads.map(l => `
             <tr>
-                <td>${l.nome}</td>
-                <td>${l.telefone}</td>
-                <td>${l.email}</td>
-                <td>${l.cidade}</td>
+                <td>${esc(l.nome)}</td>
+                <td>${esc(l.telefone)}</td>
+                <td>${esc(l.email)}</td>
+                <td>${esc(l.cidade)}</td>
                 <td>${l.desconto
-                    ? `<span class="badge ${descColors[l.desconto] || 'badge-success'}">${l.desconto}</span>`
+                    ? `<span class="badge ${descColors[l.desconto] || 'badge-success'}">${esc(l.desconto)}</span>`
                     : '<span style="color:rgba(255,255,255,0.3);font-size:0.78rem;">Passou</span>'
                 }</td>
-                <td style="font-family:monospace;font-size:0.82rem;color:var(--gold);">${l.cupom || '-'}</td>
+                <td style="font-family:monospace;font-size:0.82rem;color:var(--gold);">${esc(l.cupom || '-')}</td>
                 <td>${formatDate(l.criado_em)}</td>
                 <td>
                     <a href="https://wa.me/55${l.telefone.replace(/\D/g,'')}" target="_blank" class="tbl-btn" title="WhatsApp">

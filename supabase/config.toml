@@ -1,0 +1,5 @@
+project_id = "gzetvnqnqmjrkcfsjxyk"
+
+# Chamada pelo site com a chave publica (nao e um JWT de usuario)
+[functions.meta-capi]
+verify_jwt = false

@@ -99,19 +99,11 @@ async function handleLogin() {
     btn.disabled = true;
 
     try {
-        const { data, error } = await supabase
-            .from('orcamentos')
-            .select('*')
-            .eq('id', id)
-            .single();
+        // A senha e conferida no servidor; o orcamento so volta se id + senha baterem
+        const { data, error } = await supabase.rpc('get_orcamento', { p_id: id, p_password: password });
 
         if (error || !data) {
-            showLoginError('Orçamento não encontrado.');
-            return;
-        }
-
-        if (data.password !== password) {
-            showLoginError('Senha incorreta. Tente novamente.');
+            showLoginError('Orçamento não encontrado ou senha incorreta.');
             return;
         }
 

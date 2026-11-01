@@ -603,24 +603,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ bg_id: selectedBgId })
-                }).catch(() => {
-                    // Se a funcao RPC nao existir, incrementar manualmente
-                    fetch(`${SUPABASE_URL}/rest/v1/backgrounds?id=eq.${selectedBgId}&select=downloads`, {
-                        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                    }).then(r => r.json()).then(data => {
-                        const current = (data && data[0]) ? data[0].downloads : 0;
-                        fetch(`${SUPABASE_URL}/rest/v1/backgrounds?id=eq.${selectedBgId}`, {
-                            method: 'PATCH',
-                            headers: {
-                                'apikey': SUPABASE_KEY,
-                                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                                'Content-Type': 'application/json',
-                                'Prefer': 'return=minimal'
-                            },
-                            body: JSON.stringify({ downloads: current + 1 })
-                        });
-                    });
-                });
+                }).catch(err => console.warn('Erro ao contar download:', err));
 
                 // 3. Disparar download
                 const downloadUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/fl_attachment/${selectedBgUrl}.jpg`;

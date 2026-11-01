@@ -221,10 +221,11 @@
 
         async function loadBriefing() {
             try {
-                const res = await fetch(
-                    `${SUPABASE_URL}/rest/v1/briefings?codigo=eq.${briefId}&ativo=eq.true&select=*`,
-                    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
-                );
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_briefing`, {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_codigo: briefId })
+                });
                 const data = await res.json();
 
                 if (!data || data.length === 0) { showState('error'); return; }
