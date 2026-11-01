@@ -216,8 +216,12 @@ async function saveClient(e) {
         } else {
             // Novo cliente
             if (senha) {
-                // Criar com login: usar signUp para criar auth user
-                const { data: authData, error: authError } = await supabase.auth.signUp({
+                // Criar com login: signUp num cliente separado, sem salvar sessao,
+                // para o admin nao ser deslogado/trocado pelo cliente novo
+                const signupClient = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: 'jvc-signup-temp' }
+                });
+                const { data: authData, error: authError } = await signupClient.auth.signUp({
                     email: email,
                     password: senha,
                     // Lidos pelo trigger handle_new_user, que cria a linha em usuarios

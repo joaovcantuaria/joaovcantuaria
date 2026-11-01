@@ -488,7 +488,8 @@
     <script>
         const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
-        var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseSDK = window.supabase; // `var supabase` abaixo sobrescreve window.supabase
+        var supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Cloudinary config
         const CLOUD_NAME = 'cpfik4th';
@@ -504,6 +505,6 @@
     </script>
     <script src="admin-guard.js?v=20261101"></script>
     <script>requireAdmin();</script>
-    <script src="admin.js?v=20261101"></script>
+    <script src="admin.js?v=20261102"></script>
 </body>
 </html>
