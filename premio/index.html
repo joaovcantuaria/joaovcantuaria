@@ -1141,15 +1141,12 @@ async function confirmarGiro(e) {
 
     // Evento Meta Pixel - Lead (cadastro confirmado)
     if (typeof fbq !== 'undefined') {
-        const eventId = newEventId();
         fbq('track', 'Lead', {
             content_name: 'Roleta Aniversario',
             content_category: 'Fotografia',
             value: 0,
             currency: 'BRL'
-        }, { eventID: eventId });
-        // API de Conversoes server-side
-        sendConversionAPI('Lead', eventId, { email, telefone: tel });
+        });
     }
 
     // Decrementar giro disponível
@@ -1260,18 +1257,12 @@ async function exibirResultado(winIdx) {
         // Evento Meta Pixel - Purchase (cupom gerado)
         if (typeof fbq !== 'undefined') {
             const valorDesconto = seg.desconto === '20%' ? 0.2 : seg.desconto === '30%' ? 0.3 : seg.desconto === '50%' ? 0.5 : 1;
-            const eventId = newEventId();
             fbq('track', 'Purchase', {
                 content_name: 'Cupom Ensaio Fotografico ' + seg.desconto,
                 content_category: 'Fotografia',
                 value: valorDesconto,
                 currency: 'BRL',
                 coupon: cupom
-            }, { eventID: eventId });
-            sendConversionAPI('Purchase', eventId, {
-                email: dadosLead.email,
-                telefone: dadosLead.tel,
-                desconto: seg.desconto
             });
         }
 
@@ -1358,38 +1349,6 @@ function gerarCupom(desconto) {
     return `JVC${pct}-${code}`;
 }
 
-// ============================================================
-// META API DE CONVERSOES (via Supabase Edge Function - token fica no servidor)
-// ============================================================
-function newEventId() {
-    return (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2));
-}
-
-async function sendConversionAPI(eventName, eventId, userData) {
-    try {
-        await fetch(`${SUPABASE_URL}/functions/v1/meta-capi`, {
-            method: 'POST',
-            headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                event_name: eventName,
-                event_id: eventId,
-                event_source_url: window.location.href,
-                email: userData.email,
-                telefone: userData.telefone,
-                fbp: getCookie('_fbp'),
-                fbc: getCookie('_fbc'),
-                content_name: eventName === 'Lead' ? 'Roleta Aniversario' : ('Cupom ' + (userData.desconto || ''))
-            })
-        });
-    } catch (e) {
-        console.warn('Meta CAPI error:', e);
-    }
-}
-
-function getCookie(name) {
-    const match = document.cookie.match(new RegExp('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)'));
-    return match ? match[2] : undefined;
-}
 </script>
 </body>
 </html>
