@@ -1,0 +1,16 @@
+project_id = "gzetvnqnqmjrkcfsjxyk"
+
+# Nomes publicados no Supabase (o painel gerou nomes aleatorios):
+#   rt-gerar    -> dynamic-action
+#   rt-checkout -> super-handler
+#   rt-webhook  -> swift-responder
+# As funcoes conferem o login por conta propria (o site usa a chave publica).
+# Todas publicadas com "Verify JWT" desligado.
+[functions.rt-gerar]
+verify_jwt = false
+
+[functions.rt-checkout]
+verify_jwt = false
+
+[functions.rt-webhook]
+verify_jwt = false

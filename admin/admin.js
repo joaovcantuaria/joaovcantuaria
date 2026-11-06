@@ -94,6 +94,7 @@ function esc(value) {
 function loadPanelData(panel) {
     switch(panel) {
         case 'briefings': loadBriefings(); break;
+        case 'roteirista': loadRoteirista(); break;
         case 'roleta': loadRoletaLeads(); break;
         case 'clientes': loadClientes(); break;
         case 'projetos': loadProjetos(); break;

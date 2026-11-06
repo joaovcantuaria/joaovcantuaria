@@ -1088,3 +1088,17 @@ body {
     border-color: var(--gold);
     font-weight: 700;
 }
+
+/* ========== JOAOZINHO ROTEIRISTA ========== */
+.rt-section { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white-dim); margin-bottom: 0.75rem; font-weight: 500; }
+.rt-mask { color: var(--white-dim); font-weight: 400; }
+.rt-note { font-size: 0.8rem; color: var(--white-dim); margin-top: 1rem; line-height: 1.6; }
+.rt-note code { color: var(--gold); word-break: break-all; }
+.rt-credito { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end; }
+.rt-credito .config-group { margin: 0; flex: 1; min-width: 160px; }
+.rt-credito .config-group:first-child { flex: 2; min-width: 220px; }
+#panel-roteirista .config-group select {
+    width: 100%; background: var(--black-soft, #111); border: none; border-bottom: 1px solid var(--border-subtle);
+    padding: 0.7rem 0; font-size: 0.95rem; color: var(--white); font-family: var(--font-body); outline: none;
+}
+#panel-roteirista .config-group select:focus { border-bottom-color: var(--gold); }

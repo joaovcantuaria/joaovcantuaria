@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joãozinho Roteirista · Roteiros virais para Reels e TikTok</title>
+    <meta name="description" content="Roteiros prontos para Reels e TikTok, feitos para o seu nicho e o seu jeito de falar. Gancho, roteiro com cenas, quebra de expectativa, CTA e legenda. R$ 1,99 por roteiro.">
+    <meta name="theme-color" content="#0B0907">
+    <link rel="canonical" href="https://www.joaovcantuaria.com/roteirista/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Joãozinho Roteirista · Roteiros virais em minutos">
+    <meta property="og:description" content="Gancho, roteiro com cenas, quebra de expectativa, CTA e legenda. Feito para o seu nicho. R$ 1,99 por roteiro.">
+    <meta property="og:url" content="https://www.joaovcantuaria.com/roteirista/">
+    <link rel="icon" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0B0907;
+            --surface: #16120E;
+            --surface-2: #1E1813;
+            --line: rgba(255, 237, 214, 0.1);
+            --cream: #F7EFE4;
+            --muted: #A99C8D;
+            --orange: #FF7A1A;
+            --orange-2: #FFA445;
+            --orange-deep: #E8540C;
+            --glow: rgba(255, 122, 26, 0.35);
+            --green: #4ADE80;
+            --red: #FF6B5E;
+            --radius: 20px;
+            --font: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --serif: 'Playfair Display', Georgia, serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--cream); font-family: var(--font); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+        a { color: var(--orange-2); }
+        button, input, textarea, select { font: inherit; color: inherit; }
+        .wrap { width: min(980px, 100% - 32px); margin-inline: auto; }
+        [hidden] { display: none !important; }
+
+        /* Topo */
+        .top {
+            position: sticky; top: 0; z-index: 10;
+            background: rgba(11,9,7,.9);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+        }
+        .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 64px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; letter-spacing: -.02em; text-decoration: none; color: var(--cream); }
+        .brand-icon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-content: center; background: linear-gradient(180deg, var(--orange-2), var(--orange-deep)); color: #1A0E04; font-size: 18px; }
+        .brand small { display: block; font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+        .top-actions { display: flex; align-items: center; gap: 8px; }
+        .saldo { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255,122,26,.45); background: rgba(255,122,26,.08); font-size: 14px; white-space: nowrap; }
+        .saldo b { color: var(--orange-2); font-size: 16px; }
+        .link-btn { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 14px; padding: 8px; }
+        .link-btn:hover { color: var(--cream); }
+
+        /* Botoes */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            min-height: 52px; padding: 0 24px; border: 0; border-radius: 999px; cursor: pointer;
+            background: linear-gradient(180deg, var(--orange-2), var(--orange) 55%, var(--orange-deep));
+            color: #1A0E04; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; font-size: 15px; text-decoration: none;
+            box-shadow: 0 8px 30px var(--glow), inset 0 1px 0 rgba(255,255,255,.35);
+            transition: transform .15s ease, opacity .15s ease;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+        .btn-ghost { background: transparent; color: var(--cream); border: 1px solid var(--line); box-shadow: none; text-transform: none; letter-spacing: 0; font-weight: 700; }
+        .btn-ghost:hover { border-color: var(--orange); }
+        .btn-block { width: 100%; }
+
+        /* Hero */
+        .hero { padding: 48px 0 24px; text-align: center; position: relative; isolation: isolate; overflow: hidden; }
+        .hero::before { content: ""; position: absolute; inset: -40% 10% auto; height: 500px; background: radial-gradient(circle, rgba(255,122,26,.2), transparent 65%); z-index: -1; }
+        .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--orange); }
+        h1 { margin-top: 14px; font-size: clamp(40px, 10vw, 72px); font-weight: 900; line-height: .95; letter-spacing: -.035em; }
+        h1 em { display: block; font-family: var(--serif); font-weight: 600; font-size: .62em; letter-spacing: -.01em; color: var(--orange-2); margin-top: .1em; }
+        .hero p.lead { margin: 18px auto 0; max-width: 46ch; color: #DCCFBF; font-size: 18px; }
+        .chips { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .chip { padding: 7px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; color: #DCCFBF; }
+
+        /* Cartoes */
+        .card { background: linear-gradient(180deg, var(--surface-2), var(--surface)); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+        .card + .card { margin-top: 16px; }
+        .card h2 { font-size: 22px; font-weight: 900; letter-spacing: -.02em; }
+        .card h2 em { font-family: var(--serif); font-weight: 600; color: var(--orange-2); }
+        .card .hint { color: var(--muted); font-size: 14px; margin-top: 4px; }
+        main { padding-bottom: 80px; }
+        section.block { margin-top: 24px; }
+
+        /* Login */
+        .auth { max-width: 440px; margin: 8px auto 0; }
+        .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 5px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); margin-bottom: 18px; }
+        .tabs button { border: 0; background: none; padding: 10px; border-radius: 999px; cursor: pointer; font-weight: 700; color: var(--muted); }
+        .tabs button.on { background: var(--surface-2); color: var(--cream); box-shadow: inset 0 0 0 1px var(--line); }
+
+        /* Formulario */
+        .field { margin-top: 18px; }
+        .field > label, .field > .label { display: block; font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+        .field .opt { font-weight: 400; color: var(--muted); font-size: 13px; }
+        input[type=text], input[type=email], input[type=password], input[type=url], textarea, select {
+            width: 100%; padding: 13px 14px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); outline: none; transition: border-color .15s;
+        }
+        textarea { min-height: 96px; resize: vertical; }
+        input:focus, textarea:focus, select:focus { border-color: var(--orange); }
+        ::placeholder { color: #6E645A; }
+        .grid-2 { display: grid; gap: 12px; }
+        .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+        .pill input { position: absolute; opacity: 0; pointer-events: none; }
+        .pill span { display: inline-block; padding: 9px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; font-size: 14px; user-select: none; transition: all .15s; }
+        .pill input:checked + span { border-color: var(--orange); background: rgba(255,122,26,.14); color: var(--cream); }
+        .pill input:focus-visible + span { outline: 2px solid var(--orange-2); outline-offset: 2px; }
+        .ref-row { display: grid; gap: 8px; padding: 12px; border-radius: 14px; border: 1px dashed var(--line); }
+        .ref-row + .ref-row { margin-top: 8px; }
+
+        .modo { display: grid; gap: 10px; }
+        .modo label { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; }
+        .modo input { margin-top: 4px; accent-color: var(--orange); width: 18px; height: 18px; flex: none; }
+        .modo b { display: block; }
+        .modo small { color: var(--muted); font-size: 13px; }
+        .modo label:has(input:checked) { border-color: var(--orange); background: rgba(255,122,26,.08); }
+
+        .formatos { display: grid; gap: 8px; grid-template-columns: 1fr; }
+        .fmt { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; }
+        .fmt input { margin-top: 3px; accent-color: var(--orange); width: 18px; height: 18px; flex: none; }
+        .fmt b { display: block; font-size: 14px; }
+        .fmt small { color: var(--muted); font-size: 12.5px; line-height: 1.35; display: block; }
+        .fmt:has(input:checked) { border-color: rgba(255,122,26,.7); background: rgba(255,122,26,.07); }
+        .fmt-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+
+        .msg { margin-top: 14px; padding: 12px 14px; border-radius: 12px; font-size: 14px; }
+        .msg.erro { background: rgba(255,107,94,.1); border: 1px solid rgba(255,107,94,.4); color: #FFC9C3; }
+        .msg.ok { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.35); color: #C9F5D8; }
+
+        /* Comprar */
+        .packs { display: grid; gap: 12px; margin-top: 16px; }
+        .pack { position: relative; text-align: left; border-radius: 16px; padding: 18px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; color: var(--cream); }
+        .pack:hover { border-color: var(--orange); }
+        .pack .qtd { font-weight: 900; font-size: 18px; }
+        .pack .preco { font-weight: 900; font-size: 30px; color: var(--orange); letter-spacing: -.03em; margin-top: 4px; }
+        .pack .cada { color: var(--muted); font-size: 13px; }
+        .pack.destaque { border-color: rgba(255,122,26,.6); background: rgba(255,122,26,.07); }
+        .tag { position: absolute; top: -10px; right: 14px; padding: 4px 10px; border-radius: 999px; background: var(--orange); color: #1A0E04; font-size: 11px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+
+        /* Resultado */
+        .out { margin-top: 18px; }
+        .out-body { padding: 22px; border-radius: 16px; background: var(--bg); border: 1px solid var(--line); min-height: 120px; }
+        .out-body h3 { font-size: 24px; font-weight: 900; letter-spacing: -.02em; line-height: 1.15; }
+        .out-body h4 { margin-top: 22px; font-size: 13px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--orange); }
+        .out-body p { margin-top: 8px; }
+        .out-body ul { margin: 8px 0 0 18px; }
+        .out-body li + li { margin-top: 4px; }
+        .out-body strong { color: #FFE2C8; }
+        .out-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+        .out-actions .btn { min-height: 44px; font-size: 13px; padding: 0 16px; }
+        .loading { display: flex; align-items: center; gap: 12px; color: var(--muted); }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--orange); animation: pulse 1s infinite ease-in-out; }
+        .dot:nth-child(2) { animation-delay: .15s; } .dot:nth-child(3) { animation-delay: .3s; }
+        @keyframes pulse { 0%, 100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1); } }
+
+        /* Historico */
+        .hist { margin-top: 12px; display: grid; gap: 8px; }
+        .hist button { text-align: left; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; color: var(--cream); }
+        .hist button:hover { border-color: var(--orange); }
+        .hist small { color: var(--muted); display: block; font-size: 12px; }
+
+        .how { display: grid; gap: 10px; margin-top: 14px; counter-reset: s; }
+        .how div { position: relative; padding: 14px 14px 14px 58px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); }
+        .how div::before { counter-increment: s; content: counter(s); position: absolute; left: 14px; top: 13px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-content: center; background: var(--orange); color: #1A0E04; font-weight: 900; }
+        .how b { display: block; }
+        .how span { color: var(--muted); font-size: 14px; }
+
+        footer { padding: 30px 0 40px; text-align: center; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+
+        @media (min-width: 700px) {
+            .grid-2 { grid-template-columns: 1fr 1fr; }
+            .formatos { grid-template-columns: 1fr 1fr; }
+            .packs { grid-template-columns: 1fr 1fr; }
+            .how { grid-template-columns: repeat(3, 1fr); }
+            .card { padding: 32px; }
+        }
+        @media (max-width: 420px) {
+            .brand small { display: none; }
+            .saldo { padding: 6px 10px; font-size: 13px; }
+        }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+    </style>
+</head>
+<body>
+    <header class="top">
+        <div class="wrap">
+            <a class="brand" href="/roteirista/">
+                <span class="brand-icon" aria-hidden="true">✍</span>
+                <span>Joãozinho Roteirista<small>por João V. Cantuária</small></span>
+            </a>
+            <div class="top-actions" id="topLogged" hidden>
+                <span class="saldo"><b id="saldoNum">0</b> roteiros</span>
+                <button class="link-btn" id="btnSair" type="button">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="wrap">
+                <p class="eyebrow">IA de roteiros para Reels e TikTok</p>
+                <h1>Pare de travar na frente da câmera <em>o roteiro vem pronto</em></h1>
+                <p class="lead">Conte seu nicho e seu jeito de falar. O Joãozinho escolhe o melhor formato viral e entrega gancho, roteiro com cenas, quebra de expectativa, CTA e legenda.</p>
+                <div class="chips">
+                    <span class="chip">20 formatos virais</span>
+                    <span class="chip">Assuntos em alta no seu nicho</span>
+                    <span class="chip" data-chip-preco>R$ 1,99 por roteiro</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="wrap">
+            <!-- ===== Visitante: login / cadastro ===== -->
+            <div id="areaVisitante">
+                <div class="card auth">
+                    <div class="tabs" role="tablist">
+                        <button type="button" class="on" id="tabCriar" role="tab">Criar conta</button>
+                        <button type="button" id="tabEntrar" role="tab">Entrar</button>
+                    </div>
+                    <form id="formAuth" novalidate>
+                        <div class="field" id="campoNome">
+                            <label for="authNome">Seu nome</label>
+                            <input type="text" id="authNome" autocomplete="name" placeholder="Como quer ser chamado(a)">
+                        </div>
+                        <div class="field">
+                            <label for="authEmail">E-mail</label>
+                            <input type="email" id="authEmail" autocomplete="email" placeholder="seu@email.com" required>
+                        </div>
+                        <div class="field">
+                            <label for="authSenha">Senha</label>
+                            <input type="password" id="authSenha" autocomplete="new-password" placeholder="Mínimo 6 caracteres" required minlength="6">
+                        </div>
+                        <div id="authMsg" hidden></div>
+                        <button class="btn btn-block" style="margin-top:20px" type="submit" id="btnAuth">Criar conta grátis</button>
+                        <p style="text-align:center;margin-top:14px"><button type="button" class="link-btn" id="btnEsqueci" hidden>Esqueci minha senha</button></p>
+                    </form>
+                </div>
+
+                <div class="card" style="margin-top:16px">
+                    <h2>Como <em>funciona</em></h2>
+                    <div class="how">
+                        <div><b>Crie sua conta</b><span>Leva 10 segundos.</span></div>
+                        <div><b>Compre seus roteiros</b><span data-precos-texto>1 por R$ 1,99 ou 5 por R$ 6,99, no Pix ou cartão.</span></div>
+                        <div><b>Preencha e gere</b><span>Seu nicho, seu estilo e o assunto. O roteiro sai em minutos.</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Logado ===== -->
+            <div id="areaLogado" hidden>
+                <div id="avisoPagamento" hidden></div>
+
+                <!-- Comprar -->
+                <div class="card" id="cardComprar">
+                    <h2>Seus <em>roteiros</em></h2>
+                    <p class="hint">Você tem <b id="saldoTexto">0</b> roteiro(s) disponível(is). Cada roteiro gerado usa 1.</p>
+                    <div class="packs">
+                        <button class="pack" type="button" data-pacote="1">
+                            <span class="qtd">1 roteiro</span>
+                            <span class="preco" data-preco="1">R$ 1,99</span>
+                            <span class="cada">Para testar agora</span>
+                        </button>
+                        <button class="pack destaque" type="button" data-pacote="5">
+                            <span class="tag">Promoção</span>
+                            <span class="qtd">5 roteiros</span>
+                            <span class="preco" data-preco="5">R$ 6,99</span>
+                            <span class="cada" data-cada>Sai R$ 1,40 cada, para 5 assuntos diferentes</span>
+                        </button>
+                    </div>
+                    <div id="compraMsg" hidden></div>
+                </div>
+
+                <!-- Formulario -->
+                <form class="card" id="formRoteiro" novalidate>
+                    <h2>Seu <em>próximo vídeo</em></h2>
+                    <p class="hint">Quanto mais detalhes, mais o roteiro fica com a sua cara.</p>
+
+                    <div class="grid-2">
+                        <div class="field">
+                            <label for="fArea">Área de atuação / nicho</label>
+                            <input type="text" id="fArea" maxlength="300" placeholder="Ex.: nutricionista esportiva, advogado trabalhista, loja de roupas">
+                        </div>
+                        <div class="field">
+                            <label for="fDuracao">Duração do vídeo</label>
+                            <select id="fDuracao">
+                                <option value="">Joãozinho decide</option>
+                                <option>até 15 segundos</option>
+                                <option>30 segundos</option>
+                                <option>45 a 60 segundos</option>
+                                <option>mais de 1 minuto</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <span class="label">Como você gosta de se comunicar nos vídeos</span>
+                        <div class="pills" id="fTom">
+                            <label class="pill"><input type="checkbox" value="divertido"><span>Divertido</span></label>
+                            <label class="pill"><input type="checkbox" value="educativo"><span>Educativo</span></label>
+                            <label class="pill"><input type="checkbox" value="direto ao ponto"><span>Direto ao ponto</span></label>
+                            <label class="pill"><input type="checkbox" value="inspirador"><span>Inspirador</span></label>
+                            <label class="pill"><input type="checkbox" value="emocional"><span>Emocional</span></label>
+                            <label class="pill"><input type="checkbox" value="polêmico"><span>Polêmico</span></label>
+                            <label class="pill"><input type="checkbox" value="técnico"><span>Técnico</span></label>
+                            <label class="pill"><input type="checkbox" value="descontraído, com gírias"><span>Descontraído</span></label>
+                        </div>
+                        <input type="text" id="fTomExtra" maxlength="300" placeholder="Algo mais sobre seu jeito? (opcional)" style="margin-top:10px">
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="field">
+                            <label for="fInsta">@ do Instagram <span class="opt">(opcional)</span></label>
+                            <input type="text" id="fInsta" maxlength="60" placeholder="@seuperfil">
+                        </div>
+                        <div class="field">
+                            <label for="fBio">Bio do seu perfil <span class="opt">(cole aqui)</span></label>
+                            <input type="text" id="fBio" maxlength="600" placeholder="O que está escrito na sua bio">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <span class="label">Vídeos de referência <span class="opt">(opcional, até 3)</span></span>
+                        <p class="hint" style="margin:-2px 0 8px">O Joãozinho não assiste vídeos: conte o que você gosta em cada um.</p>
+                        <div class="ref-row">
+                            <input type="url" class="refLink" maxlength="300" placeholder="Link do vídeo">
+                            <input type="text" class="refNota" maxlength="500" placeholder="O que você gostou? Ex.: gancho forte, ritmo rápido, humor">
+                        </div>
+                        <div class="ref-row">
+                            <input type="url" class="refLink" maxlength="300" placeholder="Link do vídeo">
+                            <input type="text" class="refNota" maxlength="500" placeholder="O que você gostou?">
+                        </div>
+                        <div class="ref-row">
+                            <input type="url" class="refLink" maxlength="300" placeholder="Link do vídeo">
+                            <input type="text" class="refNota" maxlength="500" placeholder="O que você gostou?">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="fSobre">Conte um pouco sobre você</label>
+                        <textarea id="fSobre" maxlength="2000" placeholder="Sua história, seu público, o que você vende, seus diferenciais, o que quer alcançar com os vídeos"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <span class="label">Assunto do vídeo</span>
+                        <div class="modo">
+                            <label><input type="radio" name="modo" value="proprio" checked><span><b>Eu escolho o assunto</b><small>Escreva o tema ou a ideia que você quer falar.</small></span></label>
+                            <label><input type="radio" name="modo" value="em_alta"><span><b>Joãozinho escolhe um assunto em alta</b><small>Ele pesquisa o que está em alta no seu nicho.</small></span></label>
+                        </div>
+                        <textarea id="fAssunto" maxlength="1500" placeholder="Ex.: por que a dieta da minha cliente não funcionava" style="margin-top:10px"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <div class="fmt-head">
+                            <span class="label" style="margin:0">Formatos que você topa gravar</span>
+                            <button type="button" class="link-btn" id="btnTodos" style="padding:0;color:var(--orange-2)">Marcar todos</button>
+                        </div>
+                        <p class="hint" style="margin:-2px 0 10px">O Joãozinho escolhe o melhor deles para o seu tema e explica por quê.</p>
+                        <div class="formatos" id="fFormatos"></div>
+                    </div>
+
+                    <div id="formMsg" hidden></div>
+                    <button class="btn btn-block" style="margin-top:22px" type="submit" id="btnGerar">Gerar roteiro · usa 1 crédito</button>
+                </form>
+
+                <!-- Resultado -->
+                <div class="card" id="cardResultado" hidden>
+                    <h2>Seu <em>roteiro</em></h2>
+                    <div class="out">
+                        <div class="out-body" id="outBody"></div>
+                        <div class="out-actions" id="outActions" hidden>
+                            <button class="btn" type="button" id="btnCopiar">Copiar roteiro</button>
+                            <button class="btn btn-ghost" type="button" id="btnBaixar">Baixar .txt</button>
+                            <button class="btn btn-ghost" type="button" id="btnNovo">Gerar outro</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historico -->
+                <div class="card">
+                    <h2>Seus roteiros <em>anteriores</em></h2>
+                    <div class="hist" id="histLista"><p class="hint">Nenhum roteiro ainda.</p></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="wrap">
+            <p>Joãozinho Roteirista · <a href="/">João Vitor Cantuária</a> · <a href="/privacidade/">Privacidade</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Nomes das Edge Functions como foram publicadas no Supabase
+        const FN_GERAR = 'dynamic-action';   // codigo: supabase/functions/rt-gerar
+        const FN_CHECKOUT = 'super-handler'; // codigo: supabase/functions/rt-checkout
+        const $ = id => document.getElementById(id);
+
+        // Mesmos ids usados na Edge Function rt-gerar
+        const FORMATOS = [
+            ['problema', 'Problema, virada e CTA', 'Gancho com a dor, desenvolvimento, quebra de expectativa e CTA'],
+            ['novelinha', 'Novelinha', 'Encenação com personagens, em capítulos'],
+            ['pergunta_resposta', 'Pergunta e resposta', 'Respondendo comentário ou caixinha'],
+            ['videocast', 'Videocast sem olhar para a câmera', 'Estilo podcast, conversa com alguém fora do quadro'],
+            ['lofi', 'Lo-fi conversado sem cortes', 'Plano único, papo íntimo sobre um tema do nicho'],
+            ['pov', 'POV', '"POV: você é..." dentro de uma situação do nicho'],
+            ['mito_verdade', 'Mito ou verdade', 'Derruba crenças comuns do nicho'],
+            ['erros', 'Erros comuns', '"3 erros que..." e como corrigir'],
+            ['lista', 'Lista / top dicas', 'Dicas rápidas numeradas'],
+            ['antes_depois', 'Antes e depois', 'A transformação e o caminho'],
+            ['tutorial', 'Tutorial passo a passo', 'Ensina algo concreto em poucos passos'],
+            ['bastidores', 'Bastidores / dia a dia', 'A rotina e o processo por trás'],
+            ['storytelling', 'Storytelling pessoal', 'História real com conflito e virada'],
+            ['react', 'React / green screen', 'Comentando notícia, post ou tendência'],
+            ['trend', 'Trend adaptada', 'Áudio ou meme em alta trazido para o nicho'],
+            ['ninguem_conta', 'Ninguém te conta isso', 'Revela algo pouco falado do nicho'],
+            ['polemica', 'Opinião polêmica', 'Um ponto de vista forte que gera debate'],
+            ['comparacao', 'Comparação X vs Y', 'Compara duas opções do nicho'],
+            ['teste', 'Teste / desafio', '"Testei por 7 dias" e o resultado'],
+            ['texto_tela', 'Texto na tela, sem fala', 'Legendas sobre imagens, com música'],
+        ];
+        $('fFormatos').innerHTML = FORMATOS.map(([id, nome, desc], i) =>
+            `<label class="fmt"><input type="checkbox" value="${id}" ${i === 0 ? 'checked' : ''}><span><b>${nome}</b><small>${desc}</small></span></label>`
+        ).join('');
+        $('btnTodos').addEventListener('click', () => {
+            const boxes = [...document.querySelectorAll('#fFormatos input')];
+            const marcar = boxes.some(b => !b.checked);
+            boxes.forEach(b => { b.checked = marcar; });
+            $('btnTodos').textContent = marcar ? 'Desmarcar todos' : 'Marcar todos';
+        });
+
+        // ===== Utilidades =====
+        const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        function aviso(el, texto, tipo = 'erro') {
+            const box = typeof el === 'string' ? $(el) : el;
+            box.className = 'msg ' + tipo;
+            box.textContent = texto;
+            box.hidden = !texto;
+        }
+        // Markdown simples (o texto ja vem escapado)
+        function md(src) {
+            const linhas = esc(src).split('\n');
+            let html = '', lista = false;
+            const inline = s => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            for (const l of linhas) {
+                const t = l.trim();
+                if (/^[-*]\s+/.test(t)) {
+                    if (!lista) { html += '<ul>'; lista = true; }
+                    html += `<li>${inline(t.replace(/^[-*]\s+/, ''))}</li>`;
+                    continue;
+                }
+                if (lista) { html += '</ul>'; lista = false; }
+                if (/^#\s+/.test(t)) html += `<h3>${inline(t.replace(/^#\s+/, ''))}</h3>`;
+                else if (/^#{2,}\s+/.test(t)) html += `<h4>${inline(t.replace(/^#{2,}\s+/, ''))}</h4>`;
+                else if (t) html += `<p>${inline(t)}</p>`;
+            }
+            if (lista) html += '</ul>';
+            return html;
+        }
+        const brl = v => 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+
+        // ===== Precos configurados no painel =====
+        sb.rpc('rt_precos').then(({ data }) => {
+            if (!data) return;
+            const p1 = brl(data.preco_1), p5 = brl(data.preco_5);
+            document.querySelectorAll('[data-preco="1"]').forEach(el => { el.textContent = p1; });
+            document.querySelectorAll('[data-preco="5"]').forEach(el => { el.textContent = p5; });
+            document.querySelectorAll('[data-cada]').forEach(el => { el.textContent = `Sai ${brl(data.preco_5 / 5)} cada, para 5 assuntos diferentes`; });
+            document.querySelectorAll('[data-precos-texto]').forEach(el => { el.textContent = `1 por ${p1} ou 5 por ${p5}, no Pix ou cartão.`; });
+            document.querySelectorAll('[data-chip-preco]').forEach(el => { el.textContent = `${p1} por roteiro`; });
+        });
+
+        // ===== Login / cadastro =====
+        let modoAuth = 'criar';
+        function setModoAuth(m) {
+            modoAuth = m;
+            $('tabCriar').classList.toggle('on', m === 'criar');
+            $('tabEntrar').classList.toggle('on', m === 'entrar');
+            $('campoNome').hidden = m !== 'criar';
+            $('btnEsqueci').hidden = m !== 'entrar';
+            $('authSenha').autocomplete = m === 'criar' ? 'new-password' : 'current-password';
+            $('btnAuth').textContent = m === 'criar' ? 'Criar conta grátis' : 'Entrar';
+            aviso('authMsg', '');
+        }
+        $('tabCriar').addEventListener('click', () => setModoAuth('criar'));
+        $('tabEntrar').addEventListener('click', () => setModoAuth('entrar'));
+
+        $('formAuth').addEventListener('submit', async e => {
+            e.preventDefault();
+            const email = $('authEmail').value.trim();
+            const senha = $('authSenha').value;
+            if (!/^\S+@\S+\.\S+$/.test(email)) return aviso('authMsg', 'Digite um e-mail válido.');
+            if (senha.length < 6) return aviso('authMsg', 'A senha precisa ter pelo menos 6 caracteres.');
+            $('btnAuth').disabled = true;
+            try {
+                if (modoAuth === 'criar') {
+                    const nome = $('authNome').value.trim();
+                    const { data, error } = await sb.auth.signUp({ email, password: senha, options: { data: { origem: 'roteirista', nome_completo: nome } } });
+                    if (error) throw error;
+                    if (!data.session) aviso('authMsg', 'Conta criada! Confirme pelo link enviado ao seu e-mail e depois entre.', 'ok');
+                } else {
+                    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+                    if (error) throw error;
+                }
+            } catch (err) {
+                const m = String(err.message || '');
+                aviso('authMsg',
+                    m.includes('Invalid login') ? 'E-mail ou senha incorretos.' :
+                    m.includes('already registered') ? 'Este e-mail já tem conta. Use a aba Entrar.' :
+                    m.includes('rate limit') ? 'Muitas tentativas. Aguarde alguns minutos.' :
+                    'Não foi possível continuar. Tente de novo.');
+            } finally {
+                $('btnAuth').disabled = false;
+            }
+        });
+
+        $('btnEsqueci').addEventListener('click', async () => {
+            const email = $('authEmail').value.trim();
+            if (!/^\S+@\S+\.\S+$/.test(email)) return aviso('authMsg', 'Digite seu e-mail acima e clique de novo.');
+            await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/reset-password.html?next=/roteirista/' });
+            aviso('authMsg', 'Se esse e-mail tiver conta, enviamos um link para criar uma nova senha.', 'ok');
+        });
+
+        $('btnSair').addEventListener('click', () => sb.auth.signOut());
+
+        // ===== Estado logado =====
+        let sessao = null;
+        sb.auth.onAuthStateChange((_ev, s) => {
+            sessao = s;
+            $('areaVisitante').hidden = !!s;
+            $('areaLogado').hidden = !s;
+            $('topLogged').hidden = !s;
+            if (s) { carregarSaldo(); carregarHistorico(); }
+        });
+
+        let saldo = 0;
+        async function carregarSaldo() {
+            const { data } = await sb.from('rt_creditos').select('saldo').eq('user_id', sessao.user.id).maybeSingle();
+            saldo = data?.saldo || 0;
+            $('saldoNum').textContent = saldo;
+            $('saldoTexto').textContent = saldo;
+            return saldo;
+        }
+
+        let historico = [];
+        async function carregarHistorico() {
+            const { data } = await sb.from('rt_roteiros').select('id, titulo, conteudo, created_at').order('created_at', { ascending: false }).limit(30);
+            historico = data || [];
+            $('histLista').innerHTML = historico.length
+                ? historico.map((r, i) => `<button type="button" data-i="${i}">${esc(r.titulo || 'Roteiro')}<small>${new Date(r.created_at).toLocaleString('pt-BR')}</small></button>`).join('')
+                : '<p class="hint">Nenhum roteiro ainda.</p>';
+        }
+        $('histLista').addEventListener('click', e => {
+            const b = e.target.closest('button[data-i]');
+            if (!b) return;
+            mostrarRoteiro(historico[b.dataset.i].conteudo);
+            $('cardResultado').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // ===== Compra (Mercado Pago) =====
+        document.querySelectorAll('.pack').forEach(btn => btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            aviso('compraMsg', 'Abrindo o pagamento...', 'ok');
+            try {
+                const res = await fetch(`${SUPABASE_URL}/functions/v1/${FN_CHECKOUT}`, {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${sessao.access_token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pacote: btn.dataset.pacote }),
+                });
+                const out = await res.json();
+                if (!res.ok || !out.url) throw new Error(out.erro || 'Erro ao abrir o pagamento.');
+                location.href = out.url;
+            } catch (err) {
+                aviso('compraMsg', err.message || 'Erro ao abrir o pagamento.');
+                btn.disabled = false;
+            }
+        }));
+
+        // Volta do Mercado Pago
+        const retorno = new URLSearchParams(location.search).get('pagamento');
+        if (retorno) {
+            history.replaceState(null, '', location.pathname);
+            const box = $('avisoPagamento');
+            box.style.marginBottom = '16px';
+            if (retorno === 'aprovado') {
+                aviso(box, 'Pagamento aprovado! Seus roteiros aparecem aqui em instantes.', 'ok');
+                // O Mercado Pago avisa o servidor em segundos: confere o saldo ate ele subir
+                let tentativas = 0, inicial = null;
+                const t = setInterval(async () => {
+                    if (!sessao) return;
+                    const s = await carregarSaldo();
+                    if (inicial === null) inicial = s;
+                    if (s > inicial || ++tentativas > 20) clearInterval(t);
+                }, 3000);
+            } else if (retorno === 'pendente') {
+                aviso(box, 'Pagamento em processamento. Assim que for aprovado, seus roteiros aparecem aqui.', 'ok');
+            } else {
+                aviso(box, 'O pagamento não foi concluído. Você pode tentar de novo.');
+            }
+        }
+
+        // ===== Assunto: proprio ou em alta =====
+        document.querySelectorAll('input[name=modo]').forEach(r => r.addEventListener('change', () => {
+            $('fAssunto').hidden = document.querySelector('input[name=modo]:checked').value === 'em_alta';
+        }));
+
+        // ===== Gerar roteiro =====
+        let ultimoTexto = '';
+        function mostrarRoteiro(texto, terminou = true) {
+            ultimoTexto = texto;
+            $('cardResultado').hidden = false;
+            $('outBody').innerHTML = md(texto);
+            $('outActions').hidden = !terminou;
+        }
+
+        $('formRoteiro').addEventListener('submit', async e => {
+            e.preventDefault();
+            aviso('formMsg', '');
+            const modo = document.querySelector('input[name=modo]:checked').value;
+            const tons = [...document.querySelectorAll('#fTom input:checked')].map(i => i.value);
+            const extra = $('fTomExtra').value.trim();
+            const dados = {
+                area: $('fArea').value.trim(),
+                comunicacao: [tons.join(', '), extra].filter(Boolean).join('. '),
+                instagram: $('fInsta').value.trim(),
+                bio: $('fBio').value.trim(),
+                referencias: [...document.querySelectorAll('.ref-row')].map(r => ({ link: r.querySelector('.refLink').value.trim(), nota: r.querySelector('.refNota').value.trim() })).filter(r => r.link || r.nota),
+                sobre: $('fSobre').value.trim(),
+                modo_assunto: modo,
+                assunto: modo === 'proprio' ? $('fAssunto').value.trim() : '',
+                duracao: $('fDuracao').value,
+                formatos: [...document.querySelectorAll('#fFormatos input:checked')].map(i => i.value),
+            };
+            if (!dados.area) return aviso('formMsg', 'Informe sua área de atuação.');
+            if (!dados.comunicacao) return aviso('formMsg', 'Escolha pelo menos um jeito de se comunicar.');
+            if (modo === 'proprio' && !dados.assunto) return aviso('formMsg', 'Escreva o assunto do vídeo ou escolha "assunto em alta".');
+            if (saldo < 1) {
+                aviso('formMsg', 'Você não tem roteiros disponíveis. Compre acima para gerar.');
+                $('cardComprar').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            const btn = $('btnGerar');
+            btn.disabled = true;
+            btn.textContent = 'Escrevendo seu roteiro...';
+            $('cardResultado').hidden = false;
+            $('outActions').hidden = true;
+            $('outBody').innerHTML = `<div class="loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>${modo === 'em_alta' ? 'Pesquisando o que está em alta no seu nicho...' : 'O Joãozinho está pensando no melhor formato...'}</span></div>`;
+            $('cardResultado').scrollIntoView({ behavior: 'smooth' });
+
+            let texto = '';
+            try {
+                const res = await fetch(`${SUPABASE_URL}/functions/v1/${FN_GERAR}`, {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${sessao.access_token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados),
+                });
+                if (!res.ok) {
+                    const out = await res.json().catch(() => ({}));
+                    throw new Error(out.erro || 'Não foi possível gerar agora.');
+                }
+                const reader = res.body.getReader();
+                const dec = new TextDecoder();
+                let buf = '', erro = null, pintar = 0;
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    buf += dec.decode(value, { stream: true });
+                    const partes = buf.split('\n');
+                    buf = partes.pop();
+                    for (const p of partes) {
+                        if (!p.trim()) continue;
+                        const ev = JSON.parse(p);
+                        if (ev.t) texto += ev.t;
+                        if (ev.erro) erro = ev.erro;
+                    }
+                    const agora = Date.now();
+                    if (texto && agora - pintar > 120) { mostrarRoteiro(texto, false); pintar = agora; }
+                }
+                if (erro) throw new Error(erro);
+                mostrarRoteiro(texto, true);
+                carregarHistorico();
+            } catch (err) {
+                if (!texto) $('outBody').innerHTML = '';
+                aviso('formMsg', err.message || 'Não foi possível gerar agora.');
+                if (!texto) $('cardResultado').hidden = true;
+            } finally {
+                await carregarSaldo();
+                btn.disabled = false;
+                btn.textContent = 'Gerar roteiro · usa 1 crédito';
+            }
+        });
+
+        $('btnCopiar').addEventListener('click', async () => {
+            await navigator.clipboard.writeText(ultimoTexto.replace(/\*\*/g, ''));
+            $('btnCopiar').textContent = 'Copiado!';
+            setTimeout(() => { $('btnCopiar').textContent = 'Copiar roteiro'; }, 2000);
+        });
+        $('btnBaixar').addEventListener('click', () => {
+            const blob = new Blob([ultimoTexto.replace(/\*\*/g, '')], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'roteiro-joaozinho.txt';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+        $('btnNovo').addEventListener('click', () => {
+            $('formRoteiro').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
