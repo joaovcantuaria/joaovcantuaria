@@ -351,7 +351,7 @@
         var supabase = null;
 
         if (supabaseSDK && supabaseSDK.createClient) {
-            supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storageKey: 'jvc-admin-auth' } }); // sessao do painel admin
             console.log('✅ Supabase conectado!');
         } else {
             console.error('❌ SDK do Supabase não carregou');

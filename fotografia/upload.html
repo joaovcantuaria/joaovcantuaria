@@ -678,7 +678,8 @@
     <script>
         var supabase = window.supabase.createClient(
             'https://gzetvnqnqmjrkcfsjxyk.supabase.co',
-            'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5'
+            'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5',
+            { auth: { storageKey: 'jvc-admin-auth' } } // sessao do painel admin
         );
         // Token do admin logado: as tabelas so aceitam leitura/escrita com ele
         var ADMIN_TOKEN = null;

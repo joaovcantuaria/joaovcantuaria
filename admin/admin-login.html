@@ -62,7 +62,8 @@
         // Inicializar Supabase
         const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
-        var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Sessao do painel separada da do site (Roteirista, area do cliente)
+        var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storageKey: 'jvc-admin-auth' } });
         console.log('Supabase inicializado na pagina de login');
 
         // Mostrar mensagem

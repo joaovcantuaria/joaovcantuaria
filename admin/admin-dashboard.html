@@ -613,7 +613,8 @@
         const SUPABASE_URL = 'https://gzetvnqnqmjrkcfsjxyk.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_i5bIlH9xOl7Oeh3MEVnuXg_F7Zp3aZ5';
         const supabaseSDK = window.supabase; // `var supabase` abaixo sobrescreve window.supabase
-        var supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Sessao do painel separada da do site (Roteirista, area do cliente)
+        var supabase = supabaseSDK.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storageKey: 'jvc-admin-auth' } });
 
         // Cloudinary config
         const CLOUD_NAME = 'cpfik4th';
