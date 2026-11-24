@@ -14,3 +14,7 @@ verify_jwt = false
 
 [functions.rt-webhook]
 verify_jwt = false
+
+# Links de pagamento (criar/cancelar pelo painel + aviso do Mercado Pago)
+[functions.pg-links]
+verify_jwt = false

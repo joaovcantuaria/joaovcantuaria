@@ -1102,3 +1102,13 @@ body {
     padding: 0.7rem 0; font-size: 0.95rem; color: var(--white); font-family: var(--font-body); outline: none;
 }
 #panel-roteirista .config-group select:focus { border-bottom-color: var(--gold); }
+
+/* ========== LINKS DE PAGAMENTO ========== */
+#panel-pagamentos .config-group select {
+    width: 100%; background: var(--black-soft, #111); border: none; border-bottom: 1px solid var(--border-subtle);
+    padding: 0.7rem 0; font-size: 0.95rem; color: var(--white); font-family: var(--font-body); outline: none;
+}
+.pg-resultado { margin-top: 1.5rem; padding: 1.25rem; border: 1px solid var(--gold); border-radius: 10px; background: rgba(198,169,114,0.06); }
+.pg-resultado input { width: 100%; padding: 0.75rem; border: 1px solid var(--border-subtle); border-radius: 6px; background: transparent; color: var(--white); font-family: monospace; font-size: 0.9rem; }
+.pg-acoes { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.pg-wpp { background: #25D366 !important; color: #06130b !important; text-decoration: none; }

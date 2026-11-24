@@ -64,6 +64,11 @@
         <section class="nav-cards">
             <h2 class="section-heading"><span class="gold-dot"></span> Gerenciamento</h2>
             <div class="cards-grid">
+                <button class="nav-card" data-panel="pagamentos">
+                    <i class="fas fa-credit-card"></i>
+                    <span class="card-title">Links de Pagamento</span>
+                    <span class="card-desc">Cobrar no cartao de credito</span>
+                </button>
                 <button class="nav-card" data-panel="roteirista">
                     <i class="fas fa-pen-nib"></i>
                     <span class="card-title">Joaozinho Roteirista</span>
@@ -139,6 +144,91 @@
     </div>
 
     <!-- ======================== PANEL OVERLAYS ======================== -->
+
+    <!-- LINKS DE PAGAMENTO -->
+    <div class="panel-overlay" id="panel-pagamentos">
+        <div class="panel-header">
+            <button class="btn-back" onclick="closePanel()"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
+            <h1 class="panel-title">Links de Pagamento</h1>
+            <span class="admin-badge"><i class="fas fa-credit-card"></i> Cartao de credito</span>
+        </div>
+        <div class="panel-content">
+            <div class="finance-stats" style="margin-bottom:2rem;">
+                <div class="finance-card" style="border-left:3px solid var(--green);">
+                    <span class="finance-label">Recebido pelos links</span>
+                    <span class="finance-value" id="pgStatPago" style="color:var(--green);">R$ 0,00</span>
+                </div>
+                <div class="finance-card" style="border-left:3px solid var(--gold);">
+                    <span class="finance-label">Aguardando pagamento</span>
+                    <span class="finance-value" id="pgStatAberto" style="color:var(--gold);">R$ 0,00</span>
+                </div>
+            </div>
+
+            <!-- Criar link -->
+            <form id="pgForm" class="config-form" autocomplete="off">
+                <p class="rt-section">Novo link de pagamento</p>
+                <div class="config-grid">
+                    <div class="config-group">
+                        <label><i class="fas fa-file-alt"></i> Descricao (o cliente ve)</label>
+                        <input type="text" id="pgDescricao" maxlength="200" required placeholder="Ex.: Ensaio completo + 15 fotos">
+                    </div>
+                    <div class="config-group">
+                        <label><i class="fas fa-dollar-sign"></i> Valor (R$)</label>
+                        <input type="number" id="pgValor" step="0.01" min="1" required placeholder="350,00">
+                    </div>
+                    <div class="config-group">
+                        <label><i class="fas fa-layer-group"></i> Parcelar em ate</label>
+                        <select id="pgParcelas">
+                            <option value="1">A vista</option>
+                            <option value="2">2x</option><option value="3">3x</option><option value="4">4x</option>
+                            <option value="5">5x</option><option value="6">6x</option><option value="7">7x</option>
+                            <option value="8">8x</option><option value="9">9x</option><option value="10">10x</option>
+                            <option value="11">11x</option><option value="12" selected>12x</option>
+                        </select>
+                    </div>
+                    <div class="config-group">
+                        <label><i class="fas fa-user"></i> Nome do cliente (opcional)</label>
+                        <input type="text" id="pgNome" maxlength="120" placeholder="Maria Souza">
+                    </div>
+                    <div class="config-group">
+                        <label><i class="fas fa-envelope"></i> E-mail do cliente (opcional)</label>
+                        <input type="email" id="pgEmail" maxlength="160" placeholder="cliente@email.com">
+                    </div>
+                    <div class="config-group">
+                        <label><i class="fas fa-hourglass-half"></i> Validade</label>
+                        <select id="pgValidade">
+                            <option value="0">Sem prazo</option>
+                            <option value="1">1 dia</option>
+                            <option value="3">3 dias</option>
+                            <option value="7" selected>7 dias</option>
+                            <option value="15">15 dias</option>
+                            <option value="30">30 dias</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-action-primary" id="pgCriar" style="margin-top:1.25rem;"><i class="fas fa-link"></i> Gerar link</button>
+            </form>
+
+            <!-- Link gerado -->
+            <div id="pgResultado" class="pg-resultado" hidden>
+                <p class="rt-section" style="margin:0 0 0.5rem;">Link pronto para enviar</p>
+                <input type="text" id="pgUrl" readonly>
+                <div class="pg-acoes">
+                    <button type="button" class="btn-action-primary" id="pgCopiar"><i class="fas fa-copy"></i> Copiar link</button>
+                    <a class="btn-action-primary pg-wpp" id="pgWpp" href="#" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Enviar no WhatsApp</a>
+                </div>
+            </div>
+
+            <!-- Lista -->
+            <p class="rt-section" style="margin-top:2.5rem;">Links criados</p>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead><tr><th>Descricao</th><th>Cliente</th><th>Valor</th><th>Status</th><th>Criado</th><th>Acoes</th></tr></thead>
+                    <tbody id="pgTableBody"><tr><td colspan="6" class="empty">Carregando...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <!-- JOAOZINHO ROTEIRISTA -->
     <div class="panel-overlay" id="panel-roteirista">
@@ -632,5 +722,6 @@
     <script>requireAdmin();</script>
     <script src="admin.js?v=20261106"></script>
     <script src="roteirista-admin.js?v=20261106"></script>
+    <script src="pagamentos-admin.js?v=20261124"></script>
 </body>
 </html>
